@@ -1,0 +1,272 @@
+/* ───────────────────────── Fonts (self-hosted, SIL OFL) ───────────────────────── */
+@font-face {
+  font-family: 'Unifraktur';
+  src: url('/fonts/UnifrakturMaguntia.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IM Fell English';
+  src: url('/fonts/IMFellEnglish-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IM Fell English';
+  src: url('/fonts/IMFellEnglish-Italic.woff2') format('woff2');
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/CormorantGaramond.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/CormorantGaramond-Italic.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Caveat';
+  src: url('/fonts/Caveat.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Share Tech Mono';
+  src: url('/fonts/ShareTechMono.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* ───────────────────────── Design tokens ───────────────────────── */
+:root {
+  /* Colour */
+  --ink: #050505;          /* page background, the note's cover */
+  --ink-2: #0c0b0b;        /* raised surfaces */
+  --ink-3: #161414;        /* cards, panels */
+  --line: rgba(232, 226, 208, 0.12);
+  --paper: #e8e2d0;        /* main text, notebook pages */
+  --paper-dim: #a9a294;    /* secondary text */
+  --ash: #8a847b;          /* tertiary text, captions (≥4.5:1 on --ink) */
+  --blood: #c1121f;        /* accent: borders, numerals, shinigami eyes */
+  --blood-text: #ef3b47;   /* accent for small text on dark (≥4.5:1 on --ink) */
+  --blood-bright: #ff2a3a; /* glow, hover */
+  --blood-deep: #5c0a10;
+  --gold: #b89b5e;         /* rare accent: numerals, dividers */
+  --panel: rgba(8, 7, 7, 0.8);    /* readable panel over the 3D canvas */
+  --panel-border: rgba(193, 18, 31, 0.28);
+
+  /* Type */
+  --font-gothic: 'Unifraktur', 'Old English Text MT', serif;
+  --font-rules: 'IM Fell English', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  --font-mono: 'Share Tech Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+  --step--1: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --step-0: clamp(1.1rem, 1.02rem + 0.35vw, 1.3rem);
+  --step-1: clamp(1.35rem, 1.2rem + 0.7vw, 1.75rem);
+  --step-2: clamp(1.8rem, 1.5rem + 1.4vw, 2.6rem);
+  --step-3: clamp(2.4rem, 1.9rem + 2.6vw, 4rem);
+  --step-4: clamp(3rem, 2.2rem + 4.6vw, 6.5rem);
+
+  /* Layout. Mobile breakpoint is 760px everywhere (matches useIsMobile). */
+  --gutter: clamp(16px, 4vw, 48px);
+  --max: 1200px;
+  --radius: 4px;
+  --nav-h: 64px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 600ms;
+
+  /* Layering */
+  --z-canvas: 0;
+  --z-content: 1;
+  --z-grain: 15;
+  --z-nav: 20;
+  --z-intro: 50;
+
+  color-scheme: dark;
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--blood-deep) var(--ink);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--blood);
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  color: var(--blood-bright);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+p {
+  margin: 0;
+}
+
+::selection {
+  background: var(--blood);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blood-bright);
+  outline-offset: 3px;
+}
+
+/* ───────────────────────── Shared utilities ───────────────────────── */
+.container {
+  width: min(100% - 2 * var(--gutter), var(--max));
+  margin-inline: auto;
+}
+
+/* Fixed full-viewport layer holding the 3D canvas, behind all content. */
+.scene-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+.scene-layer canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Every page section. Sections sit above the fixed 3D canvas. */
+.section {
+  position: relative;
+  z-index: var(--z-content);
+  min-height: 100vh;
+  padding-block: clamp(80px, 12vh, 140px);
+}
+
+.gothic {
+  font-family: var(--font-gothic);
+  letter-spacing: 0.01em;
+}
+.rules-text {
+  font-family: var(--font-rules);
+}
+.hand {
+  font-family: var(--font-hand);
+}
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+/* Small caps label above a section heading, e.g. "RULE II · NAMES WRITTEN" */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+
+/* Readable panel for text placed over the 3D scene */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* Film grain over everything (very subtle, CSS only) */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
