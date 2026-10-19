@@ -48,6 +48,8 @@ const DESKTOP: PoseMap = {
   //            x      y      z     rx     ry     rz    scale
   hero: pose(1.95, 0.0, 0.0, -0.06, 0.3, 0.07, 1.0),
   rules: pose(1.85, -0.05, 0.1, -0.2, -0.12, 0.02, 0.84),
+  // beside the second "How to Use It" page (on the right): the book crosses to the left
+  rulesLeft: pose(-1.85, -0.05, 0.1, -0.2, 0.12, -0.02, 0.84),
   names: pose(0.0, 0.1, DEEP, -0.34, 0.0, 0.0, 1.0),
   eyes: pose(-1.85, -0.1, 0.1, -0.16, 0.12, -0.02, 0.78),
   contact: pose(1.9, -0.02, 0.15, 0.06, -0.44, -0.06, 0.94),

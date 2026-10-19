@@ -27,6 +27,7 @@ import { aspectFit, blendPoses, dampPose, makePose, pose, sectionWeights, transi
 const DESKTOP: PoseMap = {
   hero: pose(0.78, -1.14, 0.9, 0.15, 0, -0.25, 0.26),
   rules: pose(2.75, -1.42, 0.6, 0.1, 0, 0.2, 0.21),
+  rulesLeft: pose(-2.75, -1.42, 0.6, 0.1, 0, -0.2, 0.21),
   // The names cards are full width: the apple sinks into the dark with the book.
   names: pose(-1.6, -1.2, -9, 0.2, 0, 0.3, 0.26),
   eyes: pose(-2.3, -1.4, 0.8, 0.1, 0, -0.2, 0.25),

@@ -25,47 +25,83 @@ export const profile = {
   email: '',
 }
 
-// "HOW TO USE IT" — the About section, written as parody rules of the note.
-export const rules: { numeral: string; text: string }[] = [
+// "HOW TO USE IT" — the About section: the rules of this note, in Akram's own words.
+// Pages: rules on `page: 1` sit beside the notebook on the left half of the screen,
+// rules on `page: 2` on the right half (the notebook crosses to the left for them).
+export type Rule = {
+  /** "01", "02", … */
+  num: string
+  title: string
+  paragraphs: string[]
+  /** A closing line, handwritten in red ink under the rule. */
+  coda?: string
+  /** The final, secret rule: styled as sealed. Its interaction comes later. */
+  secret?: boolean
+  page: 1 | 2
+}
+
+export const rules: Rule[] = [
   {
-    numeral: 'I',
-    text: 'The developer whose name is written in this note shall turn real problems into working software: ambulance routes through flooded Chattogram streets, electricity bills under Bangladeshi tariff rules, and study tools powered by AI.',
+    num: '01',
+    title: 'The Mind Behind the Note',
+    paragraphs: [
+      'The name is Md. Akram Khan. A CS undergraduate and software developer driven by curiosity, logic and the pursuit of better solutions. I see every problem as a system waiting to be understood, and every idea as an opportunity to build something meaningful.',
+    ],
+    page: 1,
   },
   {
-    numeral: 'II',
-    text: 'This note shall not take effect unless the writer has the stack in mind: React and FastAPI for the web, Python for machine learning, C++ for problem solving, and Java or Flutter where the job demands it.',
+    num: '02',
+    title: 'Understand the Method',
+    paragraphs: [
+      'Observe before acting. Analyze before building. Test before trusting. I approach software development as an iterative process of investigation, experimentation and refinement, turning complex problems into practical, reliable and scalable solutions.',
+    ],
+    page: 1,
   },
   {
-    numeral: 'III',
-    text: 'If a model is written within 40 seconds of the name, it shall be built from first principles: logistic regression in NumPy before any framework is allowed to help.',
+    num: '03',
+    title: 'Know the Arsenal',
+    paragraphs: [
+      'Different languages. Different tools. One objective: engineer effective solutions. From full-stack applications to algorithmic problem-solving and machine learning, I choose my tools according to the problem, rather than forcing every problem into the same solution.',
+    ],
+    page: 1,
   },
   {
-    numeral: 'IV',
-    text: 'If no algorithm is specified, the shortest path shall be found by A*. BFS, DFS, UCS, IDS and Greedy search may be benchmarked against it at the writer’s leisure.',
+    num: '04',
+    title: 'Question the Unknown',
+    paragraphs: [
+      'Understanding matters more than simply making things work. I explore algorithms from first principles, experiment with machine learning and investigate the systems behind the interfaces. My interests extend into cybersecurity and emerging technologies, where curiosity is often the first step toward discovery.',
+    ],
+    page: 2,
   },
   {
-    numeral: 'V',
-    text: 'The note may be shared. Cognify, StockHub and DrugScript were written by many hands, and their owner has learned to merge without conflict.',
+    num: '05',
+    title: 'Examine the Evidence',
+    paragraphs: [
+      'Each project represents an attempt to solve a real problem, explore an idea or turn knowledge into something useful. Through building, debugging and collaborating, I continue to refine not only my code but also the way I think as an engineer.',
+    ],
+    page: 2,
   },
   {
-    numeral: 'VI',
-    text: 'The owner of this note lives in Dhaka, Bangladesh, and remains open to collaboration until the last page is filled.',
+    num: '06',
+    title: 'Leave the Story Open',
+    paragraphs: [
+      'The objective is not merely to write code. It is to engineer impactful software, keep learning beyond familiar boundaries and contribute to technology that makes a difference. There are still systems to understand, problems to solve and ideas waiting to become reality.',
+    ],
+    coda: 'The name is written. The work is still being written.',
+    page: 2,
+  },
+  {
+    num: '07',
+    title: 'The Eye Deal',
+    paragraphs: [
+      'Make the eye deal, and this floating Death Note may turn into a Love Note.',
+      'The Shinigami Eyes reveal every page of the secret Love Note hidden inside: all 52 of them. One condition remains: you must possess the Shinigami Eyes.',
+    ],
+    coda: 'Do you dare make the deal?',
+    secret: true,
+    page: 2,
   },
 ]
-
-// "The Mind Behind the Note" — Akram's own words, framed as the owner's case file.
-export const about = {
-  label: 'Owner of this note · Case file',
-  title: 'The Mind Behind the Note',
-  paragraphs: [
-    'I’m a Computer Science undergraduate who works by one principle: every problem has a solution, waiting to be uncovered, like a name waiting to be written.',
-    'I design and build software that turns ideas into practical, reliable and scalable solutions. From intuitive interfaces to the backend systems beneath them, I write with intent: clean architecture, efficient algorithms and experiences that mean something to the people who use them.',
-    'My interests span full-stack development, software engineering, cybersecurity and emerging technologies. Like any investigator, I follow the clues into complex problems and unfamiliar tools, until each technical challenge becomes a chance to build something better.',
-    'My objective is clear: engineer software with real impact, sharpen my skills with every case, and create technology that leaves its mark.',
-  ],
-  /** Closing lines, handwritten in red ink. */
-  verdict: ['Every system has a weakness.', 'Every problem has a solution.', 'The investigation never ends.'],
-}
 
 export type Project = {
   id: string

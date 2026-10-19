@@ -1,17 +1,29 @@
-/* RULE I · How to Use It — the inside cover of the note.
-   Desktop: the panel lives in the left ~55% (the open notebook is on the right).
-   Mobile (≤760px): full width. */
+/* RULE I · How to Use It — the inside cover of the note, over two facing pages.
+   Desktop: page one in the left ~55% (the open notebook on the right), page two in
+   the right ~55% below it (the notebook crosses to the left). Both pages share one
+   grid with equal rows and spans of equal width, so they are always the same size.
+   Mobile (≤760px): both full width, stacked. */
 
 .rules {
-  display: flex;
-  align-items: center;
+  display: block;
 }
 
 .rules__layout {
-  display: flex;
+  display: grid;
+  /* page one spans columns 1–2, page two columns 2–3: equal widths, offset sideways */
+  grid-template-columns: minmax(0, 9fr) minmax(0, 2fr) minmax(0, 9fr);
+  /* equal rows: both pages take the height of the taller one */
+  grid-auto-rows: 1fr;
+  row-gap: clamp(90px, 16vh, 180px);
+}
+.rules__page--1 {
+  grid-column: 1 / 3;
+}
+.rules__page--2 {
+  grid-column: 2 / 4;
 }
 
-/* ───────── The inside cover ───────── */
+/* ───────── A page of the inside cover ───────── */
 .rules__panel {
   /* Width of the left margin that holds the numerals, and the gap after it. */
   --margin: clamp(3.25rem, 5vw, 4.75rem);
@@ -21,8 +33,9 @@
 
   position: relative;
   isolation: isolate;
-  width: clamp(min(100%, 470px), 56%, 700px);
-  padding: clamp(36px, 5vw, 64px) clamp(22px, 3.5vw, 52px) clamp(32px, 4.5vw, 56px)
+  display: flex;
+  flex-direction: column;
+  padding: clamp(36px, 5vw, 64px) clamp(22px, 3.5vw, 52px) clamp(28px, 3.5vw, 44px)
     calc(var(--margin) + var(--gap));
   border-color: color-mix(in srgb, var(--blood) 40%, transparent);
   /* The panel is almost opaque, so a live backdrop blur over the moving 3D canvas
@@ -86,7 +99,7 @@
 .rules__corner--bl::after { bottom: 4px; left: 4px; }
 .rules__corner--br::after { bottom: 4px; right: 4px; }
 
-/* ───────── Heading ───────── */
+/* ───────── Heading (page one) ───────── */
 .rules__head {
   position: relative;
   padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
@@ -102,7 +115,6 @@
   background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 0%, transparent));
   opacity: 0.55;
 }
-
 
 .rules__title {
   margin-top: 0.9rem;
@@ -128,7 +140,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: clamp(1.25rem, 2.4vw, 1.9rem);
+  gap: clamp(1.6rem, 3vw, 2.3rem);
 }
 
 .rules__item {
@@ -139,7 +151,7 @@
 /* The numeral sits centred in the crimson-ruled margin */
 .rules__num {
   position: absolute;
-  top: 0.05em;
+  top: 0.1em;
   left: calc(-1 * (var(--margin) + var(--gap)));
   width: calc(var(--margin) - 4px);
   font-family: var(--font-rules);
@@ -150,72 +162,30 @@
   color: var(--gold);
 }
 
+.rules__rule-title {
+  margin-bottom: 0.5rem;
+  font-size: var(--step-1);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--paper);
+}
+
 .rules__text {
+  display: grid;
+  gap: 0.6rem;
   font-size: var(--step-0);
   line-height: 1.62;
-  color: var(--paper);
+  color: var(--paper-dim);
   text-wrap: pretty;
 }
-
-/* ───────── Owner card (a bookplate) ───────── */
-.rules__owner {
-  position: relative;
-  margin-top: clamp(2.25rem, 4.5vw, 3.25rem);
-  padding: clamp(1.25rem, 2.6vw, 1.75rem);
-  border: 1px solid color-mix(in srgb, var(--gold) 32%, transparent);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--blood-deep) 22%, transparent), transparent 55%),
-    color-mix(in srgb, var(--ink) 55%, transparent);
-  display: grid;
-  justify-items: start;
-}
-.rules__owner::before {
-  /* inner hairline, bookplate style */
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid color-mix(in srgb, var(--gold) 12%, transparent);
-  pointer-events: none;
-}
-
-.rules__owner-label {
-  font-size: calc(var(--step--1) * 0.8);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-.rules__owner-title {
-  margin-top: 0.45rem;
-  font-size: var(--step-2);
-  line-height: 1.05;
-  color: var(--paper);
-  text-shadow: 0 0 28px color-mix(in srgb, var(--blood) 35%, transparent);
-}
-
-/* The bio: the owner's own words, set like a typed case report. */
-.rules__bio {
-  justify-self: stretch;
-  display: grid;
-  gap: 0.85rem;
-  margin: 0 0 1.4rem;
-  font-family: var(--font-body);
-  font-size: var(--step-0);
-  line-height: 1.6;
-  color: var(--paper-dim);
-}
-.rules__bio p:first-child {
+.rules__text p:first-child {
   color: var(--paper);
 }
 
-/* Closing lines in red ink, slightly askew, like a note scrawled at the end of the file. */
-.rules__verdict {
-  justify-self: stretch;
-  display: grid;
-  gap: 0.1rem;
-  margin: 0 0 1.5rem;
-  padding: 0.9rem 0 0.2rem 1rem;
-  border-top: 1px dashed color-mix(in srgb, var(--gold) 22%, transparent);
+/* A closing line in red ink, slightly askew, like a note scrawled under the rule. */
+.rules__coda {
+  margin-top: 0.7rem;
+  padding-left: 0.85rem;
   border-left: 2px solid var(--blood);
   font-size: var(--step-1);
   line-height: 1.25;
@@ -223,96 +193,74 @@
   transform: rotate(-0.8deg);
   transform-origin: left top;
 }
-.rules__verdict span {
-  display: block;
+
+/* ───────── Rule 07: the final, secret rule (sealed) ───────── */
+.rules__item--secret {
+  margin-top: 0.4rem;
+  padding: 1.15rem 1.2rem 1.25rem;
+  border: 1px dashed color-mix(in srgb, var(--blood) 55%, transparent);
+  border-radius: 2px;
+  background:
+    radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--blood-deep) 45%, transparent), transparent 65%),
+    color-mix(in srgb, var(--ink) 60%, transparent);
+  box-shadow: 0 0 40px -18px color-mix(in srgb, var(--blood-bright) 60%, transparent);
 }
-.rules__verdict span:last-child {
+.rules__item--secret .rules__num {
+  /* the numeral stays in the page margin despite the box's padding */
+  top: calc(1.15rem + 0.1em);
+  left: calc(-1 * (var(--margin) + var(--gap)) - 1px);
+  color: var(--blood-text);
+}
+.rules__seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 0.45rem;
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+.rules__seal-eye {
+  width: 1.5em;
+  height: auto;
+  color: var(--blood-bright);
+  filter: drop-shadow(0 0 6px var(--blood-bright));
+  animation: rules-eye 5s ease-in-out infinite;
+}
+@keyframes rules-eye {
+  0%,
+  46%,
+  52%,
+  100% {
+    transform: scaleY(1);
+  }
+  49% {
+    transform: scaleY(0.1);
+  }
+}
+.rules__item--secret .rules__rule-title {
+  color: var(--blood-text);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--blood-bright) 45%, transparent);
+}
+.rules__item--secret .rules__coda {
   color: var(--paper);
+  border-left-color: var(--blood-bright);
 }
 
-.rules__owner-name {
-  margin: 0.35rem 0 1.25rem;
-  padding: 0 0.6rem 0.1rem 0.15rem;
-  font-size: var(--step-2);
-  line-height: 1.15;
-  color: var(--paper);
-  border-bottom: 1px dashed color-mix(in srgb, var(--paper) 30%, transparent);
-  transform: rotate(-1.2deg);
-  transform-origin: left bottom;
-}
-
-.rules__owner-facts {
-  justify-self: stretch;
-  margin: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-  gap: 0.9rem 1.5rem;
-}
-.rules__owner-facts > div {
-  display: grid;
-  gap: 0.2rem;
-  align-content: start;
-}
-.rules__owner-facts dt {
+/* Page number at the foot of each page (pushes to the bottom of the equal-height page). */
+.rules__foot {
+  margin-top: auto;
+  padding-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  align-self: center;
+  transform: translateX(calc((var(--margin) + var(--gap)) / -2));
   font-size: calc(var(--step--1) * 0.78);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--ash);
 }
-.rules__owner-facts dd {
-  margin: 0;
-  font-size: var(--step--1);
-  line-height: 1.4;
-  color: var(--paper);
-}
-
-.rules__owner-links {
-  justify-self: stretch;
-  list-style: none;
-  margin: 1.25rem 0 0;
-  padding: 1.1rem 0 0;
-  border-top: 1px dashed color-mix(in srgb, var(--gold) 22%, transparent);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.rules__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55em;
-  min-height: 44px;
-  padding: 0.5em 1.05em;
-  font-size: calc(var(--step--1) * 0.82);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--paper);
-  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--ink) 70%, transparent);
-  transition:
-    background-color 250ms var(--ease),
-    border-color 250ms var(--ease),
-    box-shadow 250ms var(--ease),
-    color 250ms var(--ease);
-}
-.rules__link:hover,
-.rules__link:focus-visible {
-  color: var(--paper);
-  border-color: var(--blood-bright);
-  background: color-mix(in srgb, var(--blood-deep) 70%, transparent);
-  box-shadow: 0 0 22px -4px color-mix(in srgb, var(--blood) 70%, transparent);
-}
-.rules__link-arrow {
-  width: 0.8em;
-  height: 0.8em;
-  flex: none;
-  transition: transform 250ms var(--ease);
-}
-.rules__link:hover .rules__link-arrow,
-.rules__link:focus-visible .rules__link-arrow {
-  transform: translate(2px, -2px);
+.rules__foot span {
+  color: color-mix(in srgb, var(--blood) 70%, transparent);
 }
 
 /* ───────── Reveal: rules are "written in" as they scroll into view ─────────
@@ -322,17 +270,18 @@
     opacity 900ms var(--ease) var(--reveal-delay, 0ms),
     transform 900ms var(--ease) var(--reveal-delay, 0ms);
 }
-.rules--armed .rules__head:not(.is-revealed),
-.rules--armed .rules__owner:not(.is-revealed) {
+.rules--armed .rules__head:not(.is-revealed) {
   opacity: 0;
   transform: translateY(18px);
 }
 
-/* Rule items: the item itself stays put; the numeral bleeds in, the text is wiped in like wet ink. */
+/* Rule items: the item itself stays put; the numeral bleeds in, the words are wiped in like wet ink. */
 .rules--armed .rules__item {
   transition: none;
 }
-.rules--armed .rules__text {
+.rules--armed .rules__rule-title,
+.rules--armed .rules__text,
+.rules--armed .rules__coda {
   /* own layer: repainting the wiping mask never touches the panel underneath */
   will-change: transform;
   -webkit-mask-image: linear-gradient(100deg, black 33%, transparent 66%);
@@ -347,7 +296,13 @@
     -webkit-mask-position 1250ms cubic-bezier(0.45, 0.05, 0.25, 1) calc(var(--reveal-delay) + 180ms),
     mask-position 1250ms cubic-bezier(0.45, 0.05, 0.25, 1) calc(var(--reveal-delay) + 180ms);
 }
-.rules--armed .rules__item.is-revealed .rules__text {
+.rules--armed .rules__text {
+  transition-delay: calc(var(--reveal-delay) + 380ms);
+}
+.rules--armed .rules__coda {
+  transition-delay: calc(var(--reveal-delay) + 900ms);
+}
+.rules--armed .rules__item.is-revealed :is(.rules__rule-title, .rules__text, .rules__coda) {
   -webkit-mask-position: 0 0;
   mask-position: 0 0;
 }
@@ -357,6 +312,9 @@
 }
 .rules--armed .rules__item.is-revealed .rules__num {
   animation: rules-ink 1400ms var(--ease) var(--reveal-delay) both;
+}
+.rules--armed .rules__item--secret.is-revealed .rules__num {
+  animation-name: rules-ink-red;
 }
 
 @keyframes rules-ink {
@@ -382,11 +340,35 @@
     text-shadow: 0 0 0 transparent;
   }
 }
+@keyframes rules-ink-red {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(1.35);
+  }
+  35%,
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rules__seal-eye {
+    animation: none;
+  }
+}
 
 /* ───────── Mobile ───────── */
 @media (max-width: 760px) {
-  .rules {
-    display: block;
+  .rules__layout {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 28px;
+  }
+  .rules__page--1,
+  .rules__page--2 {
+    grid-column: 1;
   }
   /* Carry the hero's bottom shade (Hero.css) into this section and let it fade
      out, so there is no hard band where the hero ends over the 3D canvas. */
@@ -407,17 +389,16 @@
   .rules__panel {
     --margin: 2.6rem;
     --gap: 0.9rem;
-    width: 100%;
-    padding: 36px 18px 26px calc(var(--margin) + var(--gap));
+    padding: 36px 18px 22px calc(var(--margin) + var(--gap));
   }
   .rules__num {
     font-size: var(--step-0);
-    top: 0.15em;
+    top: 0.2em;
   }
-  .rules__owner {
-    margin-left: calc(-1 * var(--margin) - var(--gap) + 10px);
+  .rules__item--secret {
+    padding: 1rem 0.9rem 1.05rem;
   }
-  .rules__owner-facts {
-    grid-template-columns: minmax(0, 1fr);
+  .rules__item--secret .rules__num {
+    top: calc(1rem + 0.2em);
   }
 }

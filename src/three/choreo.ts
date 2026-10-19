@@ -18,7 +18,12 @@ export type Pose = {
   s: number
 }
 
-export type PoseMap = Record<SectionId, Pose>
+/**
+ * One pose per section. `rulesLeft` (optional) is a second pose for "How to Use It":
+ * the 'rules' pose is used while its first page is read, and it blends into
+ * `rulesLeft` as the second page (on the right) comes into view.
+ */
+export type PoseMap = Record<SectionId, Pose> & { rulesLeft?: Pose }
 
 export const pose = (x: number, y: number, z: number, rx = 0, ry = 0, rz = 0, s = 1): Pose => ({
   x,
@@ -72,13 +77,30 @@ export const CAMERA = { fov: 35, z: 7 }
 export const visibleHalfWidth = (aspect: number, z: number) =>
   Math.tan((CAMERA.fov * Math.PI) / 360) * Math.max(0.5, CAMERA.z - z) * aspect
 
+const rulesMix = makePose()
+/** The pose a map uses for `id` right now (only 'rules' can change within its section). */
+function poseFor(map: PoseMap, id: SectionId): Pose {
+  if (id !== 'rules' || !map.rulesLeft) return map[id]
+  const k = ease(scrollState.rulesSide)
+  const a = map.rules
+  const b = map.rulesLeft
+  rulesMix.x = a.x + (b.x - a.x) * k
+  rulesMix.y = a.y + (b.y - a.y) * k
+  rulesMix.z = a.z + (b.z - a.z) * k
+  rulesMix.rx = a.rx + (b.rx - a.rx) * k
+  rulesMix.ry = a.ry + (b.ry - a.ry) * k
+  rulesMix.rz = a.rz + (b.rz - a.rz) * k
+  rulesMix.s = a.s + (b.s - a.s) * k
+  return rulesMix
+}
+
 /** Weighted blend of per-section poses into `out`. */
 export function blendPoses(map: PoseMap, out: Pose, w = sectionWeights()): Pose {
   out.x = out.y = out.z = out.rx = out.ry = out.rz = out.s = 0
   for (const id of ids) {
     const k = w[id]
     if (!k) continue
-    const p = map[id]
+    const p = poseFor(map, id)
     out.x += p.x * k
     out.y += p.y * k
     out.z += p.z * k
@@ -103,8 +125,13 @@ export function transitAmount(map: PoseMap, w = sectionWeights(), span = 1.5): n
     for (let j = i + 1; j < ids.length; j++) {
       const b = w[ids[j]]
       if (!b) continue
-      t += 4 * a * b * Math.min(1, Math.abs(map[ids[i]].x - map[ids[j]].x) / span)
+      t += 4 * a * b * Math.min(1, Math.abs(poseFor(map, ids[i]).x - poseFor(map, ids[j]).x) / span)
     }
+  }
+  // Crossing inside "How to Use It", from beside its first page to beside its second.
+  if (map.rulesLeft && w.rules) {
+    const k = ease(scrollState.rulesSide)
+    t += 4 * w.rules * k * (1 - k) * Math.min(1, Math.abs(map.rules.x - map.rulesLeft.x) / span)
   }
   return Math.min(1, t)
 }

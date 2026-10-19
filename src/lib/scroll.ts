@@ -27,7 +27,16 @@ export const scrollState = {
    * The 3D scene uses it to scroll up with the page at the very end.
    */
   tail: 0,
+  /**
+   * 0..1 inside "How to Use It": 0 while its first page is being read, 1 once the
+   * second page (on the right) has come into view. The notebook and apple use it to
+   * cross from the right side of the page to the left.
+   */
+  rulesSide: 0,
 }
+
+/** Element whose arrival flips the About section's 3D layout to the left side. */
+export const RULES_SECOND_PAGE_ID = 'rules-page-2'
 
 type Listener = (active: SectionId) => void
 const listeners = new Set<Listener>()
@@ -69,6 +78,12 @@ function measure() {
     }
   }
   scrollState.tail = Math.min(1, Math.max(0, (vh - lastBottom) / vh))
+  // The second page's top travelling from 90% to 35% of the viewport height.
+  const page2 = document.getElementById(RULES_SECOND_PAGE_ID)
+  if (page2) {
+    const top = page2.getBoundingClientRect().top
+    scrollState.rulesSide = Math.min(1, Math.max(0, (vh * 0.9 - top) / (vh * 0.55)))
+  }
   if (best !== scrollState.active) {
     scrollState.active = best
     listeners.forEach((fn) => fn(best))
