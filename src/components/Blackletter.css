@@ -1,0 +1,8 @@
+/* A Roman capital among blackletter (see Blackletter.tsx). IM Fell's capitals sit
+   a touch small next to Unifraktur's, so it is nudged up in size. */
+.blackletter__roman {
+  font-family: var(--font-rules);
+  font-size: 1.08em;
+  font-style: normal;
+  letter-spacing: 0;
+}

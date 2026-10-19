@@ -1,0 +1,522 @@
+/* ───────────── Hero · Rule 0 · The Note ───────────── */
+/* Entrance timeline. --hero-offset delays everything until the intro lifts;
+   it starts on the same frame as the intro, so no JS timer is involved. */
+.hero {
+  --hero-offset: 0ms;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-block: calc(var(--nav-h) + clamp(24px, 5vh, 56px)) clamp(96px, 13vh, 136px);
+  isolation: isolate;
+  overflow: clip;
+}
+.hero--late {
+  --hero-offset: 1800ms; /* Intro.css: overlay lifts 1750–2250ms */
+}
+
+/* Soft darkness on the text side so the notebook on the right shows through. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 90%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 74%, transparent) 30%,
+      color-mix(in srgb, var(--ink) 30%, transparent) 50%,
+      transparent 64%
+    );
+  /* Fade the shade out towards the bottom edge, so there is no hard band where
+     the hero ends and the 3D backdrop carries on behind the next section. */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+}
+
+/* Candle-lit crimson aura behind the name. Opacity-only flicker (compositor). */
+.hero__glow {
+  position: absolute;
+  z-index: -1;
+  left: calc(var(--gutter) - 12vw);
+  top: 16%;
+  width: min(64vw, 880px);
+  height: min(66vh, 620px);
+  pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--blood) 20%, transparent), transparent);
+  animation:
+    hero-fade 1800ms ease-out calc(var(--hero-offset) + 200ms) both,
+    hero-flicker 7s ease-in-out calc(var(--hero-offset) + 2000ms) infinite;
+}
+
+.hero__inner {
+  position: relative;
+}
+
+.hero__content {
+  width: min(100%, 42rem, 54vw - var(--gutter));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ── Eyebrow ── */
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: clamp(18px, 3vh, 28px);
+  font-size: 0.8rem;
+}
+.hero__eyebrow::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--blood);
+  box-shadow: 0 0 8px var(--blood-bright);
+}
+
+/* ── The name (the page's only h1) ── */
+.hero__title {
+  margin: 0 0 clamp(26px, 4.4vh, 42px);
+  font-size: var(--step-4);
+  line-height: 0.95;
+  color: var(--paper);
+}
+.hero__title-pre {
+  display: block;
+  width: fit-content;
+  margin: 0 0 0.12em 0.04em;
+  font-size: 0.42em;
+  line-height: 1;
+  color: var(--blood-text);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--blood-bright) 55%, transparent);
+}
+.hero__title-name {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  text-shadow:
+    0 0 42px color-mix(in srgb, var(--blood) 38%, transparent),
+    0 2px 1px #000;
+}
+
+/* Crimson underline flourish, drawn once the name has arrived. */
+.hero__flourish {
+  position: absolute;
+  left: -1%;
+  bottom: -0.3em;
+  width: 102%;
+  height: 0.3em;
+  overflow: visible;
+  pointer-events: none;
+}
+.hero__flourish path {
+  fill: none;
+  stroke: var(--blood);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--blood-bright) 60%, transparent));
+}
+.hero__flourish .hero__flourish-flick {
+  stroke-width: 2;
+}
+.hero__flourish path {
+  animation: hero-draw 1100ms cubic-bezier(0.65, 0, 0.35, 1) calc(var(--hero-offset) + 900ms) forwards;
+}
+.hero__flourish .hero__flourish-flick {
+  animation-duration: 380ms;
+  animation-delay: calc(var(--hero-offset) + 1900ms);
+}
+
+/* ── Role + tagline ── */
+.hero__role {
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.hero__tagline {
+  max-width: 30ch;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--step-2);
+  line-height: 1.2;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+/* ── Handwritten parody line: writes itself in red ink that dries ── */
+.hero__hand {
+  max-width: 28ch;
+  margin-top: clamp(16px, 2.6vh, 26px);
+  font-size: clamp(1.45rem, 1.1rem + 1.1vw, 2.15rem);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--paper);
+  transform: rotate(-1.6deg);
+  transform-origin: left center;
+}
+.hero__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.hero__char {
+  display: inline-block;
+  animation: hero-ink 1000ms ease-out both;
+  animation-delay: calc(var(--hero-offset) + 850ms + var(--i) * 19ms);
+}
+
+/* ── Actions ── */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(28px, 4.6vh, 44px);
+}
+
+.hero__cta {
+  --cta-bg: transparent;
+  --cta-border: color-mix(in srgb, var(--paper) 28%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  min-height: 48px;
+  padding: 0 1.35em;
+  border: 1px solid var(--cta-border);
+  border-radius: var(--radius);
+  background: var(--cta-bg);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 300ms ease,
+    color 220ms ease;
+}
+.hero__cta:hover {
+  color: var(--paper);
+}
+.hero__cta-icon {
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 300ms var(--ease);
+}
+
+.hero__cta--primary {
+  --cta-bg: var(--blood);
+  --cta-border: var(--blood);
+  padding-inline: 1.6em 1.4em;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--blood-bright) 30%, transparent) inset,
+    0 14px 34px -14px color-mix(in srgb, var(--blood-bright) 80%, transparent);
+}
+.hero__cta--primary:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--blood-bright) 60%, transparent) inset,
+    0 0 28px -4px color-mix(in srgb, var(--blood-bright) 75%, transparent),
+    0 18px 40px -14px color-mix(in srgb, var(--blood-bright) 90%, transparent);
+}
+.hero__cta--primary:hover .hero__cta-icon {
+  transform: translateY(3px);
+}
+.hero__cta--primary:active {
+  --cta-bg: var(--blood-deep);
+}
+
+.hero__cta--ghost {
+  --cta-bg: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+.hero__cta--ghost:hover {
+  --cta-border: var(--blood);
+  --cta-bg: color-mix(in srgb, var(--blood) 14%, var(--ink));
+}
+.hero__cta--ghost:hover .hero__cta-icon {
+  transform: translate(2px, -2px);
+}
+
+/* ── Location ── */
+.hero__location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.hero__pin {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--blood-text);
+  stroke-width: 1.6;
+}
+
+/* ── Scroll hint ── */
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3.5vh, 36px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  translate: -50% 0;
+  pointer-events: none;
+  animation: hero-fade 1000ms ease-out calc(var(--hero-offset) + 1800ms) both;
+}
+.hero__scroll-line {
+  position: relative;
+  width: 1px;
+  height: 64px;
+  overflow: hidden;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--paper) 55%, transparent));
+}
+.hero__scroll-drop {
+  position: absolute;
+  left: -1px;
+  top: -22px;
+  width: 3px;
+  height: 22px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, transparent, var(--blood-bright));
+  box-shadow: 0 0 8px var(--blood-bright);
+  animation: hero-drop 2400ms cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.hero__scroll-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+
+/* ── Entrance (staggered; behind the intro when it plays) ── */
+.hero__reveal {
+  animation: hero-rise 1000ms var(--ease) both;
+  animation-delay: calc(var(--hero-offset) + 60ms + var(--d, 0) * 110ms);
+}
+
+/* Programmatic focus target after "Open the note" (no outline on whole sections). */
+[data-nav-target]:focus {
+  outline: none;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes hero-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes hero-ink {
+  0% {
+    opacity: 0;
+    transform: translateY(0.1em) scale(0.9);
+    filter: blur(3px);
+    color: var(--blood-bright);
+  }
+  22% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    color: var(--blood-bright);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    color: var(--paper);
+  }
+}
+@keyframes hero-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  18% {
+    opacity: 0.86;
+  }
+  21% {
+    opacity: 0.97;
+  }
+  44% {
+    opacity: 0.8;
+  }
+  61% {
+    opacity: 0.94;
+  }
+  64% {
+    opacity: 0.84;
+  }
+  82% {
+    opacity: 1;
+  }
+}
+@keyframes hero-drop {
+  0% {
+    transform: translateY(0);
+  }
+  70%,
+  100% {
+    transform: translateY(88px);
+  }
+}
+
+/* ── Short desktop viewports: tighter rhythm, then no scroll hint at all ── */
+@media (min-width: 761px) and (max-height: 800px) {
+  .hero {
+    padding-top: calc(var(--nav-h) + 20px);
+    padding-bottom: 72px;
+  }
+  .hero__scroll {
+    bottom: 12px;
+    gap: 8px;
+  }
+  .hero__scroll-line {
+    height: 40px;
+  }
+}
+@media (max-height: 640px) {
+  .hero__scroll {
+    display: none;
+  }
+}
+
+/* ── Mobile: notebook in the top ~45%, text in the lower part ── */
+@media (max-width: 760px) {
+  .hero {
+    align-items: flex-end;
+    padding-top: 42vh;
+    padding-top: 42svh;
+    padding-bottom: clamp(28px, 5svh, 48px);
+  }
+  .hero::before {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 30%,
+      color-mix(in srgb, var(--ink) 62%, transparent) 46%,
+      color-mix(in srgb, var(--ink) 88%, transparent) 62%,
+      color-mix(in srgb, var(--ink) 92%, transparent) 90%,
+      color-mix(in srgb, var(--ink) 78%, transparent) 100%
+    );
+    /* The text sits at the bottom here, so the shade must reach the edge.
+       Rules.css continues it at the top of the next section (no hard band). */
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .hero__glow {
+    left: -30vw;
+    top: 44%;
+    width: 120vw;
+    height: 50vh;
+  }
+  .hero__content {
+    width: 100%;
+  }
+  .hero__eyebrow {
+    margin-bottom: 14px;
+    font-size: 0.72rem;
+  }
+  .hero__eyebrow::before {
+    width: 28px;
+  }
+  .hero__title {
+    margin-bottom: 26px;
+    font-size: clamp(2.6rem, 14.5vw, 4rem);
+  }
+  .hero__role {
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+  .hero__tagline {
+    font-size: var(--step-1);
+  }
+  .hero__hand {
+    margin-top: 12px;
+    font-size: 1.45rem;
+  }
+  .hero__actions {
+    gap: 10px;
+    margin-top: 22px;
+    width: 100%;
+  }
+  .hero__cta {
+    padding-inline: 1.1em;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+  }
+  .hero__cta--primary {
+    flex: 1 1 100%;
+  }
+  .hero__cta--ghost {
+    flex: 1 1 0;
+  }
+  .hero__location {
+    margin-top: 16px;
+    font-size: 0.72rem;
+  }
+  .hero__scroll {
+    display: none;
+  }
+}
+
+/* ── Reduced motion: everything visible at once, nothing loops ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero__reveal,
+  .hero__char,
+  .hero__scroll,
+  .hero__glow {
+    opacity: 1;
+    animation: none;
+  }
+  .hero__flourish path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .hero__scroll-drop {
+    top: 18px;
+    animation: none;
+  }
+}

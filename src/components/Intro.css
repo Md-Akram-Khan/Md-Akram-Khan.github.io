@@ -1,0 +1,289 @@
+/* ───────────── Intro: the name is written, then the dark lifts ─────────────
+   Timeline (ms from mount; the overlay is gone by 2250 without any JS):
+     0–900     ruled page draws in
+     200–1150  pen + outline wipe        440–1390  ink fill follows
+     1150–1670 caption                   1750–2250 overlay lifts (visibility hidden at the end)
+   Keep LEAVE_AT_MS / UNMOUNT_AT_MS in Intro.tsx and the entrance offsets in
+   Hero.css (--hero-offset) and Nav.css (nav-in-late delay) in step with this. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: var(--ink);
+  color: var(--paper);
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  cursor: default;
+  animation: intro-out 500ms cubic-bezier(0.65, 0, 0.35, 1) 1750ms forwards;
+}
+.intro--leaving {
+  pointer-events: none;
+}
+.intro--skip {
+  animation: intro-out-fast 280ms ease-out forwards;
+}
+
+/* Candle-light pool behind the page. */
+.intro::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(ellipse 46% 34% at 50% 50%, color-mix(in srgb, var(--blood-deep) 38%, transparent), transparent 72%),
+    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, color-mix(in srgb, #000 70%, transparent) 100%);
+  opacity: 0;
+  animation: intro-fade-in 1200ms ease-out 80ms forwards;
+}
+
+.intro__stage {
+  position: relative;
+  width: min(100%, 860px);
+  display: grid;
+  justify-items: center;
+  gap: clamp(4px, 1.2vw, 14px);
+  animation: intro-stage-out 420ms cubic-bezier(0.55, 0, 1, 0.45) 1750ms forwards;
+}
+.intro--skip .intro__stage {
+  animation: intro-stage-out-fast 220ms ease-in forwards;
+}
+
+.intro__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* ── Ruled page ── */
+.intro__rule,
+.intro__margin {
+  fill: none;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: intro-draw 900ms var(--ease) forwards;
+}
+.intro__rule {
+  stroke-opacity: 0.2;
+  stroke-width: 1;
+}
+.intro__rule--faint {
+  stroke-opacity: 0.08;
+  animation-delay: 120ms;
+}
+.intro__rule-stop {
+  stop-color: var(--paper);
+  stop-opacity: 1;
+}
+.intro__rule-stop--clear {
+  stop-opacity: 0;
+}
+.intro__margin {
+  stroke: var(--blood);
+  stroke-opacity: 0.45;
+  stroke-width: 1.2;
+  animation-duration: 700ms;
+  animation-delay: 200ms;
+}
+
+/* ── The name: outline first, then the ink fills in behind it ── */
+.intro__name {
+  font-family: var(--font-hand);
+  font-size: 120px;
+  font-weight: 500;
+}
+.intro__name--stroke {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  animation: intro-draw 900ms ease-out 200ms forwards;
+}
+.intro__name--fill {
+  fill: var(--paper);
+}
+
+/* The ink wipe that reveals the name from left to right. */
+.intro__wipe--stroke {
+  animation: intro-wipe 950ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 200ms both;
+}
+.intro__wipe--fill {
+  animation: intro-wipe 950ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 440ms both;
+}
+
+/* ── The pen ── */
+.intro__pen {
+  opacity: 0;
+  animation:
+    intro-wipe 950ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 200ms both,
+    intro-pen-fade 950ms linear 200ms both;
+}
+.intro__pen-hand {
+  animation: intro-wobble 210ms ease-in-out 200ms 5 alternate;
+}
+.intro__nib {
+  fill: var(--paper);
+}
+.intro__quill {
+  stroke: var(--paper);
+  stroke-opacity: 0.55;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.intro__glow-stop {
+  stop-color: var(--blood-bright);
+  stop-opacity: 0.85;
+}
+.intro__glow-stop--edge {
+  stop-opacity: 0;
+}
+
+/* ── Caption + hint ── */
+.intro__caption {
+  margin: 0;
+  font-size: var(--step-1);
+  color: var(--paper-dim);
+  letter-spacing: 0.06em;
+  opacity: 0;
+  animation: intro-caption 520ms var(--ease) 1150ms both;
+}
+.intro__caption::first-letter {
+  color: var(--blood-text);
+}
+
+.intro__hint {
+  position: absolute;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ash);
+  opacity: 0;
+  animation: intro-fade-in 500ms ease-out 450ms forwards;
+}
+.intro__hint-touch {
+  display: none;
+}
+@media (hover: none) {
+  .intro__hint-mouse {
+    display: none;
+  }
+  .intro__hint-touch {
+    display: inline;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes intro-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-wipe {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(var(--intro-travel));
+  }
+}
+@keyframes intro-pen-fade {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes intro-wobble {
+  0% {
+    transform: translate(0, 0);
+  }
+  35% {
+    transform: translate(2px, -14px);
+  }
+  70% {
+    transform: translate(-1px, 9px);
+  }
+  100% {
+    transform: translate(1px, -4px);
+  }
+}
+@keyframes intro-caption {
+  from {
+    opacity: 0;
+    letter-spacing: 0.22em;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.06em;
+    filter: none;
+  }
+}
+/* visibility flips to hidden only at the very end, so the finished overlay
+   never intercepts clicks even if JS is late to unmount it. */
+@keyframes intro-out {
+  0%,
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes intro-out-fast {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@keyframes intro-stage-out {
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.03);
+    filter: blur(6px);
+  }
+}
+@keyframes intro-stage-out-fast {
+  to {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+@media (max-width: 760px) {
+  /* Let the page bleed past the screen edges so the name can be larger. */
+  .intro__stage {
+    width: 118%;
+    max-width: none;
+  }
+  .intro__caption {
+    font-size: var(--step-0);
+  }
+}
+
+/* The component never renders under reduced motion; this is a safety net. */
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}

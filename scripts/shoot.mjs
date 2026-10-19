@@ -1,10 +1,13 @@
 // Visual QA: serves the production build and captures screenshots at several
 // scroll positions on desktop and mobile, using the locally installed Microsoft Edge.
 //
-//   npm run build && node scripts/shoot.mjs [outDir] [--only=desktop|mobile] [--motion=reduce] [--dist=path]
+//   npm run build && node scripts/shoot.mjs [outDir] [--only=desktop|mobile] [--motion=reduce] [--dist=path] [--wait=ms] [--warm=ms]
 //
 // --dist serves a build from another folder (e.g. `npx vite build --outDir <dir>`),
 // so several people/agents can build and shoot at the same time without clobbering dist/.
+// --wait sets the pause after each scroll (default 1600ms) and --warm the pause after load
+// (default 4500ms). Headless Edge renders WebGL in software at a few frames per second, so
+// use e.g. --wait=9000 to judge the settled 3D poses rather than mid-motion frames.
 //
 // Prints console errors / page errors from the browser so WebGL or runtime
 // problems are visible. Screenshots are named <viewport>-<section>.png.
@@ -18,6 +21,12 @@ const outDir = resolve(args.find((a) => !a.startsWith('--')) ?? 'shots')
 const only = args.find((a) => a.startsWith('--only='))?.split('=')[1]
 const motion = args.find((a) => a.startsWith('--motion='))?.split('=')[1] ?? 'no-preference'
 const dist = args.find((a) => a.startsWith('--dist='))?.split('=')[1]
+const num = (name, fallback) => {
+  const v = Number(args.find((a) => a.startsWith(`--${name}=`))?.split('=')[1])
+  return Number.isFinite(v) && v >= 0 ? v : fallback
+}
+const waitMs = num('wait', 1600)
+const warmMs = num('warm', 4500)
 mkdirSync(outDir, { recursive: true })
 
 const viewports = [
@@ -55,7 +64,7 @@ try {
     })
     page.on('pageerror', (e) => errors.push(`[${vp.name}] pageerror: ${e.message}`))
     await page.goto(url, { waitUntil: 'networkidle' })
-    await page.waitForTimeout(4500) // intro + 3D warm-up
+    await page.waitForTimeout(warmMs) // intro + 3D warm-up
     const webgl = await page.evaluate(() => !!document.querySelector('canvas'))
     console.log(`[${vp.name}] canvas present: ${webgl}`)
 
@@ -64,7 +73,7 @@ try {
         const el = document.getElementById(sid)
         if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'instant' })
       }, id)
-      await page.waitForTimeout(1600) // let damped 3D motion settle
+      await page.waitForTimeout(waitMs) // let damped 3D motion settle
       const file = resolve(outDir, `${vp.name}-${id}.png`)
       await page.screenshot({ path: file })
       console.log(`saved ${file}`)

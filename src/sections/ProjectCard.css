@@ -1,0 +1,584 @@
+/* ───────────────────────── Project card: a page torn from the note ─────────────────────────
+   Paper-coloured page with ink text (AA+ everywhere), faint ruled lines, a red margin rule,
+   ragged top/bottom edges (CSS mask) and a strip of tape. The <li> carries the tilt and the
+   drop shadow (a filter follows the masked edge); the <article> carries the paper. */
+
+.project-card {
+  --tilt: 0deg;
+  --tear-x: 0px;
+  --stagger: 0;
+  --tear-h: 12px;
+  --rule-gap: 1.95rem;
+  --margin-x: clamp(26px, 3.2vw, 44px);
+  --pad-x: clamp(20px, 3vw, 44px);
+  --pad-y: clamp(26px, 3.4vw, 44px);
+  --card-ink: var(--ink);
+  --card-ink-2: color-mix(in srgb, var(--ink) 82%, var(--paper));
+  --card-ink-3: color-mix(in srgb, var(--ink) 66%, var(--paper));
+  --shadow: color-mix(in srgb, var(--ink) 70%, transparent);
+
+  position: relative;
+  min-width: 0;
+  rotate: var(--tilt);
+  filter: drop-shadow(0 22px 26px var(--shadow)) drop-shadow(0 2px 2px var(--shadow));
+  transition:
+    rotate 700ms var(--ease),
+    translate 700ms var(--ease);
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  rotate: 0deg;
+  translate: 0 -6px;
+  z-index: 2;
+}
+
+/* ── Tape ── */
+.project-card__tape {
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  left: 16%;
+  width: clamp(72px, 9vw, 104px);
+  height: 26px;
+  rotate: -5deg;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--paper) 30%, transparent),
+      color-mix(in srgb, var(--paper-dim) 46%, transparent) 40%,
+      color-mix(in srgb, var(--paper) 26%, transparent)
+    );
+  /* Serrated tape ends. */
+  -webkit-mask:
+    conic-gradient(from -45deg at left, transparent 90deg, var(--ink) 0) left / 4px 6px repeat-y,
+    conic-gradient(from 135deg at right, transparent 90deg, var(--ink) 0) right / 4px 6px repeat-y,
+    linear-gradient(var(--ink), var(--ink)) center / calc(100% - 7px) 100% no-repeat;
+  mask:
+    conic-gradient(from -45deg at left, transparent 90deg, var(--ink) 0) left / 4px 6px repeat-y,
+    conic-gradient(from 135deg at right, transparent 90deg, var(--ink) 0) right / 4px 6px repeat-y,
+    linear-gradient(var(--ink), var(--ink)) center / calc(100% - 7px) 100% no-repeat;
+}
+.project-card:nth-child(even) .project-card__tape {
+  left: auto;
+  right: 14%;
+  rotate: 4deg;
+}
+
+/* ── The page ── */
+.project-card__page {
+  --tear-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 12' preserveAspectRatio='none'%3E%3Cpath d='M0 6L2 10.3L5.7 3L12.1 6.3L16.1 8.6L22.6 6.4L28.7 7.4L35.6 3.4L39.9 8.1L46.1 1.4L52.2 5.7L59.7 9.1L62.4 6.1L70 7.9L75.8 6.8L83.3 10.2L87.5 4.3L94.6 4.3L97.5 3.9L102.1 3.9L109.7 6.6L116 9.9L118.4 3.7L123.8 6.1L128.3 2.9L135.7 1.5L139.9 4.4L145.9 10.3L151 2.6L155.5 3.8L159.6 5.2L163.6 6.3L169.3 3.3L176.8 5.6L183.9 7.4L189.7 6.2L194.8 7.9L202.4 4.9L208.7 3.5L214.2 4.5L220 6L220 12L0 12Z'/%3E%3C/svg%3E");
+  --tear-bottom: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 12' preserveAspectRatio='none'%3E%3Cpath d='M0 0L260 0L260 6L251.9 7.8L246.5 10.9L244.4 6.5L236.4 5.3L231 2.8L227.2 10.6L224 7.3L217.4 1L210 7.5L206.6 1.3L199.3 9.9L193.7 11L188.7 10.7L184.7 2.7L180 5.2L173 2.4L166.7 6.6L160.2 8.9L153.3 7.7L149.3 2.6L143.3 6.8L140.7 3L133 7.8L127.7 6L124.4 10.5L119.6 9L115.2 8.8L112 8.5L104.7 9.4L101.3 3.6L95.9 7.2L91.4 10.2L84.4 2.1L80 6L76.8 9.6L74.8 1.9L68.9 10.4L64.3 9.8L56.4 1.9L50 9.9L43.9 5.5L37.1 8.6L29.1 2.4L22.2 9.3L16.5 9.5L8.9 10.7L2 8.1L0 6Z'/%3E%3C/svg%3E");
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--tear-h) + var(--pad-y)) var(--pad-x) calc(var(--tear-h) + var(--pad-y))
+    calc(var(--margin-x) + clamp(16px, 2.2vw, 30px));
+  color: var(--card-ink);
+  background-color: var(--paper);
+  background-image:
+    /* age: warm stains in two corners */
+    radial-gradient(120% 70% at 100% 0%, color-mix(in srgb, var(--gold) 20%, transparent), transparent 62%),
+    radial-gradient(90% 60% at 0% 100%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 66%),
+    /* faint ruled lines */
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--rule-gap) - 1px),
+      color-mix(in srgb, var(--ink) 8%, transparent) calc(var(--rule-gap) - 1px) var(--rule-gap)
+    );
+  background-position: 0 0, 0 0, 0 calc(var(--tear-h) + 0.9rem);
+  box-shadow: inset 0 0 70px color-mix(in srgb, var(--gold) 26%, transparent);
+
+  /* Ragged, torn top and bottom edges. Layers overlap by 1px to avoid hairline gaps. */
+  -webkit-mask:
+    var(--tear-top) var(--tear-x) 0 / 220px var(--tear-h) repeat-x,
+    linear-gradient(var(--ink), var(--ink)) 0 calc(var(--tear-h) - 1px) / 100% calc(100% - 2 * var(--tear-h) + 2px)
+      no-repeat,
+    var(--tear-bottom) calc(var(--tear-x) * -1) 100% / 260px var(--tear-h) repeat-x;
+  mask:
+    var(--tear-top) var(--tear-x) 0 / 220px var(--tear-h) repeat-x,
+    linear-gradient(var(--ink), var(--ink)) 0 calc(var(--tear-h) - 1px) / 100% calc(100% - 2 * var(--tear-h) + 2px)
+      no-repeat,
+    var(--tear-bottom) calc(var(--tear-x) * -1) 100% / 260px var(--tear-h) repeat-x;
+}
+
+/* Red margin rule, like a ruled notebook page. Deepens when the eyes are on it. */
+.project-card__page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--margin-x);
+  width: 1px;
+  background: var(--blood);
+  opacity: 0.4;
+  transition: opacity 400ms ease;
+}
+/* A faint red bloom from the margin when hovered: the page is being "seen". */
+.project-card__page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 55% at 0% 0%, color-mix(in srgb, var(--blood) 9%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+.project-card:is(:hover, :focus-within) .project-card__page::before {
+  opacity: 0.85;
+}
+.project-card:is(:hover, :focus-within) .project-card__page::after {
+  opacity: 1;
+}
+
+/* ── Head: meta → eyes → name → subtitle → description (visual order) ── */
+.project-card__head {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.project-card__meta {
+  order: -2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: clamp(14px, 2vw, 22px);
+}
+
+.project-card__no {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--card-ink-3);
+}
+.project-card__of {
+  opacity: 0.7;
+}
+
+/* Rubber stamp. */
+.project-card__stamp {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blood);
+  padding: 7px 10px 6px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 3px color-mix(in srgb, currentColor 55%, transparent);
+  rotate: -3deg;
+  /* Uneven ink: a little noise knocked out of the stamp. */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -4 3.1'/%3E%3C/filter%3E%3Crect width='120' height='40' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -4 3.1'/%3E%3C/filter%3E%3Crect width='120' height='40' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.project-card__stamp--team {
+  color: var(--card-ink);
+  rotate: 2.5deg;
+}
+
+/* ── Shinigami Eyes: the numbers above the name ── */
+.project-card__eyes {
+  order: -1;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65em;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blood);
+}
+.project-card__eye {
+  flex-shrink: 0;
+  width: 1.65em;
+  height: auto;
+  margin-top: 0.36em;
+  overflow: visible;
+}
+.project-card__eye path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+.project-card__eye ellipse {
+  fill: currentColor;
+}
+.project-card__eyes-text {
+  min-width: 0;
+}
+/* Scanlines that roll through the line while it materialises. */
+.project-card__eyes::after {
+  content: '';
+  position: absolute;
+  inset: -3px -6px;
+  pointer-events: none;
+  opacity: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 2px,
+    color-mix(in srgb, var(--paper) 70%, transparent) 2px 3px
+  );
+}
+
+/* Hover-capable devices: hidden until hover / keyboard focus. Touch: always shown (static). */
+@media (hover: hover) {
+  .project-card__eyes {
+    opacity: 0;
+    translate: 0 4px;
+    transition:
+      opacity 180ms ease,
+      translate 300ms var(--ease);
+  }
+  .project-card:is(:hover, :focus-within) .project-card__eyes {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .project-card:is(:hover, :focus-within) .project-card__eyes {
+    animation: project-card-glitch 640ms steps(1, end) both;
+  }
+  .project-card:is(:hover, :focus-within) .project-card__eyes::after {
+    animation: project-card-scan 760ms linear both;
+  }
+}
+
+@keyframes project-card-glitch {
+  0% {
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+    clip-path: inset(0 0 52% 0);
+    translate: -3px 0;
+    text-shadow: 2px 0 var(--blood-bright), -2px 0 color-mix(in srgb, var(--ink) 35%, transparent);
+  }
+  14% {
+    opacity: 0.3;
+    clip-path: inset(46% 0 0 0);
+    translate: 3px 0;
+  }
+  22% {
+    opacity: 1;
+    clip-path: inset(0);
+    translate: 0 0;
+    text-shadow: -1px 0 var(--blood-bright);
+  }
+  32% {
+    opacity: 0.55;
+    translate: 1px 0;
+  }
+  40% {
+    opacity: 1;
+    clip-path: inset(18% 0 34% 0);
+    translate: -2px 0;
+    text-shadow: 1px 0 var(--blood-bright);
+  }
+  50%,
+  100% {
+    opacity: 1;
+    clip-path: inset(0);
+    translate: 0 0;
+    text-shadow: none;
+  }
+}
+@keyframes project-card-scan {
+  0% {
+    opacity: 0.9;
+    background-position: 0 0;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    background-position: 0 24px;
+  }
+}
+
+/* ── The name, handwritten ── */
+.project-card__title {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: clamp(2.3rem, 1.75rem + 1.5vw, 3.1rem);
+  line-height: 1.14;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+  color: var(--card-ink);
+  overflow-wrap: anywhere;
+}
+/* Red pen flourish under the name. A background on an inline box with `clone`
+   gives every wrapped line its own stroke, sized to that line.
+   (Stroke colour is --blood; a data-URI image cannot read CSS variables.) */
+.project-card__name {
+  --flourish-h: 0.3em;
+  padding: 0 0.06em 0.16em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23c1121f' stroke-linecap='round' vector-effect='non-scaling-stroke'%3E%3Cpath d='M3 11 C 52 4, 104 14, 158 8 S 250 3, 297 8' stroke-width='2.2' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M214 14 C 240 11.5, 266 12.5, 294 10.5' stroke-width='1.3' vector-effect='non-scaling-stroke'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% var(--flourish-h);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.project-card__subtitle {
+  margin-top: 10px;
+  font-family: var(--font-rules);
+  font-style: italic;
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: var(--card-ink-2);
+  text-wrap: balance;
+}
+
+.project-card__desc {
+  margin-top: clamp(14px, 1.8vw, 20px);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--step-0);
+  line-height: 1.58;
+  color: var(--card-ink-2);
+  text-wrap: pretty;
+}
+
+/* ── Body: highlights, stack, links ── */
+.project-card__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-top: clamp(20px, 2.6vw, 28px);
+}
+
+.project-card__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--card-ink-3);
+}
+.project-card__label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.project-card__list {
+  list-style: none;
+  margin: 0 0 clamp(20px, 2.4vw, 26px);
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.project-card__list li {
+  position: relative;
+  padding-left: 1.5em;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(1.04rem, 0.98rem + 0.25vw, 1.16rem);
+  line-height: 1.5;
+  color: var(--card-ink-2);
+}
+/* A quick pen stroke as the bullet. */
+.project-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0.1em;
+  top: 0.78em;
+  width: 0.85em;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--blood);
+  rotate: -10deg;
+}
+
+.project-card__stack {
+  list-style: none;
+  margin: 0 0 clamp(22px, 2.6vw, 30px);
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.project-card__stack li {
+  padding: 5px 9px 4px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  color: var(--card-ink-2);
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+}
+
+.project-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: auto;
+}
+.project-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-height: 44px;
+  padding: 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--card-ink);
+  border: 1.5px solid var(--card-ink);
+  border-radius: 2px;
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease,
+    color 250ms ease;
+}
+.project-card__link:hover {
+  color: var(--paper);
+  background-color: var(--card-ink);
+}
+.project-card__link:focus-visible {
+  outline: 2px solid var(--blood);
+  outline-offset: 3px;
+}
+.project-card__link--live {
+  color: var(--paper);
+  background-color: var(--card-ink);
+}
+.project-card__link--live:hover {
+  color: var(--paper);
+  background-color: var(--blood);
+  border-color: var(--blood);
+}
+.project-card__link-icon {
+  letter-spacing: 0;
+  color: var(--blood);
+  transition: color 250ms ease;
+}
+.project-card__link:hover .project-card__link-icon {
+  color: inherit;
+}
+.project-card__arrow {
+  display: inline-block;
+  letter-spacing: 0;
+  transition: translate 300ms var(--ease);
+}
+.project-card__link:hover .project-card__arrow {
+  translate: 2px -2px;
+}
+.project-card__live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blood-bright);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--blood-bright) 60%, transparent);
+}
+.project-card__link--live:hover .project-card__live-dot {
+  background: var(--paper);
+}
+
+/* ── Feature pages (solo flagships): two columns on wide screens ── */
+.project-card--featured .project-card__title {
+  font-size: clamp(2.5rem, 1.6rem + 2.6vw, 4.25rem);
+}
+@media (min-width: 1024px) {
+  .project-card--featured .project-card__page {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    column-gap: clamp(36px, 4.4vw, 72px);
+  }
+  .project-card--featured .project-card__body {
+    margin-top: 0;
+    /* line the body up with the name, below the meta + eyes lines */
+    padding-top: clamp(14px, 2vw, 22px);
+  }
+}
+
+/* ── Small screens ── */
+@media (max-width: 760px) {
+  .project-card {
+    --tear-h: 10px;
+    --margin-x: 18px;
+    --pad-x: 18px;
+    --pad-y: 24px;
+    rotate: calc(var(--tilt) * 0.6);
+  }
+  .project-card__page {
+    padding-left: calc(var(--margin-x) + 14px);
+  }
+  .project-card__meta {
+    flex-wrap: wrap;
+  }
+  .project-card__eyes {
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Motion ── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Reveal: the page is laid down. Hidden state only exists when motion is allowed. */
+  .project-card[data-reveal]:not(.is-in) {
+    opacity: 0;
+  }
+  .project-card.is-in {
+    animation: project-card-in 1000ms var(--ease) calc(var(--stagger) * 140ms) backwards;
+  }
+
+  /* The red flourish is pulled across under the name once the page is in view. */
+  .project-card__name {
+    background-size: 0% var(--flourish-h);
+    transition: background-size 1000ms var(--ease) calc(550ms + var(--stagger) * 140ms);
+  }
+  .project-card.is-in .project-card__name {
+    background-size: 100% var(--flourish-h);
+  }
+
+  /* Pulses only while its page is under the eyes, so idle cards never repaint. */
+  .project-card:is(:hover, :focus-within) .project-card__live-dot {
+    animation: project-card-pulse 2.2s ease-out infinite;
+  }
+}
+
+@keyframes project-card-in {
+  from {
+    opacity: 0;
+    translate: 0 64px;
+    rotate: calc(var(--tilt) * 5);
+  }
+}
+@keyframes project-card-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--blood-bright) 60%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--blood-bright) 0%, transparent);
+  }
+}
+
+/* Windows high contrast: let the system colours through and keep a visible page border. */
+@media (forced-colors: active) {
+  .project-card__page {
+    border: 1px solid CanvasText;
+    -webkit-mask: none;
+    mask: none;
+  }
+}

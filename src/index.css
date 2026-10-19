@@ -221,6 +221,15 @@ p {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
+/* Phones and touch devices: a live blur over the always-animating canvas costs a
+   full-panel blur every frame. A slightly denser panel reads just as well. */
+@media (max-width: 760px), (hover: none) {
+  .panel {
+    background: rgba(8, 7, 7, 0.88);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
 
 .visually-hidden {
   position: absolute !important;

@@ -1,0 +1,671 @@
+/* ───────────────────────── Contact · "Write a Name" ───────────────────────── */
+
+.contact {
+  /* Ruled-page grid: every row inside the sheet is one --rule tall. */
+  --rule: 2.75rem;
+  /* The ruled line sits this far above the bottom of each row, just under the handwriting baseline. */
+  --rule-lift: 7px;
+  --margin: 3.25rem;
+  --sheet-pad: 20px;
+  --name-size: 2.05rem;
+  --margin-line: rgba(193, 18, 31, 0.45);
+  --rule-ink: rgba(232, 226, 208, 0.065);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
+}
+
+.contact__col {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4.5vh, 44px);
+  min-width: 0;
+}
+
+/* ───────────── Header ───────────── */
+
+.contact__header {
+  text-shadow: 0 2px 24px rgba(5, 5, 5, 0.9);
+}
+
+.contact__eyebrow {
+  margin-bottom: 14px;
+}
+
+.contact__title {
+  font-size: min(var(--step-4), 5.75rem);
+  line-height: 0.95;
+  color: var(--paper);
+  text-shadow:
+    0 2px 24px rgba(5, 5, 5, 0.9),
+    0 0 48px rgba(193, 18, 31, 0.28);
+}
+
+.contact__lede {
+  margin-top: 20px;
+  max-width: 44ch;
+  color: var(--paper-dim);
+  font-size: var(--step-0);
+  line-height: 1.55;
+}
+
+/* ───────────── The notebook page ───────────── */
+
+.contact__page {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 40px 90px -40px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(232, 226, 208, 0.05);
+}
+
+/* A faint warm vignette, like candlelight on paper. */
+.contact__page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 85% 0%, rgba(184, 155, 94, 0.07), transparent 60%);
+}
+
+.contact__page-head {
+  position: relative;
+  padding: 18px var(--sheet-pad) 16px calc(var(--margin) + var(--sheet-pad));
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.contact__page-title {
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+
+.contact__page-rules {
+  counter-reset: page-rule;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: var(--step--1);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--paper-dim);
+}
+.contact__page-rules li {
+  counter-increment: page-rule;
+}
+.contact__page-rules li::before {
+  content: counter(page-rule, lower-roman) '. ';
+  font-style: normal;
+  color: var(--gold);
+}
+
+.contact__sheet {
+  position: relative;
+  padding: 0 var(--sheet-pad) calc(var(--rule) * 0.5) calc(var(--margin) + var(--sheet-pad));
+  background-image:
+    linear-gradient(
+      to right,
+      transparent calc(var(--margin) - 1px),
+      var(--margin-line) calc(var(--margin) - 1px),
+      var(--margin-line) var(--margin),
+      transparent var(--margin)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--rule) - var(--rule-lift) - 1px),
+      var(--rule-ink) calc(var(--rule) - var(--rule-lift) - 1px) calc(var(--rule) - var(--rule-lift)),
+      transparent calc(var(--rule) - var(--rule-lift)) var(--rule)
+    );
+}
+
+/* Line numbers in the margin column. */
+.contact__line-no {
+  position: absolute;
+  top: 0;
+  left: calc(-1 * (var(--margin) + var(--sheet-pad)));
+  width: var(--margin);
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: var(--rule);
+  letter-spacing: 0.08em;
+  color: var(--blood-text);
+}
+.contact__line-no--next {
+  color: var(--ash);
+}
+
+/* ───────────── Written names ───────────── */
+
+.contact__entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contact__entry {
+  position: relative;
+  /* The strut decides the row height, so every wrapped line stays on the grid. */
+  font-family: var(--font-hand);
+  font-size: var(--name-size);
+  line-height: var(--rule);
+  overflow-wrap: anywhere;
+}
+
+.contact__entry-name {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.35em;
+  color: var(--paper);
+}
+
+.contact__ink {
+  display: inline-block;
+  clip-path: inset(-0.5em -0.4em -0.6em -0.4em);
+  text-shadow:
+    0 0 0.5px rgba(232, 226, 208, 0.7),
+    0 0 14px rgba(193, 18, 31, 0.22);
+  animation:
+    contact-write var(--write-dur, 1.2s) cubic-bezier(0.5, 0.1, 0.4, 0.95) both,
+    contact-ink-glow 1.8s ease-out var(--write-dur, 1.2s) both;
+}
+
+@keyframes contact-write {
+  0% {
+    clip-path: inset(-0.5em 100% -0.6em -0.4em);
+  }
+  38% {
+    clip-path: inset(-0.5em 58% -0.6em -0.4em);
+  }
+  52% {
+    clip-path: inset(-0.5em 47% -0.6em -0.4em);
+  }
+  100% {
+    clip-path: inset(-0.5em -0.4em -0.6em -0.4em);
+  }
+}
+
+@keyframes contact-ink-glow {
+  0% {
+    text-shadow:
+      0 0 0.5px rgba(232, 226, 208, 0.9),
+      0 0 22px rgba(255, 42, 58, 0.75);
+  }
+  100% {
+    text-shadow:
+      0 0 0.5px rgba(232, 226, 208, 0.7),
+      0 0 14px rgba(193, 18, 31, 0.22);
+  }
+}
+
+/* The quill that "writes" the name. Its box spans the name; translateX(100%) moves it to the end. */
+.contact__nib {
+  position: absolute;
+  top: calc(var(--rule) * 0.5 - 0.95em);
+  left: 0;
+  width: 100%;
+  height: 1em;
+  pointer-events: none;
+  color: var(--blood-bright);
+  filter: drop-shadow(0 0 6px rgba(255, 42, 58, 0.7));
+  animation: contact-nib var(--write-dur, 1.2s) cubic-bezier(0.5, 0.1, 0.4, 0.95) both;
+}
+.contact__nib .contact__quill {
+  width: 1em;
+  height: 1em;
+  transform: translate(-12%, 22%);
+}
+
+@keyframes contact-nib {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  38% {
+    transform: translateX(42%);
+  }
+  52% {
+    transform: translateX(53%);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.contact__entry-cause {
+  font-size: var(--step--1);
+  font-style: italic;
+  line-height: 1;
+  color: var(--paper-dim);
+  animation: contact-fade 700ms var(--ease) var(--write-dur, 1.2s) both;
+}
+
+@keyframes contact-fade {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+/* ───────────── The form ───────────── */
+
+.contact__form {
+  margin: 0;
+}
+
+.contact__label {
+  display: block;
+  height: var(--rule);
+  padding-top: calc(var(--rule) - var(--rule-lift) - 1.45rem);
+  font-size: 0.78rem;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.contact__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contact__line {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+}
+
+/* The line you write on: brighter than the other rules, red while focused. */
+.contact__line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--rule) - var(--rule-lift) - 1px);
+  height: 1px;
+  background: rgba(232, 226, 208, 0.38);
+  pointer-events: none;
+  transition:
+    background-color 250ms var(--ease),
+    height 250ms var(--ease);
+}
+.contact__line:focus-within::after {
+  height: 2px;
+  background: var(--blood-bright);
+  box-shadow: 0 0 12px rgba(255, 42, 58, 0.55);
+}
+
+.contact__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: var(--rule);
+  margin: 0;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  font-size: var(--name-size);
+  line-height: normal;
+  caret-color: var(--blood-bright);
+  appearance: none;
+}
+.contact__input::placeholder {
+  color: var(--ash);
+  opacity: 1;
+}
+/* Focus is shown by the red writing line under the field (see .contact__field::after). */
+.contact__input:focus-visible {
+  outline: none;
+}
+.contact__line:has([aria-invalid='true'])::after {
+  background-color: var(--blood-text);
+}
+
+.contact__write {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: calc(var(--rule) - 8px);
+  padding: 0 18px 0 14px;
+  border: 1px solid var(--blood);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(193, 18, 31, 0.35), rgba(92, 10, 16, 0.6));
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 250ms var(--ease),
+    box-shadow 250ms var(--ease),
+    transform 150ms var(--ease);
+}
+.contact__write .contact__quill {
+  width: 18px;
+  height: 18px;
+  color: var(--blood-text);
+  transition: transform 300ms var(--ease);
+}
+.contact__write:hover {
+  background-color: var(--blood);
+  box-shadow: 0 0 28px rgba(255, 42, 58, 0.35);
+}
+.contact__write:hover .contact__quill {
+  color: var(--paper);
+  transform: rotate(-12deg) translateY(-1px);
+}
+.contact__write:active {
+  transform: translateY(1px);
+}
+
+/* ───────────── Result: status + countdown ───────────── */
+
+.contact__result {
+  min-height: var(--rule);
+}
+
+/* Stays rendered while empty so screen readers keep listening to it. */
+.contact__status {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-style: italic;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+  line-height: var(--rule);
+  color: var(--paper);
+}
+.contact__status--error,
+.contact__status--owner {
+  color: var(--blood-text);
+}
+
+.contact__timer {
+  font-size: 0.8rem;
+  line-height: var(--rule);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.contact__timer--done {
+  color: var(--blood-text);
+}
+
+.contact__clock {
+  color: var(--blood-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────────── Links ───────────── */
+
+.contact__reach-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  text-shadow: 0 1px 12px rgba(5, 5, 5, 0.95);
+}
+.contact__reach-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--panel-border), transparent);
+}
+
+.contact__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 14px;
+}
+
+.contact__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 84px;
+  padding: 16px 20px 16px 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: var(--paper);
+  text-decoration: none;
+  transition:
+    border-color 300ms var(--ease),
+    background-color 300ms var(--ease),
+    box-shadow 300ms var(--ease),
+    transform 300ms var(--ease);
+}
+.contact__link:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+  background-color: rgba(92, 10, 16, 0.55);
+  transform: translateY(-2px);
+}
+
+.contact__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--paper);
+  transition:
+    color 300ms var(--ease),
+    border-color 300ms var(--ease);
+}
+.contact__icon svg {
+  width: 22px;
+  height: 22px;
+}
+.contact__link:hover .contact__icon {
+  color: var(--blood-bright);
+  border-color: var(--blood);
+}
+
+.contact__link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.contact__link-label {
+  font-family: var(--font-rules);
+  font-size: var(--step-1);
+  line-height: 1.1;
+}
+
+.contact__link-caption {
+  font-size: var(--step--1);
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--paper-dim);
+  overflow-wrap: anywhere;
+}
+
+.contact__arrow {
+  width: 22px;
+  height: 22px;
+  color: var(--blood-text);
+  transition: transform 300ms var(--ease);
+}
+.contact__link:hover .contact__arrow {
+  transform: translate(3px, -3px);
+}
+
+/* After a name is written the links are "summoned". */
+.contact__reach--summoned .contact__reach-title {
+  color: var(--paper);
+}
+.contact__reach--summoned .contact__reach-title::after {
+  background: linear-gradient(to right, var(--blood), transparent);
+}
+.contact__reach--summoned .contact__link {
+  border-color: rgba(193, 18, 31, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(193, 18, 31, 0.3),
+    0 18px 50px -22px rgba(255, 42, 58, 0.6);
+}
+.contact__reach--summoned .contact__link::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: contact-summon 1.6s var(--ease) 0.9s 2 both;
+}
+.contact__reach--summoned .contact__item:nth-child(2) .contact__link::after {
+  animation-delay: 1.05s;
+}
+.contact__reach--summoned .contact__item:nth-child(3) .contact__link::after {
+  animation-delay: 1.2s;
+}
+
+@keyframes contact-summon {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 42, 58, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(255, 42, 58, 0);
+  }
+}
+
+.contact__location {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  color: var(--paper);
+  font-size: var(--step--1);
+  text-shadow: 0 1px 12px rgba(5, 5, 5, 0.95);
+}
+.contact__pin {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--blood-text);
+}
+.contact__location-label {
+  margin-right: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+/* ───────────── Mobile: full width, everything on panels ───────────── */
+
+@media (max-width: 760px) {
+  .contact {
+    --margin: 2.5rem;
+    --sheet-pad: 14px;
+    --name-size: 1.85rem;
+  }
+
+  .contact__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact__header {
+    padding: 24px 20px;
+    background: rgba(8, 7, 7, 0.88);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+  }
+
+  .contact__title {
+    font-size: var(--step-3);
+  }
+
+  /* No live blur over the animating canvas on phones; a denser panel instead. */
+  .contact__link {
+    min-height: 76px;
+    background-color: rgba(8, 7, 7, 0.88);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Over the dimmed notebook, the small labels get their own readable backing. */
+  .contact__reach-title {
+    padding: 10px 14px;
+    background: var(--panel);
+    border-radius: var(--radius);
+  }
+  .contact__location {
+    padding: 12px 14px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+  }
+}
+
+/* Very narrow phones: the button drops to its own ruled line. */
+@media (max-width: 440px) {
+  .contact__field {
+    flex-wrap: wrap;
+    gap: 0 12px;
+  }
+  .contact__line {
+    flex-basis: 100%;
+  }
+  .contact__write {
+    margin-block: 4px;
+  }
+}
+
+/* ───────────── Reduced motion: the name simply appears ───────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .contact__ink,
+  .contact__entry-cause,
+  .contact__reach--summoned .contact__link::after {
+    animation: none;
+  }
+  .contact__nib {
+    display: none;
+  }
+  .contact__link:hover,
+  .contact__write:active {
+    transform: none;
+  }
+  .contact__link:hover .contact__arrow,
+  .contact__write:hover .contact__quill {
+    transform: none;
+  }
+}

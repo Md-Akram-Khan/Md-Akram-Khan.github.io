@@ -1,0 +1,391 @@
+/* RULE I · How to Use It — the inside cover of the note.
+   Desktop: the panel lives in the left ~55% (the open notebook is on the right).
+   Mobile (≤760px): full width. */
+
+.rules {
+  display: flex;
+  align-items: center;
+}
+
+.rules__layout {
+  display: flex;
+}
+
+/* ───────── The inside cover ───────── */
+.rules__panel {
+  /* Width of the left margin that holds the numerals, and the gap after it. */
+  --margin: clamp(3.25rem, 5vw, 4.75rem);
+  --gap: clamp(1.1rem, 2vw, 1.75rem);
+  --rule-line: color-mix(in srgb, var(--paper) 4%, transparent);
+  --margin-line: color-mix(in srgb, var(--blood) 55%, transparent);
+
+  position: relative;
+  isolation: isolate;
+  width: clamp(min(100%, 470px), 56%, 700px);
+  padding: clamp(36px, 5vw, 64px) clamp(22px, 3.5vw, 52px) clamp(32px, 4.5vw, 56px)
+    calc(var(--margin) + var(--gap));
+  border-color: color-mix(in srgb, var(--blood) 40%, transparent);
+  /* The panel is almost opaque, so a live backdrop blur over the moving 3D canvas
+     would cost a full-panel blur every frame for no visible gain. */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background:
+    /* edge vignette (cheaper than a large inset box-shadow) */
+    radial-gradient(120% 85% at 50% 45%, transparent 55%, color-mix(in srgb, var(--ink) 75%, transparent)),
+    /* aged stains, faint and warm */
+    radial-gradient(70% 45% at 8% 4%, color-mix(in srgb, var(--blood-deep) 32%, transparent), transparent 70%),
+    radial-gradient(55% 40% at 96% 92%, color-mix(in srgb, var(--gold) 7%, transparent), transparent 70%),
+    radial-gradient(40% 30% at 70% 30%, color-mix(in srgb, var(--gold) 3%, transparent), transparent 70%),
+    /* double crimson margin line */
+    linear-gradient(
+      90deg,
+      transparent calc(var(--margin) - 4px),
+      var(--margin-line) calc(var(--margin) - 4px) calc(var(--margin) - 3px),
+      transparent calc(var(--margin) - 3px) var(--margin),
+      var(--margin-line) var(--margin) calc(var(--margin) + 1px),
+      transparent calc(var(--margin) + 1px)
+    ),
+    /* ruled lines */
+    repeating-linear-gradient(180deg, transparent 0 33px, var(--rule-line) 33px 34px),
+    linear-gradient(170deg, color-mix(in srgb, var(--ink-3) 95%, transparent), color-mix(in srgb, var(--ink) 96%, transparent) 70%);
+  box-shadow: 0 40px 90px -30px color-mix(in srgb, var(--ink) 90%, transparent);
+}
+
+/* Inner hairline border, like a printed frame on the inside cover */
+.rules__panel::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--blood) 16%, transparent);
+  pointer-events: none;
+}
+
+/* Corner ornaments */
+.rules__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 0 solid color-mix(in srgb, var(--blood) 75%, transparent);
+  pointer-events: none;
+}
+.rules__corner--tl { top: 4px; left: 4px; border-top-width: 1px; border-left-width: 1px; }
+.rules__corner--tr { top: 4px; right: 4px; border-top-width: 1px; border-right-width: 1px; }
+.rules__corner--bl { bottom: 4px; left: 4px; border-bottom-width: 1px; border-left-width: 1px; }
+.rules__corner--br { bottom: 4px; right: 4px; border-bottom-width: 1px; border-right-width: 1px; }
+.rules__corner::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--blood);
+  transform: rotate(45deg);
+}
+.rules__corner--tl::after { top: 4px; left: 4px; }
+.rules__corner--tr::after { top: 4px; right: 4px; }
+.rules__corner--bl::after { bottom: 4px; left: 4px; }
+.rules__corner--br::after { bottom: 4px; right: 4px; }
+
+/* ───────── Heading ───────── */
+.rules__head {
+  position: relative;
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.rules__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(100%, 22rem);
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), color-mix(in srgb, var(--gold) 0%, transparent));
+  opacity: 0.55;
+}
+
+.rules__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: calc(var(--step--1) * 0.85);
+}
+.rules__eyebrow::before {
+  content: '';
+  width: 2.25rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.rules__title {
+  margin-top: 0.9rem;
+  font-size: calc(var(--step-3) * 1.08);
+  line-height: 1;
+  color: var(--paper);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--blood) 35%, transparent);
+}
+
+.rules__lead {
+  margin-top: 1.1rem;
+  max-width: 40ch;
+  text-wrap: pretty;
+  font-style: italic;
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--paper-dim);
+}
+
+/* ───────── The rules ───────── */
+.rules__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1.25rem, 2.4vw, 1.9rem);
+}
+
+.rules__item {
+  --reveal-delay: 0ms;
+  position: relative;
+}
+
+/* The numeral sits centred in the crimson-ruled margin */
+.rules__num {
+  position: absolute;
+  top: 0.05em;
+  left: calc(-1 * (var(--margin) + var(--gap)));
+  width: calc(var(--margin) - 4px);
+  font-family: var(--font-rules);
+  font-size: var(--step-1);
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+
+.rules__text {
+  font-size: var(--step-0);
+  line-height: 1.62;
+  color: var(--paper);
+  text-wrap: pretty;
+}
+
+/* ───────── Owner card (a bookplate) ───────── */
+.rules__owner {
+  position: relative;
+  margin-top: clamp(2.25rem, 4.5vw, 3.25rem);
+  padding: clamp(1.25rem, 2.6vw, 1.75rem);
+  border: 1px solid color-mix(in srgb, var(--gold) 32%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--blood-deep) 22%, transparent), transparent 55%),
+    color-mix(in srgb, var(--ink) 55%, transparent);
+  display: grid;
+  justify-items: start;
+}
+.rules__owner::before {
+  /* inner hairline, bookplate style */
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in srgb, var(--gold) 12%, transparent);
+  pointer-events: none;
+}
+
+.rules__owner-label {
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.rules__owner-name {
+  margin: 0.35rem 0 1.25rem;
+  padding: 0 0.6rem 0.1rem 0.15rem;
+  font-size: var(--step-2);
+  line-height: 1.15;
+  color: var(--paper);
+  border-bottom: 1px dashed color-mix(in srgb, var(--paper) 30%, transparent);
+  transform: rotate(-1.2deg);
+  transform-origin: left bottom;
+}
+
+.rules__owner-facts {
+  justify-self: stretch;
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 0.9rem 1.5rem;
+}
+.rules__owner-facts > div {
+  display: grid;
+  gap: 0.2rem;
+  align-content: start;
+}
+.rules__owner-facts dt {
+  font-size: calc(var(--step--1) * 0.78);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.rules__owner-facts dd {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--paper);
+}
+
+.rules__owner-links {
+  justify-self: stretch;
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px dashed color-mix(in srgb, var(--gold) 22%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.rules__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  min-height: 44px;
+  padding: 0.5em 1.05em;
+  font-size: calc(var(--step--1) * 0.82);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  transition:
+    background-color 250ms var(--ease),
+    border-color 250ms var(--ease),
+    box-shadow 250ms var(--ease),
+    color 250ms var(--ease);
+}
+.rules__link:hover,
+.rules__link:focus-visible {
+  color: var(--paper);
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 70%, transparent);
+  box-shadow: 0 0 22px -4px color-mix(in srgb, var(--blood) 70%, transparent);
+}
+.rules__link-arrow {
+  width: 0.8em;
+  height: 0.8em;
+  flex: none;
+  transition: transform 250ms var(--ease);
+}
+.rules__link:hover .rules__link-arrow,
+.rules__link:focus-visible .rules__link-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ───────── Reveal: rules are "written in" as they scroll into view ─────────
+   Only applied once JS has armed the section (never under reduced motion). */
+.rules--armed [data-reveal] {
+  transition:
+    opacity 900ms var(--ease) var(--reveal-delay, 0ms),
+    transform 900ms var(--ease) var(--reveal-delay, 0ms);
+}
+.rules--armed .rules__head:not(.is-revealed),
+.rules--armed .rules__owner:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* Rule items: the item itself stays put; the numeral bleeds in, the text is wiped in like wet ink. */
+.rules--armed .rules__item {
+  transition: none;
+}
+.rules--armed .rules__text {
+  /* own layer: repainting the wiping mask never touches the panel underneath */
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(100deg, black 33%, transparent 66%);
+  mask-image: linear-gradient(100deg, black 33%, transparent 66%);
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+  transition:
+    -webkit-mask-position 1250ms cubic-bezier(0.45, 0.05, 0.25, 1) calc(var(--reveal-delay) + 180ms),
+    mask-position 1250ms cubic-bezier(0.45, 0.05, 0.25, 1) calc(var(--reveal-delay) + 180ms);
+}
+.rules--armed .rules__item.is-revealed .rules__text {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+.rules--armed .rules__num {
+  opacity: 0;
+}
+.rules--armed .rules__item.is-revealed .rules__num {
+  animation: rules-ink 1400ms var(--ease) var(--reveal-delay) both;
+}
+
+@keyframes rules-ink {
+  0% {
+    opacity: 0;
+    color: var(--blood-bright);
+    filter: blur(6px);
+    transform: scale(1.35);
+    text-shadow: 0 0 18px var(--blood-bright);
+  }
+  35% {
+    opacity: 1;
+    color: var(--blood-bright);
+    filter: blur(0);
+    transform: scale(1);
+    text-shadow: 0 0 14px var(--blood);
+  }
+  100% {
+    opacity: 1;
+    color: var(--gold);
+    filter: blur(0);
+    transform: scale(1);
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+/* ───────── Mobile ───────── */
+@media (max-width: 760px) {
+  .rules {
+    display: block;
+  }
+  /* Carry the hero's bottom shade (Hero.css) into this section and let it fade
+     out, so there is no hard band where the hero ends over the 3D canvas. */
+  .rules::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 34vh;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ink) 78%, transparent),
+      color-mix(in srgb, var(--ink) 40%, transparent) 45%,
+      transparent
+    );
+  }
+  .rules__panel {
+    --margin: 2.6rem;
+    --gap: 0.9rem;
+    width: 100%;
+    padding: 36px 18px 26px calc(var(--margin) + var(--gap));
+  }
+  .rules__num {
+    font-size: var(--step-0);
+    top: 0.15em;
+  }
+  .rules__owner {
+    margin-left: calc(-1 * var(--margin) - var(--gap) + 10px);
+  }
+  .rules__owner-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

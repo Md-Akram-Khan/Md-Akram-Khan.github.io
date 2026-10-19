@@ -1,0 +1,122 @@
+/* ───────────────────────── Footer ───────────────────────── */
+
+.footer {
+  position: relative;
+  z-index: var(--z-content);
+  background: var(--ink);
+  border-top: 1px solid var(--line);
+  padding: clamp(48px, 8vh, 72px) 0 calc(clamp(32px, 5vh, 48px) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+/* A thin blood line where the page meets the footer. */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: min(420px, 60%);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(to right, transparent, var(--blood), transparent);
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer__mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(260px, 100%);
+  margin-bottom: 10px;
+  color: var(--blood);
+}
+.footer__mark-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--panel-border));
+}
+.footer__mark-line:last-child {
+  background: linear-gradient(to left, transparent, var(--panel-border));
+}
+.footer__apple {
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 0 8px rgba(193, 18, 31, 0.45));
+}
+
+.footer__copy {
+  font-family: var(--font-rules);
+  font-size: var(--step-0);
+  color: var(--paper);
+}
+.footer__year {
+  margin-right: 4px;
+  font-size: 0.85em;
+  color: var(--paper-dim);
+}
+
+.footer__built {
+  font-size: var(--step--1);
+  font-style: italic;
+  color: var(--paper-dim);
+}
+
+.footer__top {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper-dim);
+  transition:
+    color 250ms var(--ease),
+    border-color 250ms var(--ease),
+    background-color 250ms var(--ease);
+}
+.footer__top:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+  background-color: rgba(92, 10, 16, 0.35);
+}
+.footer__top-arrow {
+  color: var(--blood-text);
+  transition: transform 250ms var(--ease);
+}
+.footer__top:hover .footer__top-arrow {
+  transform: translateY(-3px);
+}
+
+.footer__disclaimer {
+  max-width: 62ch;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ash);
+}
+
+/* "Back to top" focuses the hero section programmatically; a ring around a whole screen is noise. */
+#hero[tabindex='-1']:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__top:hover .footer__top-arrow {
+    transform: none;
+  }
+}

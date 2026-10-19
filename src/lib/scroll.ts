@@ -22,6 +22,11 @@ export const scrollState = {
   ) as Record<SectionId, SectionState>,
   /** Pointer position normalised to -1..1 (x right, y up). Stays 0 on touch devices. */
   pointer: { x: 0, y: 0 },
+  /**
+   * 0..1: fraction of the viewport below the last section (the footer scrolling in).
+   * The 3D scene uses it to scroll up with the page at the very end.
+   */
+  tail: 0,
 }
 
 type Listener = (active: SectionId) => void
@@ -46,10 +51,12 @@ function measure() {
 
   let best: SectionId = scrollState.active
   let bestDist = Infinity
+  let lastBottom = vh
   for (const { id } of sections) {
     const el = document.getElementById(id)
     if (!el) continue
     const r = el.getBoundingClientRect()
+    lastBottom = r.bottom
     const s = scrollState.sections[id]
     s.progress = Math.min(1, Math.max(0, (vh - r.top) / (r.height + vh)))
     const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0))
@@ -61,6 +68,7 @@ function measure() {
       best = id
     }
   }
+  scrollState.tail = Math.min(1, Math.max(0, (vh - lastBottom) / vh))
   if (best !== scrollState.active) {
     scrollState.active = best
     listeners.forEach((fn) => fn(best))

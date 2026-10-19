@@ -1,0 +1,598 @@
+/* RULE III · Shinigami Eyes — skills seen "through the eyes".
+   Desktop: the panel lives in the right ~55% (the notebook sits on the left,
+   red eyes glow behind). Mobile (≤760px): full width. */
+
+.skills {
+  display: flex;
+  align-items: center;
+}
+
+.skills__layout {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ───────── Panel ───────── */
+.skills__panel {
+  --scan-line: color-mix(in srgb, var(--blood) 5%, transparent);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: clamp(min(100%, 470px), 56%, 700px);
+  padding: clamp(34px, 4.5vw, 60px) clamp(22px, 3.5vw, 52px) clamp(30px, 4vw, 52px);
+  border-color: color-mix(in srgb, var(--blood) 38%, transparent);
+  /* Nearly opaque already: skip the live backdrop blur over the moving 3D canvas. */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background:
+    radial-gradient(120% 85% at 50% 45%, transparent 55%, color-mix(in srgb, var(--ink) 70%, transparent)),
+    radial-gradient(80% 45% at 0% 0%, color-mix(in srgb, var(--blood) 16%, transparent), transparent 70%),
+    radial-gradient(60% 40% at 100% 100%, color-mix(in srgb, var(--blood-deep) 25%, transparent), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 2px, var(--scan-line) 2px 3px),
+    color-mix(in srgb, var(--ink) 90%, transparent);
+  box-shadow: 0 40px 90px -30px color-mix(in srgb, var(--ink) 90%, transparent);
+  transition:
+    border-color 600ms var(--ease),
+    box-shadow 600ms var(--ease);
+}
+/* Red inner glow while the eyes are open (fades, never repaints per frame) */
+.skills__panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(90% 60% at 0% 0%, color-mix(in srgb, var(--blood) 22%, transparent), transparent 70%),
+    radial-gradient(120% 90% at 50% 50%, transparent 60%, color-mix(in srgb, var(--blood) 18%, transparent));
+  opacity: 0;
+  transition: opacity 600ms var(--ease);
+}
+.skills--open .skills__panel::after {
+  opacity: 1;
+}
+.skills__panel::before {
+  /* thin crimson rail on the leading edge, towards the notebook */
+  content: '';
+  position: absolute;
+  top: clamp(34px, 4.5vw, 60px);
+  bottom: clamp(30px, 4vw, 52px);
+  left: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--blood) 20%, var(--blood) 80%, transparent);
+  opacity: 0.7;
+}
+
+.skills--open .skills__panel {
+  border-color: color-mix(in srgb, var(--blood-bright) 60%, transparent);
+  box-shadow: 0 0 60px -20px color-mix(in srgb, var(--blood) 60%, transparent);
+}
+
+/* A red scan bar that sweeps the panel while the eyes are open.
+   The element is as tall as the panel and carries the bar on its bottom edge,
+   so a transform (composited, no repaint) moves the bar from top to bottom. */
+.skills__sweep {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-100%);
+  background: linear-gradient(
+    180deg,
+    transparent calc(100% - 160px),
+    color-mix(in srgb, var(--blood-bright) 9%, transparent) calc(100% - 3px),
+    color-mix(in srgb, var(--blood-bright) 30%, transparent) calc(100% - 2px),
+    transparent
+  );
+  transition: opacity 500ms var(--ease);
+}
+.skills--open .skills__sweep {
+  opacity: 1;
+  animation: skills-sweep 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes skills-sweep {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(15%);
+  }
+}
+
+/* ───────── Heading ───────── */
+.skills__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: calc(var(--step--1) * 0.85);
+}
+.skills__eyebrow::before {
+  content: '';
+  width: 2.25rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.skills__title {
+  margin-top: 0.9rem;
+  font-size: calc(var(--step-3) * 1.08);
+  line-height: 1;
+  color: var(--paper);
+}
+.skills__title-accent {
+  color: var(--blood-text);
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--blood) 70%, transparent),
+    0 0 42px color-mix(in srgb, var(--blood) 35%, transparent);
+  transition: text-shadow 600ms var(--ease), color 600ms var(--ease);
+}
+.skills--open .skills__title-accent {
+  color: var(--blood-bright);
+  text-shadow:
+    0 0 14px var(--blood-bright),
+    0 0 46px color-mix(in srgb, var(--blood-bright) 70%, transparent);
+}
+
+.skills__lead {
+  margin-top: 1.1rem;
+  max-width: 42ch;
+  text-wrap: pretty;
+  font-style: italic;
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--paper-dim);
+}
+
+.skills__controls {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.1rem;
+}
+
+/* ───────── The eye deal toggle ───────── */
+.skills__deal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  min-height: 44px;
+  padding: 0.55em 0.75em 0.55em 0.9em;
+  font-family: var(--font-mono);
+  font-size: calc(var(--step--1) * 0.82);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--ink) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blood) 60%, transparent);
+  border-radius: 2px;
+  cursor: pointer;
+  transition:
+    background-color 300ms var(--ease),
+    border-color 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+.skills__deal:hover {
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 55%, transparent);
+}
+.skills__deal[aria-pressed='true'] {
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 80%, transparent);
+  box-shadow: 0 0 26px -6px var(--blood-bright);
+}
+
+.skills__deal-icon {
+  width: 2.1em;
+  height: auto;
+  flex: none;
+  overflow: visible;
+}
+.skills__deal-lid {
+  fill: color-mix(in srgb, var(--blood) 15%, transparent);
+  stroke: var(--blood-text);
+  stroke-width: 1.1;
+  transition: fill 300ms var(--ease);
+}
+.skills__deal-pupil {
+  fill: var(--blood-text);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleY(0.35);
+  transition: transform 300ms var(--ease);
+}
+.skills__deal[aria-pressed='true'] .skills__deal-lid {
+  fill: color-mix(in srgb, var(--blood-bright) 35%, transparent);
+}
+.skills__deal[aria-pressed='true'] .skills__deal-pupil,
+.skills__deal:hover .skills__deal-pupil {
+  transform: none;
+}
+.skills__deal[aria-pressed='true'] .skills__deal-icon {
+  filter: drop-shadow(0 0 4px var(--blood-bright));
+}
+
+.skills__deal-state {
+  padding: 0.2em 0.55em;
+  font-size: 0.85em;
+  letter-spacing: 0.12em;
+  color: var(--ash);
+  border-left: 1px solid color-mix(in srgb, var(--paper) 15%, transparent);
+}
+.skills__deal[aria-pressed='true'] .skills__deal-state {
+  color: var(--blood-text);
+}
+
+.skills__hint {
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.12em;
+  color: var(--ash);
+}
+@media (hover: none) {
+  .skills__hint {
+    display: none;
+  }
+}
+
+/* ───────── Skill groups ───────── */
+.skills__groups {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.1rem) clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.skills__group {
+  --reveal-delay: 0ms;
+  min-width: 0;
+}
+
+.skills__group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 0.8rem;
+  font-family: var(--font-rules);
+  font-size: var(--step-0);
+  color: var(--paper);
+}
+.skills__group-index {
+  font-size: 0.68em;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+.skills__group-count {
+  margin-left: auto;
+  font-size: 0.68em;
+  letter-spacing: 0.1em;
+  color: var(--blood-text);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 400ms var(--ease),
+    transform 400ms var(--ease);
+}
+.skills--open .skills__group-count,
+.skills__group:hover .skills__group-count {
+  opacity: 1;
+  transform: none;
+}
+
+.skills__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.7rem;
+}
+
+/* ───────── A skill chip ───────── */
+.skills__chip {
+  --reticle: var(--blood-bright);
+  --tick: 6px;
+  position: relative;
+  padding: 0.42em 0.8em;
+  font-size: calc(var(--step--1) * 0.86);
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  color: var(--paper-dim);
+  background: color-mix(in srgb, var(--ink-3) 75%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  transition:
+    color 250ms var(--ease),
+    background-color 250ms var(--ease),
+    border-color 250ms var(--ease),
+    box-shadow 250ms var(--ease),
+    text-shadow 250ms var(--ease);
+}
+
+/* Targeting reticle at the four corners */
+.skills__chip::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--reticle), var(--reticle)) top left / var(--tick) 1px,
+    linear-gradient(var(--reticle), var(--reticle)) top left / 1px var(--tick),
+    linear-gradient(var(--reticle), var(--reticle)) top right / var(--tick) 1px,
+    linear-gradient(var(--reticle), var(--reticle)) top right / 1px var(--tick),
+    linear-gradient(var(--reticle), var(--reticle)) bottom left / var(--tick) 1px,
+    linear-gradient(var(--reticle), var(--reticle)) bottom left / 1px var(--tick),
+    linear-gradient(var(--reticle), var(--reticle)) bottom right / var(--tick) 1px,
+    linear-gradient(var(--reticle), var(--reticle)) bottom right / 1px var(--tick);
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.18);
+  transition:
+    opacity 250ms var(--ease),
+    transform 350ms var(--ease);
+}
+
+/* Scan lines + a single red scan bar */
+.skills__chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+        180deg,
+        transparent 0 40%,
+        color-mix(in srgb, var(--blood-bright) 55%, transparent) 50%,
+        transparent 60% 100%
+      )
+      0 100% / 100% 300% no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 2px, color-mix(in srgb, var(--blood) 16%, transparent) 2px 3px);
+  opacity: 0;
+  transition: opacity 250ms var(--ease);
+}
+
+.skills__chip-label {
+  position: relative;
+}
+.skills__chip-ghost {
+  position: absolute;
+  inset: 0;
+  padding: inherit;
+  color: var(--blood-bright);
+  text-shadow: 0 0 8px var(--blood);
+  white-space: pre-wrap;
+  pointer-events: none;
+}
+.skills__chip.is-decoding .skills__chip-label {
+  color: transparent;
+  text-shadow: none;
+}
+
+/* Revealed: hovered, or every chip while the eyes are open */
+.skills__chip:hover,
+.skills--open .skills__chip {
+  color: var(--paper);
+  background: color-mix(in srgb, var(--blood-deep) 45%, var(--ink));
+  border-color: color-mix(in srgb, var(--blood) 70%, transparent);
+  box-shadow:
+    0 0 18px -4px color-mix(in srgb, var(--blood) 80%, transparent),
+    inset 0 0 12px color-mix(in srgb, var(--blood) 22%, transparent);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--blood-bright) 55%, transparent);
+}
+.skills__chip:hover::before,
+.skills--open .skills__chip::before {
+  opacity: 1;
+  transform: none;
+}
+.skills__chip:hover::after,
+.skills--open .skills__chip::after {
+  opacity: 1;
+}
+.skills__chip:hover::after {
+  animation: skills-scan 700ms cubic-bezier(0.3, 0, 0.3, 1) both;
+}
+@keyframes skills-scan {
+  from {
+    background-position: 0 100%, 0 0;
+  }
+  to {
+    background-position: 0 0, 0 0;
+  }
+}
+
+/* ───────── Practice notebooks ───────── */
+.skills__practice {
+  margin-top: clamp(2.25rem, 4.5vw, 3rem);
+  padding-top: clamp(1.75rem, 3.5vw, 2.25rem);
+  border-top: 1px solid var(--line);
+}
+.skills__practice-title {
+  font-size: var(--step-2);
+  line-height: 1.05;
+  color: var(--paper);
+}
+.skills__practice-lead {
+  margin-top: 0.45rem;
+  font-style: italic;
+  font-size: var(--step--1);
+  color: var(--paper-dim);
+}
+
+.skills__notebooks {
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.skills__notebooks > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.skills__notebook {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.85rem 0.6rem 0.85rem 0.9rem;
+  text-decoration: none;
+  color: var(--paper);
+  transition: background-color 250ms var(--ease);
+}
+.skills__notebook::before {
+  /* crimson bookmark ribbon that slides in on hover/focus */
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  bottom: 0.85rem;
+  width: 2px;
+  background: var(--blood-bright);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 300ms var(--ease);
+}
+.skills__notebook:hover,
+.skills__notebook:focus-visible {
+  color: var(--paper);
+  background: color-mix(in srgb, var(--blood-deep) 30%, transparent);
+}
+.skills__notebook:hover::before,
+.skills__notebook:focus-visible::before {
+  transform: scaleY(1);
+}
+.skills__notebook:focus-visible {
+  outline-offset: -2px;
+}
+
+.skills__notebook-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.skills__notebook-title {
+  font-size: var(--step-1);
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color 250ms var(--ease);
+}
+.skills__notebook:hover .skills__notebook-title,
+.skills__notebook:focus-visible .skills__notebook-title {
+  text-decoration-color: var(--blood);
+}
+/* dotted leader, like a table of contents */
+.skills__notebook-leader {
+  flex: 1 1 1.5rem;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted color-mix(in srgb, var(--paper) 25%, transparent);
+  transform: translateY(-0.3em);
+}
+.skills__notebook-since {
+  flex: none;
+  font-size: calc(var(--step--1) * 0.82);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.skills__notebook-arrow {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  align-self: center;
+  color: var(--blood-text);
+  transition: transform 250ms var(--ease);
+}
+.skills__notebook:hover .skills__notebook-arrow,
+.skills__notebook:focus-visible .skills__notebook-arrow {
+  transform: translate(2px, -2px);
+}
+.skills__notebook-detail {
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--paper-dim);
+}
+
+/* ───────── Scroll reveal (armed by JS; never under reduced motion) ───────── */
+.skills--armed [data-reveal] {
+  transition:
+    opacity 900ms var(--ease) var(--reveal-delay, 0ms),
+    transform 900ms var(--ease) var(--reveal-delay, 0ms),
+    filter 900ms var(--ease) var(--reveal-delay, 0ms);
+}
+.skills--armed [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(4px);
+}
+
+/* ───────── Reduced motion: keep the look, drop the movement ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .skills--open .skills__sweep {
+    animation: none;
+    opacity: 0;
+  }
+  .skills__chip:hover::after {
+    animation: none;
+  }
+}
+
+/* ───────── Mobile ───────── */
+@media (max-width: 760px) {
+  .skills {
+    display: block;
+  }
+  .skills__panel {
+    width: 100%;
+    padding: 34px 18px 26px;
+  }
+  .skills__groups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Notebook rows: the year becomes a small label above the title. */
+  .skills__notebook {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'since arrow'
+      'title title'
+      'detail detail';
+    row-gap: 0.2rem;
+    padding-inline: 0.75rem 0.4rem;
+  }
+  .skills__notebook-row {
+    display: contents;
+  }
+  .skills__notebook-leader {
+    display: none;
+  }
+  .skills__notebook-since {
+    grid-area: since;
+    font-size: calc(var(--step--1) * 0.75);
+  }
+  .skills__notebook-arrow {
+    grid-area: arrow;
+  }
+  .skills__notebook-title {
+    grid-area: title;
+  }
+  .skills__notebook-detail {
+    grid-area: detail;
+  }
+}
+
+/* Very narrow phones: the toggle spans the panel so its label stays on one line. */
+@media (max-width: 420px) {
+  .skills__deal {
+    width: 100%;
+    letter-spacing: 0.1em;
+  }
+  .skills__deal-state {
+    margin-left: auto;
+  }
+}

@@ -1,0 +1,227 @@
+/* ───────────────────────── Rule II · Names Written ─────────────────────────
+   Full-width section over the dimmed, pushed-back notebook. Cards are opaque
+   paper, so they stay readable whatever the 3D scene is doing behind them. */
+
+.projects {
+  isolation: isolate;
+  /* Ink pools, tilted pages and shadows may poke past the gutters; never let them
+     cause sideways scroll. `clip` (unlike `hidden`) creates no scroll container. */
+  overflow-x: clip;
+}
+
+/* ── Heading ── */
+.projects__intro {
+  display: grid;
+  gap: clamp(20px, 3vw, 32px);
+  margin-bottom: clamp(56px, 9vh, 112px);
+  /* A tight ink halo keeps every glyph legible even over a lit page of the 3D notebook. */
+  text-shadow:
+    0 0 2px var(--ink),
+    0 0 10px var(--ink),
+    0 0 24px var(--ink);
+}
+
+/* Soft pools of ink behind the heading and the aside: the 3D notebook glows through
+   around them, never under the words. Pure gradients (no backdrop-filter), so the
+   live canvas underneath costs nothing extra to composite. */
+.projects__heading,
+.projects__aside,
+.projects__more {
+  position: relative;
+}
+.projects__heading::before,
+.projects__aside::before,
+.projects__more::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -55% -22%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--ink) 88%, transparent) 0 52%,
+    color-mix(in srgb, var(--ink) 55%, transparent) 76%,
+    transparent 100%
+  );
+}
+
+.projects__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: clamp(10px, 1.6vw, 18px);
+}
+.projects__eyebrow::after {
+  content: '';
+  width: 56px;
+  height: 1px;
+  background: var(--blood);
+}
+
+.projects__title {
+  font-size: var(--step-4);
+  line-height: 0.92;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.projects__aside {
+  display: grid;
+  gap: 14px;
+  align-content: end;
+}
+
+.projects__lede {
+  font-size: var(--step-2);
+  line-height: 1.12;
+  color: var(--paper);
+  max-width: 26ch;
+  text-wrap: balance;
+  rotate: -1.5deg;
+  transform-origin: left center;
+}
+
+.projects__tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 0.6em;
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.projects__tally > span[aria-hidden] {
+  color: var(--blood-text);
+}
+@media (min-width: 761px) {
+  .projects__tally {
+    justify-content: flex-end;
+  }
+}
+/* Narrow: items wrap, so dots would dangle at line ends. Use a pen dash before each item instead. */
+@media (max-width: 760px) {
+  .projects__tally {
+    gap: 0.3em 1.1em;
+  }
+  .projects__tally > span[aria-hidden] {
+    display: none;
+  }
+  .projects__tally > span::before {
+    content: '';
+    display: inline-block;
+    width: 0.8em;
+    height: 1px;
+    margin-right: 0.55em;
+    vertical-align: 0.32em;
+    background: var(--blood);
+  }
+}
+
+@media (min-width: 761px) {
+  .projects__intro {
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    align-items: end;
+    column-gap: 56px;
+  }
+  .projects__aside {
+    justify-items: end;
+    text-align: right;
+    padding-bottom: 0.4em;
+  }
+  .projects__lede {
+    transform-origin: right center;
+  }
+}
+
+/* ── Grid ── */
+.projects__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(36px, 7vw, 56px);
+  align-items: start;
+}
+
+@media (min-width: 761px) {
+  .projects__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(56px, 7vw, 96px) clamp(28px, 4vw, 56px);
+  }
+  /* Feature pages: wide, and placed off-centre in alternation for an editorial rhythm. */
+  .projects__grid > .project-card--featured {
+    grid-column: 1 / -1;
+    width: min(100%, 1080px);
+  }
+  .projects__grid > .project-card--featured:nth-child(even) {
+    justify-self: end;
+  }
+  /* Right-hand column drops a little lower, like pages laid down by hand. */
+  .projects__grid > .project-card--offset {
+    margin-top: clamp(40px, 6vw, 88px);
+  }
+}
+
+/* ── More pages ── */
+.projects__more {
+  margin-top: clamp(64px, 11vh, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  text-shadow: 0 2px 20px var(--ink);
+}
+
+.projects__more-note {
+  font-size: var(--step-1);
+  color: var(--paper-dim);
+  rotate: -2deg;
+}
+
+.projects__more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  min-height: 48px;
+  padding: 6px 4px;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  background-image: linear-gradient(var(--blood), var(--blood));
+  background-size: 100% 1px;
+  background-position: 0 calc(100% - 8px);
+  background-repeat: no-repeat;
+  transition: color 250ms ease, background-size 400ms var(--ease);
+}
+.projects__more-link:hover {
+  color: var(--blood-bright);
+}
+.projects__more-arrow {
+  display: inline-block;
+  color: var(--blood-text);
+  transition: translate 400ms var(--ease);
+}
+.projects__more-link:hover .projects__more-arrow,
+.projects__more-link:focus-visible .projects__more-arrow {
+  translate: 6px 0;
+}
+
+/* ── Reveal on scroll (only when motion is allowed; content is never hidden otherwise) ── */
+@media (prefers-reduced-motion: no-preference) {
+  .projects__intro[data-reveal],
+  .projects__more[data-reveal] {
+    transition:
+      opacity 900ms var(--ease),
+      translate 900ms var(--ease);
+  }
+  .projects__intro[data-reveal]:not(.is-in),
+  .projects__more[data-reveal]:not(.is-in) {
+    opacity: 0;
+    translate: 0 32px;
+  }
+}
