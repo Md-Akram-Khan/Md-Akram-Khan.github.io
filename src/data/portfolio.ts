@@ -273,7 +273,7 @@ export type Contest = {
 }
 
 export const contests: Contest[] = [
-  { kind: 'ctf', year: 2025, name: 'AL KHWARIZMI CTF', organizer: 'Bangladesh Islami Chhatrashibir Science', team: 'Restless_goblins', rank: 6, field: 650, fieldPlus: true },
+  { kind: 'ctf', year: 2025, name: 'AL KHWARIZMI CTF', organizer: 'Bangladesh Islami Chhatrashibir Science', team: 'DU_Restless_goblins', rank: 6, field: 650, fieldPlus: true },
   { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', organizer: 'University of Dhaka', rank: 10, field: 105, standings: 'https://toph.co/c/battle-brains-2025/standings' },
   { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', organizer: 'University of Dhaka', rank: 14, field: 68, standings: 'https://toph.co/c/battle-brains-2024/standings' },
   { kind: 'ctf', year: 2023, name: 'DU CTF 2023', organizer: 'University of Dhaka', team: 'DU_CTF_NOOBS', rank: 10, field: 100, fieldPlus: true },
