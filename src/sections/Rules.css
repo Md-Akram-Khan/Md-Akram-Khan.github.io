@@ -194,6 +194,87 @@
   transform-origin: left top;
 }
 
+/* ───────── Rule 01: the owner's photo, pinned like a case-file print ───────── */
+.rules__item--photo {
+  display: flow-root; /* contain the floated photo */
+}
+.rules__photo {
+  --tilt: 2.4deg;
+  position: relative;
+  float: right;
+  width: clamp(130px, 32%, 190px);
+  margin: 0.15rem 0 0.9rem 1.3rem;
+  padding: 7px 7px 0;
+  background: var(--paper);
+  border-radius: 1px;
+  box-shadow:
+    0 18px 34px -14px rgba(0, 0, 0, 0.9),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: rotate(var(--tilt));
+  transition: transform 500ms var(--ease);
+}
+.rules__photo:hover {
+  transform: rotate(0.6deg) scale(1.03);
+}
+.rules__photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  /* muted dossier print; full colour when looked at closely */
+  filter: grayscale(0.75) sepia(0.25) contrast(1.06) brightness(0.95);
+  transition: filter 600ms var(--ease);
+}
+.rules__photo:hover .rules__photo-img {
+  filter: none;
+}
+/* a strip of translucent tape holding the print to the page */
+.rules__photo-tape {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  z-index: 1;
+  width: 62%;
+  height: 22px;
+  background: color-mix(in srgb, var(--paper) 42%, transparent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transform: translateX(-50%) rotate(-4deg);
+}
+/* red evidence stamp over the corner of the print */
+.rules__photo-stamp {
+  position: absolute;
+  right: 12px;
+  bottom: 44px;
+  padding: 0.25em 0.6em;
+  border: 1.5px solid var(--blood);
+  border-radius: 2px;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #a30f1a;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 40%, transparent);
+  transform: rotate(-9deg);
+}
+.rules__photo-caption {
+  padding: 0.25rem 0.1rem 0.35rem;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  text-align: center;
+  color: #1a1410;
+}
+/* the print is pinned in after the rule starts being written */
+.rules--armed .rules__item--photo .rules__photo {
+  transition:
+    opacity 900ms var(--ease) calc(var(--reveal-delay) + 250ms),
+    transform 900ms var(--ease) calc(var(--reveal-delay) + 250ms);
+}
+.rules--armed .rules__item--photo:not(.is-revealed) .rules__photo {
+  opacity: 0;
+  transform: translateY(14px) rotate(7deg);
+}
+
 /* ───────── Rule 07: the final, secret rule (sealed) ───────── */
 .rules__item--secret {
   margin-top: 0.4rem;
@@ -400,5 +481,18 @@
   }
   .rules__item--secret .rules__num {
     top: calc(1rem + 0.2em);
+  }
+  .rules__photo {
+    width: 118px;
+    margin: 0.1rem 0 0.6rem 0.9rem;
+    padding: 5px 5px 0;
+  }
+  .rules__photo-caption {
+    font-size: 0.95rem;
+  }
+  .rules__photo-stamp {
+    right: 8px;
+    bottom: 34px;
+    font-size: 0.5rem;
   }
 }

@@ -5,8 +5,8 @@
 // scrolls into view; under reduced motion, or without IntersectionObserver, every
 // rule is shown immediately.
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { rules, sections, type Rule } from '../data/portfolio'
-import { useReducedMotion } from '../lib/env'
+import { profile, rules, sections, type Rule } from '../data/portfolio'
+import { asset, useReducedMotion } from '../lib/env'
 import { RULES_SECOND_PAGE_ID } from '../lib/scroll'
 import RuleEyebrow from '../components/RuleEyebrow'
 import './Rules.css'
@@ -26,13 +26,39 @@ function Corners() {
   )
 }
 
+/** The owner's portrait, pinned to the page like a photo clipped to a case file. */
+function CaseFilePhoto() {
+  return (
+    <figure className="rules__photo">
+      <span className="rules__photo-tape" aria-hidden="true" />
+      <picture>
+        <source type="image/webp" srcSet={asset(profile.photo.webp)} />
+        <img
+          className="rules__photo-img"
+          src={asset(profile.photo.jpg)}
+          alt={profile.photo.alt}
+          width={480}
+          height={600}
+          loading="lazy"
+          decoding="async"
+        />
+      </picture>
+      <span className="mono rules__photo-stamp" aria-hidden="true">
+        Subject 01
+      </span>
+      <figcaption className="hand rules__photo-caption">{profile.name}</figcaption>
+    </figure>
+  )
+}
+
 function RuleItem({ rule }: { rule: Rule }) {
   return (
-    <li className={`rules__item${rule.secret ? ' rules__item--secret' : ''}`} data-reveal>
+    <li className={`rules__item${rule.secret ? ' rules__item--secret' : ''}${rule.photo ? ' rules__item--photo' : ''}`} data-reveal>
       <span className="rules__num">
         <span className="visually-hidden">Rule </span>
         {rule.num}
       </span>
+      {rule.photo && <CaseFilePhoto />}
       {rule.secret && (
         <p className="mono rules__seal">
           <EyeIcon />

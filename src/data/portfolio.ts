@@ -21,6 +21,8 @@ export const profile = {
     github: 'https://github.com/Md-Akram-Khan',
     linkedin: 'https://www.linkedin.com/in/md-akram-khan-534363291',
   },
+  /** Portrait in /public (webp + jpg fallback, 480×600, metadata stripped). */
+  photo: { webp: 'media/akram-portrait.webp', jpg: 'media/akram-portrait.jpg', alt: 'Portrait of Md. Akram Khan' },
   // Leave empty to hide the email link. Add an address here to show it.
   email: '',
 }
@@ -35,6 +37,8 @@ export type Rule = {
   paragraphs: string[]
   /** A closing line, handwritten in red ink under the rule. */
   coda?: string
+  /** Pin the owner's portrait to this rule, like a photo clipped to a case file. */
+  photo?: boolean
   /** The final, secret rule: styled as sealed. Its interaction comes later. */
   secret?: boolean
   page: 1 | 2
@@ -44,6 +48,7 @@ export const rules: Rule[] = [
   {
     num: '01',
     title: 'The Mind Behind the Note',
+    photo: true,
     paragraphs: [
       'The name is Md. Akram Khan. A CS undergraduate and software developer driven by curiosity, logic and the pursuit of better solutions. I see every problem as a system waiting to be understood, and every idea as an opportunity to build something meaningful.',
     ],
