@@ -1,12 +1,15 @@
 /* ───────────── Music: floating launcher + YouTube player card ───────────── */
 
+/* Sits at the top of the page, just under the nav, and scrolls away with the page
+   (absolute, not fixed). The launcher comes first, the card opens below it. */
 .music {
-  position: fixed;
-  right: max(16px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
-  z-index: var(--z-nav);
+  position: absolute;
+  top: calc(var(--nav-h) + 12px);
+  right: max(var(--gutter), env(safe-area-inset-right));
+  /* below the fixed nav, so the nav covers it once the page scrolls */
+  z-index: calc(var(--z-nav) - 1);
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: flex-end;
   gap: 12px;
   pointer-events: none;
@@ -98,7 +101,7 @@
 @keyframes music-in {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.98);
+    transform: translateY(-12px) scale(0.98);
   }
 }
 
