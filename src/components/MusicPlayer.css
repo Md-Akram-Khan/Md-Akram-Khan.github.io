@@ -82,8 +82,12 @@
 
 /* ── Player card ── */
 .music__card {
+  position: relative;
   width: min(380px, calc(100vw - 32px));
   padding: 14px;
+  transition:
+    width 450ms var(--ease),
+    padding 450ms var(--ease);
   display: grid;
   gap: 12px;
   box-shadow:
@@ -195,6 +199,37 @@
 }
 .music__credit a {
   color: var(--paper-dim);
+}
+
+/* ── Compact: only the player stays (200×200 inside its border), × sits on the edge ── */
+.music--compact .music__card {
+  width: 216px;
+  padding: 6px;
+  gap: 0;
+}
+.music--compact .music__screen {
+  width: 202px;
+  height: 202px;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.music--compact .music__bars,
+.music--compact .music__meta,
+.music--compact .music__credit {
+  display: none;
+}
+.music--compact .music__head {
+  position: absolute;
+  top: -13px;
+  right: -13px;
+  z-index: 1;
+}
+.music--compact .music__close {
+  width: 30px;
+  height: 30px;
+  font-size: 1.15rem;
+  background: var(--ink-2);
+  border-color: var(--panel-border);
 }
 
 @media (max-width: 760px) {

@@ -16,17 +16,34 @@ const PANEL_ID = 'music-player'
 
 export default function MusicPlayer() {
   const [open, setOpen] = useState(false)
+  // Compact: after a few seconds the card shrinks to just the player (YouTube's
+  // 200×200 minimum) so it covers as little of the page as the rules allow.
+  const [compact, setCompact] = useState(false)
+  const timer = useRef(0)
   const launcher = useRef<HTMLButtonElement>(null)
   const closeBtn = useRef<HTMLButtonElement>(null)
 
+  const shrinkSoon = (ms: number) => {
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setCompact(true), ms)
+  }
+  const expand = () => {
+    window.clearTimeout(timer.current)
+    setCompact(false)
+  }
+
   useEffect(() => {
     if (!open) return
+    shrinkSoon(5000)
     closeBtn.current?.focus({ preventScroll: true })
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close()
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.clearTimeout(timer.current)
+    }
   }, [open])
 
   function close() {
@@ -35,9 +52,15 @@ export default function MusicPlayer() {
   }
 
   return (
-    <div className={`music${open ? ' music--open' : ''}`}>
+    <div className={`music${open ? ' music--open' : ''}${open && compact ? ' music--compact' : ''}`}>
       {open && (
-        <section id={PANEL_ID} className="music__card panel" aria-label="Music player">
+        <section
+          id={PANEL_ID}
+          className="music__card panel"
+          aria-label="Music player"
+          onMouseEnter={expand}
+          onMouseLeave={() => shrinkSoon(2500)}
+        >
           <header className="music__head">
             <span className="music__bars" aria-hidden="true">
               <span />
@@ -77,7 +100,11 @@ export default function MusicPlayer() {
         className="music__launcher"
         aria-expanded={open}
         aria-controls={open ? PANEL_ID : undefined}
-        onClick={() => (open ? close() : setOpen(true))}
+        onClick={() => {
+          if (open) return close()
+          setCompact(false)
+          setOpen(true)
+        }}
       >
         <NoteIcon />
         <span className="mono music__launcher-label">{open ? 'Stop' : 'Music'}</span>
