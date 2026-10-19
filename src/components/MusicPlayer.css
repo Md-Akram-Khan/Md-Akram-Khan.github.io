@@ -1,0 +1,215 @@
+/* ───────────── Music: floating launcher + YouTube player card ───────────── */
+
+.music {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+.music > * {
+  pointer-events: auto;
+}
+
+/* ── Launcher ── */
+.music__launcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 18px 0 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--paper);
+  cursor: pointer;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9);
+  transition:
+    border-color 250ms ease,
+    box-shadow 250ms ease,
+    transform 250ms var(--ease);
+}
+.music__launcher:hover {
+  border-color: var(--blood);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.9),
+    0 0 22px -4px color-mix(in srgb, var(--blood-bright) 55%, transparent);
+  transform: translateY(-1px);
+}
+/* A slow red ring invites the first click; it stops once music is playing. */
+.music__launcher::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--blood-bright);
+  opacity: 0;
+  animation: music-ring 3.2s ease-out infinite;
+  pointer-events: none;
+}
+.music--open .music__launcher::after {
+  animation: none;
+}
+@keyframes music-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.18, 1.35);
+  }
+}
+
+.music__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--blood-text);
+}
+.music__launcher-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ── Player card ── */
+.music__card {
+  width: min(380px, calc(100vw - 32px));
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  box-shadow:
+    0 24px 60px -18px rgba(0, 0, 0, 0.95),
+    0 0 40px -14px color-mix(in srgb, var(--blood) 60%, transparent);
+  animation: music-in 420ms var(--ease) both;
+}
+@keyframes music-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.music__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.music__meta {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.music__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+.music__title {
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.music__close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--paper-dim);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+.music__close:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+}
+
+/* Equaliser bars */
+.music__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 22px;
+  height: 22px;
+}
+.music__bars span {
+  flex: 1;
+  background: var(--blood-bright);
+  border-radius: 1px;
+  animation: music-bar 900ms ease-in-out infinite alternate;
+}
+.music__bars span:nth-child(2) {
+  animation-delay: -300ms;
+}
+.music__bars span:nth-child(3) {
+  animation-delay: -600ms;
+}
+@keyframes music-bar {
+  from {
+    height: 25%;
+  }
+  to {
+    height: 100%;
+  }
+}
+
+/* YouTube requires a visible player of at least 200×200 CSS px. */
+.music__screen {
+  position: relative;
+  overflow: hidden;
+  /* 200px inside the 1px border (box-sizing is border-box). */
+  min-height: 202px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #000;
+}
+.music__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.music__credit {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--ash);
+}
+.music__credit a {
+  color: var(--paper-dim);
+}
+
+@media (max-width: 760px) {
+  .music__launcher {
+    height: 44px;
+    padding: 0 14px 0 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music__launcher::after,
+  .music__bars span {
+    animation: none;
+  }
+  .music__bars span {
+    height: 60%;
+  }
+}
