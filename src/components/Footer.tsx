@@ -30,7 +30,7 @@ export default function Footer() {
         <p className="footer__copy">
           <span className="mono footer__year">© {YEAR}</span> {profile.name}
         </p>
-        <p className="footer__built">Built with React, Three.js and too many apples.</p>
+        <p className="footer__built">Built with too many apples and Shinigami.</p>
 
         <a className="footer__top" href="#hero" onClick={backToTop}>
           <span className="footer__top-arrow" aria-hidden="true">
