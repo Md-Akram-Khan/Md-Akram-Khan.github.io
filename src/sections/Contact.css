@@ -14,6 +14,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* The ink pool behind the header reaches past the gutters; never let it widen the
+     page (on phones that grew the layout viewport and cropped the fixed nav). */
+  overflow-x: clip;
 }
 
 /* Fade the canvas to ink over the last stretch of the page, so the footer never
@@ -639,6 +642,11 @@
 
   .contact__inner {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The header is its own opaque panel here, so the ink pool is not needed. */
+  .contact__header::before {
+    display: none;
   }
 
   .contact__header {

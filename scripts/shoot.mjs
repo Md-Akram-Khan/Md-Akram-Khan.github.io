@@ -79,7 +79,11 @@ try {
       console.log(`saved ${file}`)
     }
     // Horizontal overflow check (no sideways scrolling allowed).
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+    // Compare with clientWidth: on emulated phones, innerWidth grows to fit overflowing
+    // content (the page zooms out), which would hide the very overflow we look for.
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    )
     if (overflow > 0) errors.push(`[${vp.name}] horizontal overflow of ${overflow}px`)
     await ctx.close()
   }
