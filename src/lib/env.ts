@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 /** URL for a file in /public, correct under any Vite `base`. */
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`
 
+/**
+ * Font files the 3D notebook draws its canvas text with. The same woff2 files the
+ * page's @font-face rules use, so they come straight from the HTTP cache.
+ */
 export const fonts = {
-  /** TTF files, for drei <Text> (troika cannot read woff2). */
-  gothic: asset('fonts/UnifrakturMaguntia.ttf'),
-  hand: asset('fonts/Caveat.ttf'),
-  serif: asset('fonts/IMFellEnglish-Regular.ttf'),
+  gothic: asset('fonts/UnifrakturMaguntia.woff2'),
+  hand: asset('fonts/Caveat.woff2'),
+  serif: asset('fonts/IMFellEnglish-Regular.woff2'),
 }
 
 function useMedia(query: string) {
@@ -36,7 +39,10 @@ export function hasWebGL() {
   if (webglCache !== null) return webglCache
   try {
     const c = document.createElement('canvas')
-    webglCache = !!(c.getContext('webgl2') || c.getContext('webgl'))
+    const gl = c.getContext('webgl2') || c.getContext('webgl')
+    webglCache = !!gl
+    // Release the probe context right away: browsers cap live WebGL contexts.
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
   } catch {
     webglCache = false
   }

@@ -8,16 +8,18 @@ import { BlendFunction, ToneMappingMode } from 'postprocessing'
 import { Vector2 } from 'three'
 
 type Props = {
-  /** 'full' adds multisampling and chromatic aberration. */
+  /** 'full' adds more multisampling, more bloom levels and chromatic aberration. */
   quality: 'full' | 'lite'
+  /** Reduced motion: no animated film grain (it changes every frame). */
+  still?: boolean
 }
 
-export default function Effects({ quality }: Props) {
+export default function Effects({ quality, still = false }: Props) {
   const offset = useMemo(() => new Vector2(0.0009, 0.0006), [])
   const full = quality === 'full'
 
   return (
-    <EffectComposer multisampling={full ? 4 : 0} stencilBuffer={false}>
+    <EffectComposer multisampling={full ? 4 : 2} stencilBuffer={false}>
       <Bloom
         mipmapBlur
         luminanceThreshold={0.95}
@@ -28,7 +30,7 @@ export default function Effects({ quality }: Props) {
       />
       <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
       {full ? <ChromaticAberration offset={offset} radialModulation modulationOffset={0.4} /> : null}
-      <Noise premultiply blendFunction={BlendFunction.SCREEN} opacity={0.22} />
+      {still ? null : <Noise premultiply blendFunction={BlendFunction.SCREEN} opacity={0.22} />}
       <Vignette offset={0.2} darkness={0.78} eskil={false} />
     </EffectComposer>
   )

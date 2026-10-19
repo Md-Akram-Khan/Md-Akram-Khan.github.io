@@ -2,16 +2,17 @@
 // dolly per section. Under reduced motion it stays put at [0, 0, 7].
 //
 // At the very end of the page, as the footer scrolls in, the camera slides down
-// by half the scrolled distance (measured at the notebook's depth): the scene
-// drifts up behind the last section with a little parallax, so the notebook is
-// not simply cut off by the footer.
+// by exactly the scrolled distance (measured at the notebook's depth): the scene
+// scrolls away with the last section like part of the page, so the opaque footer
+// never slices through the notebook or the apple (nearer things, like the apple,
+// even rise a touch faster). Contact.css fades the canvas to ink above the footer.
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MathUtils, Vector3 } from 'three'
 import type { SectionId } from '../data/portfolio'
 import { scrollState } from '../lib/scroll'
 import { useReducedMotion } from '../lib/env'
-import { blendValues, damp, sectionWeights, world } from './choreo'
+import { blendValues, CAMERA, damp, sectionWeights, world } from './choreo'
 
 // Camera z per section: lean in for the rules, step back for the names,
 // lean in again at the end, as if about to write.
@@ -35,7 +36,7 @@ const LIFT: Record<SectionId, number> = {
 const look = new Vector3()
 
 /** How much of the footer's scroll the scene follows (1 = moves with the page). */
-const TAIL_FOLLOW = 0.5
+const TAIL_FOLLOW = 1
 
 export default function CameraRig() {
   const reduced = useReducedMotion()
@@ -45,7 +46,7 @@ export default function CameraRig() {
     const cam = frame.camera
     // World height of one viewport at the notebook's depth, times how much of
     // the viewport the footer now covers.
-    const tanHalf = Math.tan(MathUtils.degToRad(('fov' in cam ? (cam.fov as number) : 35) / 2))
+    const tanHalf = Math.tan(MathUtils.degToRad(('fov' in cam ? (cam.fov as number) : CAMERA.fov) / 2))
     const tail = (z: number) => scrollState.tail * TAIL_FOLLOW * 2 * tanHalf * Math.max(1, z - world.notebook.z)
 
     if (reduced) {

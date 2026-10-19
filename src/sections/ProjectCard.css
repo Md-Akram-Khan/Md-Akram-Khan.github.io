@@ -155,8 +155,9 @@
   text-transform: uppercase;
   color: var(--card-ink-3);
 }
+/* "/ 06" keeps full --card-ink-3 (no extra fade) so it stays above 4.5:1 on paper. */
 .project-card__of {
-  opacity: 0.7;
+  letter-spacing: 0.12em;
 }
 
 /* Rubber stamp. */

@@ -5,7 +5,7 @@ import { Fragment, useState, useSyncExternalStore } from 'react'
 import type { CSSProperties } from 'react'
 import { profile, sections } from '../data/portfolio'
 import { scrollToSection } from '../lib/scroll'
-import Blackletter from '../components/Blackletter'
+import RuleEyebrow from '../components/RuleEyebrow'
 import './Hero.css'
 
 const HAND_LINE = 'The developer whose name is written in this note shall ship.'
@@ -92,16 +92,19 @@ function HeroBody() {
 
       <div className="container hero__inner">
         <div className="hero__content">
-          <p className="eyebrow hero__eyebrow hero__reveal" style={v({ '--d': 0 })}>
-            Rule {heroMeta?.numeral ?? '0'} <span aria-hidden="true">·</span> {heroMeta?.label ?? 'The Note'}
-          </p>
+          <RuleEyebrow
+            numeral={heroMeta?.numeral ?? '0'}
+            subtitle={heroMeta?.label ?? 'The Note'}
+            className="hero__eyebrow hero__reveal"
+            style={v({ '--d': 0 })}
+          />
 
           <h1 id="hero-title" className="hero__title gothic">
             <span className="hero__title-pre hero__reveal" style={v({ '--d': 1 })}>
               {namePrefix}
             </span>{' '}
             <span className="hero__title-name hero__reveal" style={v({ '--d': 2 })}>
-              <Blackletter text={nameMain} />
+              {nameMain}
               <svg
                 className="hero__flourish"
                 viewBox="0 0 600 40"

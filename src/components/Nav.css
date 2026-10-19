@@ -82,7 +82,8 @@
   border: 1px solid var(--panel-border);
   border-radius: 50%;
   color: var(--blood-text);
-  font-size: 1.3rem;
+  font-family: var(--font-rules);
+  font-size: 1.25rem;
   line-height: 1;
   box-shadow: inset 0 0 14px color-mix(in srgb, var(--blood) 22%, transparent);
   transition:
@@ -99,6 +100,16 @@
   font-size: 1.45rem;
   line-height: 1;
   letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+/* The name in a legible old-style serif; "Note" keeps the blackletter. */
+.nav__brand-name {
+  font-family: var(--font-rules);
+  font-size: 0.9em;
+  letter-spacing: 0;
+}
+.nav__brand-note {
+  font-family: var(--font-gothic);
 }
 
 /* ── Inline links (wide screens) ── */

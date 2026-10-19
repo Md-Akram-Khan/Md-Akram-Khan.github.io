@@ -7,7 +7,6 @@ import type { MouseEvent as ReactMouseEvent } from 'react'
 import { profile, sections } from '../data/portfolio'
 import type { SectionId } from '../data/portfolio'
 import { onActiveSection, scrollState, scrollToSection } from '../lib/scroll'
-import Blackletter from './Blackletter'
 import './Nav.css'
 
 const links = sections.filter((s) => s.id !== 'hero')
@@ -112,10 +111,16 @@ export default function Nav() {
     if (restoreFocus) toggleRef.current?.focus()
   }, [])
 
-  // While the menu is open: lock scroll, focus the first link, trap Tab, Escape closes.
+  // While the menu is open: lock scroll, focus the first link, trap Tab, Escape closes,
+  // and make everything behind the full-screen menu inert, so screen-reader cursors
+  // and swipes stay in the menu just as keyboard focus does.
   useEffect(() => {
     if (!open) return
     lockScroll()
+    const behind = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip-link'))
+    behind.forEach((el) => {
+      el.inert = true
+    })
     const first = menuRef.current?.querySelector<HTMLElement>('a[href]')
     first?.focus({ preventScroll: true })
 
@@ -144,6 +149,9 @@ export default function Nav() {
     document.addEventListener('keydown', onKey)
     return () => {
       document.removeEventListener('keydown', onKey)
+      behind.forEach((el) => {
+        el.inert = false
+      })
       unlockScroll()
     }
   }, [open, closeMenu])
@@ -171,11 +179,13 @@ export default function Nav() {
     <header ref={headerRef} className={cls}>
       <div className="nav__bar">
         <a className="nav__brand" href="#hero" onClick={(e) => onLink(e, 'hero')}>
-          <span className="nav__seal gothic" aria-hidden="true">
-            <Blackletter text={profile.shortName.charAt(0)} />
+          <span className="nav__seal" aria-hidden="true">
+            {profile.shortName.charAt(0)}
           </span>
-          <span className="nav__brand-text gothic">
-            <Blackletter text={`${profile.shortName}’s Note`} />
+          {/* The name is set in a legible serif (Fraktur's "k" reads as an "f"); "Note" stays gothic. */}
+          <span className="nav__brand-text">
+            <span className="nav__brand-name">{profile.shortName}’s</span>{' '}
+            <span className="nav__brand-note gothic">Note</span>
           </span>
           <span className="visually-hidden">, back to the top</span>
         </a>

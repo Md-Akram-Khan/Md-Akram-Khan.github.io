@@ -1,6 +1,7 @@
 // A procedurally modelled red apple: lathe body with dimples and five soft lobes
 // at the base, vertex-painted streaks, a curved stem and a small bent leaf.
-// It drifts to a different spot in every section and turns slowly.
+// It drifts to a different spot in every section and turns slowly. When it has
+// to cross the page it dips below the frame instead of passing behind the text.
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import {
@@ -20,23 +21,26 @@ import {
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { scrollState } from '../lib/scroll'
 import { useIsMobile, useReducedMotion } from '../lib/env'
-import { aspectFit, blendPoses, dampPose, makePose, pose, sectionWeights, type PoseMap } from './choreo'
+import { aspectFit, blendPoses, dampPose, makePose, pose, sectionWeights, transitAmount, type PoseMap } from './choreo'
 
 // World placements (the apple's radius is ~1 × scale).
 const DESKTOP: PoseMap = {
   hero: pose(0.78, -1.14, 0.9, 0.15, 0, -0.25, 0.26),
   rules: pose(2.75, -1.42, 0.6, 0.1, 0, 0.2, 0.21),
-  names: pose(-2.9, -1.55, -1.2, 0.2, 0, 0.3, 0.26),
+  // The names cards are full width: the apple sinks into the dark with the book.
+  names: pose(-1.6, -1.2, -9, 0.2, 0, 0.3, 0.26),
   eyes: pose(-2.3, -1.4, 0.8, 0.1, 0, -0.2, 0.25),
   contact: pose(1.15, -1.22, 1.3, 0.2, 0, 0.18, 0.23),
 }
 
+// Phones: after the hero every section is full-width panels, so the apple sinks
+// into the dark with the book instead of peeking through the gaps between panels.
 const MOBILE: PoseMap = {
   hero: pose(0.46, 0.45, 0.9, 0.15, 0, -0.25, 0.15),
-  rules: pose(0.75, -1.9, -0.5, 0.1, 0, 0.2, 0.18),
-  names: pose(-0.7, -1.7, -1.5, 0.2, 0, 0.3, 0.18),
-  eyes: pose(0.7, -1.8, -0.4, 0.1, 0, -0.2, 0.18),
-  contact: pose(-0.55, -1.35, 0.4, 0.2, 0, 0.18, 0.17),
+  rules: pose(0.3, 0.2, -9, 0.1, 0, 0.2, 0.18),
+  names: pose(0.3, 0.2, -9, 0.2, 0, 0.3, 0.18),
+  eyes: pose(0.3, 0.2, -9, 0.1, 0, -0.2, 0.18),
+  contact: pose(0.3, 0.2, -9, 0.2, 0, 0.18, 0.18),
 }
 
 function buildBody(): BufferGeometry {
@@ -139,12 +143,20 @@ export default function Apple() {
     if (!o || !s) return
     const st = state.current
     const t = frame.clock.elapsedTime
-    blendPoses(isMobile ? MOBILE : DESKTOP, st.target, sectionWeights())
+    const poses = isMobile ? MOBILE : DESKTOP
+    const w = sectionWeights()
+    blendPoses(poses, st.target, w)
     if (!isMobile) {
       const fit = aspectFit(aspect)
       st.target.x *= fit.x
       st.target.s *= fit.s
     }
+    // Crossing sideways (e.g. eyes → contact runs right through the text column):
+    // route below the frame and a little back, shrinking, then rise into place.
+    const transit = transitAmount(poses, w)
+    st.target.y -= transit * 1.9
+    st.target.z -= transit * 1.4
+    st.target.s *= 1 - 0.35 * transit
     if (!st.init) {
       Object.assign(st.cur, st.target)
       st.init = true
@@ -159,6 +171,8 @@ export default function Apple() {
     )
     o.rotation.set(c.rx + Math.sin(t * 0.6) * 0.06 * m, 0, c.rz + Math.sin(t * 0.8 + 1) * 0.05 * m)
     o.scale.setScalar(c.s)
+    // Sunk into the fog (names; phones after the hero): not drawn at all.
+    o.visible = c.z > -7.5
     // Slow turn, nudged a little by scrolling.
     st.spin += dt * (0.28 + Math.min(Math.abs(scrollState.velocity) * 0.01, 1.2)) * m
     s.rotation.y = st.spin + 0.6

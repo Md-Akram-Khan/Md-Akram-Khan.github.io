@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, CSSProperties, FormEvent, ReactNode } from 'react'
 import { profile, sections } from '../data/portfolio'
+import RuleEyebrow from '../components/RuleEyebrow'
 import './Contact.css'
 
 const meta = sections.find((s) => s.id === 'contact') ?? { numeral: 'IV', label: 'Write a Name' }
@@ -67,9 +68,16 @@ const pad = (n: number) => String(n).padStart(2, '0')
 const clean = (s: string) => s.replace(/\s+/g, ' ').trim()
 /** Glue the last two words together so a wrapped cause never leaves one word alone on a line. */
 const noOrphan = (s: string) => s.replace(/ (\S+)$/, ' $1')
+const words = (s: string) => s.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean)
+const ownerWords = new Set(words(profile.name))
+const ownerShort = profile.shortName.toLowerCase()
+/**
+ * The owner's own name ("Akram", "Akram Khan", the full name), compared as whole
+ * words: "Akramul" or "Akram Hossain" is someone else and may write freely.
+ */
 const isOwner = (s: string) => {
-  const n = s.toLowerCase()
-  return n.includes(profile.shortName.toLowerCase()) || n === profile.name.toLowerCase()
+  const w = words(s)
+  return w.includes(ownerShort) && w.every((x) => ownerWords.has(x))
 }
 
 export default function Contact() {
@@ -139,9 +147,7 @@ export default function Contact() {
       <div className="container contact__inner">
         <div className="contact__col">
           <header className="contact__header">
-            <p className="eyebrow contact__eyebrow">
-              Rule {meta.numeral} <span aria-hidden="true">·</span> The last page
-            </p>
+            <RuleEyebrow numeral={meta.numeral} subtitle="Contact" className="contact__eyebrow" />
             <h2 id="contact-title" className="gothic contact__title">
               {meta.label}
             </h2>

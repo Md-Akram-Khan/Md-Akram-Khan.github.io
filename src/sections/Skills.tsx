@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { problemSolving, sections, skillGroups } from '../data/portfolio'
 import { useReducedMotion } from '../lib/env'
+import RuleEyebrow from '../components/RuleEyebrow'
 import './Skills.css'
 
 const numeral = sections.find((s) => s.id === 'eyes')?.numeral ?? 'III'
@@ -123,9 +124,7 @@ export default function Skills() {
           <div className="skills__sweep" aria-hidden="true" />
 
           <header className="skills__head" data-reveal>
-            <p className="eyebrow skills__eyebrow">
-              Rule {numeral} <span aria-hidden="true">·</span> Skills
-            </p>
+            <RuleEyebrow numeral={numeral} subtitle="Skills" className="skills__eyebrow" />
             <h2 id="eyes-title" className="gothic skills__title">
               Shinigami <span className="skills__title-accent">Eyes</span>
             </h2>

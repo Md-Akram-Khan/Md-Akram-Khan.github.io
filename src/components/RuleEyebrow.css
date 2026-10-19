@@ -1,0 +1,31 @@
+/* Shared section eyebrow (see RuleEyebrow.tsx). Sections only add spacing. */
+.rule-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  letter-spacing: 0.25em;
+}
+.rule-eyebrow::before {
+  content: '';
+  flex: none;
+  width: 32px;
+  height: 1px;
+  background: var(--blood);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--blood-bright) 60%, transparent);
+}
+.rule-eyebrow__text {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .rule-eyebrow {
+    gap: 12px;
+    font-size: 0.74rem;
+    letter-spacing: 0.22em;
+  }
+  .rule-eyebrow::before {
+    width: 24px;
+  }
+}

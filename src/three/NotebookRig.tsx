@@ -9,13 +9,14 @@
 //             rotations pivot around what you actually see
 import { Suspense, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { AdditiveBlending, Color, type Group, type ShaderMaterial } from 'three'
+import { AdditiveBlending, Color, type Group, type Mesh, type ShaderMaterial } from 'three'
 import Notebook from './Notebook'
 import { scrollState } from '../lib/scroll'
 import { useIsMobile, useReducedMotion } from '../lib/env'
 import {
   aspectFit,
   blendPoses,
+  CAMERA,
   damp,
   dampPose,
   easeInOutCubic,
@@ -25,30 +26,42 @@ import {
   sectionWeights,
   SPREAD_SHIFT,
   transitAmount,
+  visibleHalfWidth,
   world,
   type PoseMap,
 } from './choreo'
 
+/**
+ * Depth the book sinks to where it would only peek out from behind full-width
+ * content (the names cards; every section after the hero on phones). The fog
+ * swallows it there, so only its red halo stays: a deliberate glow in the dark
+ * rather than fragments of a book showing through the gaps between panels.
+ */
+const DEEP = -11
+/** Below this depth the book is fully fogged out and is not drawn at all. */
+const HIDDEN_Z = -9.2
+
 // Visual centre of the book (closed, or its open spread) per section, from the
-// layout contract. HTML sits left in hero/rules/contact, right in eyes, and
-// full width over the dimmed book in names.
+// layout contract. HTML sits left in hero/rules/contact and right in eyes; in
+// names the cards are full width, so the book withdraws into the dark.
 const DESKTOP: PoseMap = {
   //            x      y      z     rx     ry     rz    scale
   hero: pose(1.95, 0.0, 0.0, -0.06, 0.3, 0.07, 1.0),
   rules: pose(1.85, -0.05, 0.1, -0.2, -0.12, 0.02, 0.84),
-  names: pose(0.0, 0.05, -3.0, -0.34, 0.0, 0.0, 1.0),
+  names: pose(0.0, 0.1, DEEP, -0.34, 0.0, 0.0, 1.0),
   eyes: pose(-1.85, -0.1, 0.1, -0.16, 0.12, -0.02, 0.78),
   contact: pose(1.9, -0.02, 0.15, 0.06, -0.44, -0.06, 0.94),
 }
 
 // Phone: centred and smaller. In the hero the book sits in the top ~45% of the
-// viewport; elsewhere it stays behind the (panelled) content, pushed back.
+// viewport; after that every section is full-width panels, so the book sinks
+// into the dark and only its halo glows behind the content.
 const MOBILE: PoseMap = {
   hero: pose(0.0, 1.06, 0.0, 0.08, -0.3, 0.06, 0.56),
-  rules: pose(0.0, 0.6, -1.6, -0.24, 0.0, 0.0, 0.6),
-  names: pose(0.0, 0.45, -3.4, -0.3, 0.0, 0.0, 0.64),
-  eyes: pose(0.0, 0.6, -1.6, -0.2, 0.0, 0.0, 0.6),
-  contact: pose(0.0, 0.35, -2.2, 0.06, -0.36, -0.05, 0.62),
+  rules: pose(0.0, 0.9, DEEP, -0.24, 0.0, 0.0, 0.6),
+  names: pose(0.0, 0.9, DEEP, -0.3, 0.0, 0.0, 0.6),
+  eyes: pose(0.0, 0.9, DEEP, -0.2, 0.0, 0.0, 0.6),
+  contact: pose(0.0, 0.9, DEEP, 0.06, -0.36, -0.05, 0.6),
 }
 
 const HALO_VERT = /* glsl */ `
@@ -99,6 +112,7 @@ export default function NotebookRig() {
   const body = useRef<Group>(null)
   const pivot = useRef<Group>(null)
   const halo = useRef<ShaderMaterial>(null)
+  const haloMesh = useRef<Mesh>(null)
   const veil = useRef<ShaderMaterial>(null)
   const isMobile = useIsMobile()
   const reduced = useReducedMotion()
@@ -118,6 +132,8 @@ export default function NotebookRig() {
   )
   const veilUniforms = useMemo(() => ({ uOpacity: { value: 0 } }), [])
 
+  // Priority -1: runs before the Notebook's own frame callback, so the cover reads
+  // this frame's world.open (no one-frame lag between cover and slide).
   useFrame((frame, dt) => {
     const a = anchor.current
     const b = body.current
@@ -128,24 +144,35 @@ export default function NotebookRig() {
     const w = sectionWeights()
     const poses = isMobile ? MOBILE : DESKTOP
     blendPoses(poses, st.target, w)
+    const openTarget = notebookOpenTarget(reduced)
     if (!isMobile) {
       const fit = aspectFit(aspect)
       st.target.x *= fit.x
       st.target.s *= fit.s
+      // Keep the whole book (or the open spread, twice as wide) inside the free
+      // column beside the text: narrow or portrait windows (768×1024, 1024×768)
+      // shrink and re-centre it instead of letting it run off the edge or slide
+      // under the panel. (At 16:10 the authored poses already fit; nothing changes.)
+      const ax = Math.abs(st.target.x)
+      if (ax > 0.5) {
+        const vis = visibleHalfWidth(aspect, st.target.z)
+        const inner = vis * (aspect < 1.1 ? 0.24 : 0.12) // text column edge
+        const outer = vis - 0.12 // viewport edge, less a margin
+        const halfBook = 0.75 + SPREAD_SHIFT * easeInOutCubic(openTarget)
+        st.target.s = Math.min(st.target.s, Math.max(0.3, (outer - inner) / 2 / halfBook))
+        const hw = halfBook * st.target.s
+        const lo = inner + hw
+        st.target.x = Math.sign(st.target.x) * Math.min(Math.max(ax, lo), Math.max(lo, outer - hw))
+      }
     }
+    // Crossing the page (eyes → contact runs over the heading as it scrolls in):
+    // arc up a little on the way, away from the incoming text.
+    const transitLift = isMobile ? 0 : 0.6
     // Crossing from one side of the page to the other: pull back into the dark
     // on the way, so the bright pages never sit full-size behind the text.
     const transit = transitAmount(poses, w)
     st.target.z -= transit * 1.8
-
-    const openTarget = notebookOpenTarget(reduced)
-    if (!isMobile) {
-      // Portrait-ish desktop windows (e.g. an 820×1000 tablet): the open spread is
-      // twice as wide as the closed book, so shrink it while open to keep it in the
-      // free column beside the text instead of sliding under the panel.
-      const portrait = Math.min(1, Math.max(0, (1.25 - aspect) / 0.45))
-      st.target.s *= 1 - 0.2 * portrait * openTarget
-    }
+    st.target.y += transit * transitLift
     // First frame: jump straight to the pose (no swoop in from the origin).
     if (!st.init) {
       Object.assign(st.cur, st.target)
@@ -153,8 +180,9 @@ export default function NotebookRig() {
       st.init = true
     }
     dampPose(st.cur, st.target, reduced ? 8 : 2.6, dt)
-    // Same rate and dt clamp as Notebook.tsx uses for its cover, so they stay in step.
-    st.open = reduced ? openTarget : damp(st.open, openTarget, 3.2, Math.min(dt, 1 / 20))
+    // The one open amount for both the cover (Notebook) and the slide below.
+    st.open = reduced ? openTarget : damp(st.open, openTarget, 3.2, Math.min(dt, 0.1))
+    world.open = st.open
     const c = st.cur
 
     // Pointer parallax, idle float and scroll inertia (all off under reduced motion).
@@ -174,6 +202,7 @@ export default function NotebookRig() {
       c.rz + floatR,
     )
     b.scale.setScalar(c.s)
+    b.visible = c.z > HIDDEN_Z
     // Slide with the cover (same easing), so the spread stays centred as it opens.
     pv.position.x = SPREAD_SHIFT * easeInOutCubic(st.open)
 
@@ -187,6 +216,11 @@ export default function NotebookRig() {
     if (isMobile) dim = Math.max(dim, (1 - w.hero) * 0.85)
     world.dim = damp(world.dim, dim, 3, dt)
 
+    // The halo keeps its on-screen size however deep the book sinks.
+    if (haloMesh.current) {
+      const k = Math.max(1, (CAMERA.z - c.z) / CAMERA.z)
+      haloMesh.current.scale.set(7.5 * k, 6.5 * k, 1)
+    }
     if (halo.current) {
       const u = halo.current.uniforms
       u.uTime.value = reduced ? 0 : t
@@ -197,12 +231,12 @@ export default function NotebookRig() {
       veil.current.uniforms.uOpacity.value = world.dim * 0.55
       veil.current.visible = world.dim > 0.01
     }
-  })
+  }, -1)
 
   return (
     <group ref={anchor}>
       {/* Soft glow behind the book (faces camera, never rotates with the book). */}
-      <mesh position={[0, 0.05, -1.4]} scale={[7.5, 6.5, 1]} renderOrder={-1}>
+      <mesh ref={haloMesh} position={[0, 0.05, -1.4]} scale={[7.5, 6.5, 1]} renderOrder={-1}>
         <planeGeometry />
         <shaderMaterial
           ref={halo}

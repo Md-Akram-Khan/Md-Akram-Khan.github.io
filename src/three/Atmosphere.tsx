@@ -296,9 +296,11 @@ export default function Atmosphere() {
       makeField(counts.ash, 11, { x: halfW * 1.6 + 1, y: HEIGHT, zMin: -9, zMax: 4 }, [0.08, 0.22], [1.2, 5.5], [0.1, 0.5]),
     [counts.ash, halfW],
   )
+  // Embers stay behind the book's plane: blooming in front of it, they blotted out
+  // the cover title. Only the fine ash drifts in front, for depth.
   const emberField = useMemo(
     () =>
-      makeField(counts.embers, 23, { x: halfW * 1.3 + 0.5, y: HEIGHT, zMin: -6, zMax: 2.5 }, [0.18, 0.5], [2.2, 6], [0.15, 0.6]),
+      makeField(counts.embers, 23, { x: halfW * 1.3 + 0.5, y: HEIGHT, zMin: -7, zMax: -0.9 }, [0.18, 0.5], [2.2, 6], [0.15, 0.6]),
     [counts.embers, halfW],
   )
 
@@ -307,7 +309,8 @@ export default function Atmosphere() {
     return Array.from({ length: counts.feathers }, () => ({
       x: (r() * 2 - 1) * (halfW * 1.25 + 0.6),
       y: r() * HEIGHT,
-      z: -7 + r() * 8.5,
+      // Behind the page plane, so a feather never sweeps across a heading up close.
+      z: -7.5 + r() * 6.6,
       speed: 0.16 + r() * 0.16,
       phase: r() * Math.PI * 2,
       sway: 0.25 + r() * 0.45,
@@ -360,8 +363,8 @@ export default function Atmosphere() {
 
   useFrame((_, dt) => {
     const st = state.current
-    // Under reduced motion the air barely moves (near-static, not frozen dead).
-    const speed = reduced ? 0.05 : 1
+    // Under reduced motion the air holds still (and the canvas renders on demand).
+    const speed = reduced ? 0 : 1
     st.time += Math.min(dt, 0.1) * speed
     const t = st.time
     st.scroll = damp(st.scroll, reduced ? 0 : scrollState.progress * 7, 3, dt)

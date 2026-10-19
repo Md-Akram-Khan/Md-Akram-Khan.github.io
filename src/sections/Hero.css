@@ -64,18 +64,7 @@
 
 /* ── Eyebrow ── */
 .hero__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
   margin-bottom: clamp(18px, 3vh, 28px);
-  font-size: 0.8rem;
-}
-.hero__eyebrow::before {
-  content: '';
-  width: 40px;
-  height: 1px;
-  background: var(--blood);
-  box-shadow: 0 0 8px var(--blood-bright);
 }
 
 /* ── The name (the page's only h1) ── */
@@ -94,10 +83,16 @@
   color: var(--blood-text);
   text-shadow: 0 0 22px color-mix(in srgb, var(--blood-bright) 55%, transparent);
 }
+/* The name itself is set in a legible old-style serif at display size (Fraktur's
+   "A" and "k" misread as "U" and "f"); the blackletter stays for "Md." and headings. */
 .hero__title-name {
   position: relative;
   display: inline-block;
   white-space: nowrap;
+  font-family: var(--font-rules);
+  font-size: 0.94em;
+  letter-spacing: -0.025em;
+  line-height: 1;
   text-shadow:
     0 0 42px color-mix(in srgb, var(--blood) 38%, transparent),
     0 2px 1px #000;
@@ -456,10 +451,6 @@
   }
   .hero__eyebrow {
     margin-bottom: 14px;
-    font-size: 0.72rem;
-  }
-  .hero__eyebrow::before {
-    width: 28px;
   }
   .hero__title {
     margin-bottom: 26px;

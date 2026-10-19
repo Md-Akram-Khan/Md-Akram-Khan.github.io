@@ -1,17 +1,78 @@
 // Lighting for the void: a warm candle key that flickers, a hard red rim from
-// behind, a whisper of cool fill, and a tiny local environment (Lightformers
-// only — nothing is fetched) so glossy things like the apple have something to
-// reflect.
-import { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { Environment, Lightformer } from '@react-three/drei'
-import type { PointLight, SpotLight } from 'three'
+// behind, a whisper of cool fill, and a tiny local environment so glossy things
+// like the apple have something to reflect.
+//
+// The environment is a handful of glowing panels rendered once through
+// PMREMGenerator. (drei's <Environment> would also work with Lightformers, but it
+// ships the HDR/EXR/gain-map loaders and the remote preset table with it.)
+import { useEffect, useRef } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
+import {
+  CircleGeometry,
+  Color,
+  DoubleSide,
+  Mesh,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  PMREMGenerator,
+  RingGeometry,
+  Scene,
+  type BufferGeometry,
+  type PointLight,
+  type SpotLight,
+} from 'three'
 import { useReducedMotion } from '../lib/env'
 import { damp, wobble, world } from './choreo'
 
 const KEY = 46
 const RIM = 26
 const RIM_LOW = 10
+
+/** Emissive panels for the environment: [shape, colour, intensity, position, scale]. */
+const PANELS: [shape: 'rect' | 'circle' | 'ring', color: string, intensity: number, pos: [number, number, number], scale: [number, number]][] = [
+  ['rect', '#ffb36b', 2.4, [-4, 3, 4], [4, 2]],
+  ['rect', '#ff2236', 3.2, [5, 1, -3], [2, 5]],
+  ['circle', '#8090b0', 0.6, [0, 6, 1], [3, 3]],
+  ['ring', '#ff8a4a', 1.2, [-2, -3, 3], [2, 2]],
+]
+
+/** Bakes PANELS into a prefiltered environment map and sets it on the scene. */
+function LocalEnvironment({ intensity }: { intensity: number }) {
+  const get = useThree((s) => s.get)
+  useEffect(() => {
+    // The renderer and scene live as long as the canvas; read them from the store.
+    const { gl, scene, invalidate } = get()
+    const env = new Scene()
+    env.background = new Color('#000000')
+    const disposables: { dispose: () => void }[] = []
+    for (const [shape, color, k, pos, scale] of PANELS) {
+      const geo: BufferGeometry =
+        shape === 'rect' ? new PlaneGeometry(1, 1) : shape === 'circle' ? new CircleGeometry(0.5, 32) : new RingGeometry(0.25, 0.5, 32)
+      const mat = new MeshBasicMaterial({ color: new Color(color).multiplyScalar(k), side: DoubleSide, toneMapped: false })
+      const m = new Mesh(geo, mat)
+      m.position.set(...pos)
+      m.scale.set(scale[0], scale[1], 1)
+      m.lookAt(0, 0, 0)
+      env.add(m)
+      disposables.push(geo, mat)
+    }
+    const pmrem = new PMREMGenerator(gl)
+    const target = pmrem.fromScene(env, 0.02)
+    pmrem.dispose()
+    disposables.forEach((d) => d.dispose())
+    const prev = scene.environment
+    const prevIntensity = scene.environmentIntensity
+    scene.environment = target.texture
+    scene.environmentIntensity = intensity
+    invalidate()
+    return () => {
+      scene.environment = prev
+      scene.environmentIntensity = prevIntensity
+      target.dispose()
+    }
+  }, [get, intensity])
+  return null
+}
 
 export default function Stage() {
   const key = useRef<SpotLight>(null)
@@ -74,12 +135,7 @@ export default function Stage() {
       {/* Faint cool fill from the right. */}
       <directionalLight position={[5, -1, 4]} intensity={0.22} color="#7d8db5" />
 
-      <Environment resolution={128} frames={1} environmentIntensity={0.55}>
-        <Lightformer form="rect" color="#ffb36b" intensity={2.4} position={[-4, 3, 4]} scale={[4, 2, 1]} target={[0, 0, 0]} />
-        <Lightformer form="rect" color="#ff2236" intensity={3.2} position={[5, 1, -3]} scale={[2, 5, 1]} target={[0, 0, 0]} />
-        <Lightformer form="circle" color="#8090b0" intensity={0.6} position={[0, 6, 1]} scale={3} target={[0, 0, 0]} />
-        <Lightformer form="ring" color="#ff8a4a" intensity={1.2} position={[-2, -3, 3]} scale={2} target={[0, 0, 0]} />
-      </Environment>
+      <LocalEnvironment intensity={0.55} />
     </>
   )
 }

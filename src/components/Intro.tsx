@@ -16,7 +16,7 @@
 //   Hero and Nav schedule their entrance behind it with matching CSS delays.
 import { useEffect, useState } from 'react'
 import type { CSSProperties } from 'react'
-import { profile } from '../data/portfolio'
+import { profile, sections } from '../data/portfolio'
 import './Intro.css'
 
 const SEEN_KEY = 'the-note:intro-seen'
@@ -55,6 +55,9 @@ function shouldPlay(): boolean {
   } catch {
     /* matchMedia unavailable: play */
   }
+  // A deep link (e.g. /#eyes) goes straight to that page of the note.
+  const hash = window.location.hash.slice(1)
+  if (hash && hash !== 'hero' && sections.some((s) => s.id === hash)) return false
   try {
     if (window.sessionStorage.getItem(SEEN_KEY)) return false
   } catch {

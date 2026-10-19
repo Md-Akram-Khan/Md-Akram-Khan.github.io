@@ -8,11 +8,12 @@
 // When open, the front cover lies to the LEFT of the spine (x ≈ -2.2 … -0.75),
 // so the open spread spans roughly x ∈ [-2.2, 0.75].
 import { useEffect, useMemo, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { projects } from '../data/portfolio'
 import { scrollState } from '../lib/scroll'
 import { useReducedMotion } from '../lib/env'
+import { world } from './choreo'
 import {
   drawBugsInk,
   drawCoverTitle,
@@ -55,6 +56,10 @@ const SEG = 20
 const REST_LIFT = Array.from({ length: SHEETS }, (_, i) => 0.014 + i * 0.009)
 /** Flip duration in "sheet slots"; > 1 so consecutive pages overlap. */
 const FLIP_LEN = 1.7
+/** Seconds to write one name, whatever the scroll speed (scroll only decides when). */
+const WRITE_SECONDS = 0.6
+/** Seconds to "un-write" a name when scrolling back above its trigger. */
+const UNWRITE_SECONDS = 0.25
 
 const RIB_N = 18
 const RIB_W = 0.044
@@ -317,14 +322,18 @@ function createAssets() {
 
   const title = makeCanvasTexture(px(1024), px(1024 * (H / W)))
   drawCoverTitle(title.canvas, false)
+  // Silver foil: metallic and fairly smooth, so the candle key and the red rim
+  // glint across it; the same canvas as a bump map embosses the letter edges.
   const titleMat = new THREE.MeshStandardMaterial({
-    color: '#d9d5cc',
+    color: '#dcd4c2',
     map: title.texture,
-    metalness: 0.35,
-    roughness: 0.32,
+    metalness: 0.7,
+    roughness: 0.28,
+    bumpMap: title.texture,
+    bumpScale: 2.5,
     emissive: new THREE.Color('#d6d0c4'),
     emissiveMap: title.texture,
-    emissiveIntensity: 0.62,
+    emissiveIntensity: 0.42,
     transparent: true,
     depthWrite: false,
     polygonOffset: true,
@@ -453,12 +462,13 @@ export default function Notebook() {
   const live = useRef(assets)
 
   const cover = useRef<THREE.Group>(null)
+  const invalidate = useThree((s) => s.invalidate)
   const anim = useRef({
-    open: 0,
-    write: 0,
     flip: 0,
     flutter: 0,
     fresh: new Float32Array(MAX_LINES),
+    /** Per-line write progress 0..1, advanced by time once the line is triggered. */
+    ink: new Float32Array(MAX_LINES),
     last: Array.from({ length: SHEETS }, () => ({ angle: NaN, bend: NaN, min: NaN })),
   })
 
@@ -466,12 +476,14 @@ export default function Notebook() {
     let alive = true
     // Draw the text once the fonts are in (or with fallbacks if they failed).
     loadNoteFonts().then(() => {
-      if (alive) live.current.redraw(true)
+      if (!alive) return
+      live.current.redraw(true)
+      invalidate() // on-demand rendering (reduced motion) needs a nudge to show it
     })
     return () => {
       alive = false
     }
-  }, [assets])
+  }, [assets, invalidate])
 
   useEffect(() => () => assets.dispose(), [assets])
 
@@ -483,35 +495,27 @@ export default function Notebook() {
     const sec = scrollState.sections
 
     // ── Targets from scroll ──
-    let openT: number
     let writeT: number
     let flipT: number
     if (reduced) {
-      const act = scrollState.active
-      openT = act === 'rules' || act === 'names' || act === 'eyes' ? 1 : 0
-      writeT = act === 'hero' ? 0 : 1
+      writeT = scrollState.active === 'hero' ? 0 : 1
       flipT = 0
     } else {
-      openT = smooth(0.12, 0.42, sec.rules.progress) * (1 - smooth(0.18, 0.5, sec.contact.progress))
       writeT = smooth(0.24, 0.56, sec.rules.progress)
       flipT = smooth(0.16, 0.84, sec.names.progress)
     }
 
     if (reduced) {
-      a.open = openT
-      a.write = writeT
       a.flip = flipT
       a.flutter = 0
     } else {
-      a.open = damp(a.open, openT, 3.2, dt)
-      a.write = damp(a.write, writeT, 3, dt)
       a.flip = damp(a.flip, flipT, 2.6, dt)
       const vel = clamp01(Math.abs(scrollState.velocity) / 28)
       a.flutter = damp(a.flutter, vel, vel > a.flutter ? 6 : 1.5, dt)
     }
 
-    // ── Cover ──
-    const open = a.open
+    // ── Cover ── (open amount shared with NotebookRig, which runs first)
+    const open = world.open
     let coverAngle = easeInOut(open) * OPEN_ANGLE
     if (!reduced) {
       // Closed: the cover "breathes", lifting a hair. Open: a slow sway.
@@ -549,7 +553,10 @@ export default function Notebook() {
       bendSheet(nb.sheets[i].geometry, angle, bend, minAngle, 0)
     }
 
-    // ── Handwritten names (write-on, line by line) ──
+    // ── Handwritten names ──
+    // Scroll only decides WHEN a name is written: once the scroll passes line i's
+    // trigger, the whole name is written in a fixed time, so a resting page only
+    // ever shows whole names (never one frozen mid-word).
     const u = nb.namesUniforms
     const n = nb.lines.length
     for (let i = 0; i < MAX_LINES; i++) {
@@ -559,10 +566,16 @@ export default function Notebook() {
         u.uLineV.value[i] = -1
         continue
       }
-      const p = clamp01(a.write * n - i)
+      const wanted = writeT * n > i + 0.15 ? 1 : 0
+      const prev = a.ink[i]
+      if (reduced) a.ink[i] = wanted
+      // One pen: a line starts once the previous one is mostly written.
+      else if (wanted > prev && (i === 0 || a.ink[i - 1] > 0.7)) a.ink[i] = Math.min(1, prev + dt / WRITE_SECONDS)
+      else if (wanted < prev) a.ink[i] = Math.max(0, prev - dt / UNWRITE_SECONDS)
+      const p = easeInOut(a.ink[i])
       u.uLineV.value[i] = line.v
       u.uRevealX.value[i] = p <= 0 ? -1 : line.x0 + (line.x1 - line.x0) * p
-      const writing = !reduced && p > 0.001 && p < 0.999 ? 1 : 0
+      const writing = !reduced && wanted === 1 && p < 0.999 ? 1 : 0
       a.fresh[i] = reduced ? 0 : damp(a.fresh[i], writing, writing ? 12 : 1.6, dt)
       u.uFresh.value[i] = a.fresh[i]
     }

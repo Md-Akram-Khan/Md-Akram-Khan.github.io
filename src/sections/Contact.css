@@ -16,6 +16,21 @@
   justify-content: center;
 }
 
+/* Fade the canvas to ink over the last stretch of the page, so the footer never
+   meets the 3D scene (or its red glow) at a hard edge. Sits under the content
+   (.section is already a positioned stacking context). */
+.contact::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(72px, 12vh, 140px);
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--ink));
+}
+
 .contact__inner {
   display: grid;
   grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
@@ -32,7 +47,24 @@
 /* ───────────── Header ───────────── */
 
 .contact__header {
+  position: relative;
+  isolation: isolate;
   text-shadow: 0 2px 24px rgba(5, 5, 5, 0.9);
+}
+/* A soft pool of ink behind the intro (the rules and skills sit on panels), so the
+   apple, the book and stray feathers drifting past never sit under the words. */
+.contact__header::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -28% -14% -32% -18%;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--ink) 90%, transparent) 0 58%,
+    color-mix(in srgb, var(--ink) 55%, transparent) 80%,
+    transparent 100%
+  );
 }
 
 .contact__eyebrow {
@@ -335,9 +367,16 @@
   color: var(--ash);
   opacity: 1;
 }
-/* Focus is shown by the red writing line under the field (see .contact__field::after). */
+/* Focus is shown by the red writing line under the field (see .contact__line::after).
+   The transparent outline is invisible normally but becomes a real ring in forced colours. */
 .contact__input:focus-visible {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+@media (forced-colors: active) {
+  .contact__input:focus-visible {
+    outline: 2px solid Highlight;
+  }
 }
 .contact__line:has([aria-invalid='true'])::after {
   background-color: var(--blood-text);
@@ -635,8 +674,9 @@
   }
 }
 
-/* Very narrow phones: the button drops to its own ruled line. */
-@media (max-width: 440px) {
+/* Very narrow phones, and tablets where the page shares the screen with the 3D book:
+   the button drops to its own ruled line so the name field keeps the full width. */
+@media (max-width: 440px), (min-width: 761px) and (max-width: 1100px) {
   .contact__field {
     flex-wrap: wrap;
     gap: 0 12px;

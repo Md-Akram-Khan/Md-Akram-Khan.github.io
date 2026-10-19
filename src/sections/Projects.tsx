@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { profile, projects, sections } from '../data/portfolio'
 import ProjectCard from './ProjectCard'
+import RuleEyebrow from '../components/RuleEyebrow'
 import './Projects.css'
 
 const meta = sections.find((s) => s.id === 'names')
@@ -42,13 +43,13 @@ export default function Projects() {
       <div className="container">
         <header className="projects__intro" data-reveal>
           <div className="projects__heading">
-            <p className="eyebrow projects__eyebrow">Rule {meta?.numeral ?? 'II'}</p>
+            <RuleEyebrow numeral={meta?.numeral ?? 'II'} subtitle="Projects" className="projects__eyebrow" />
             <h2 className="gothic projects__title" id="names-title">
               {meta?.label ?? 'Names Written'}
             </h2>
           </div>
           <div className="projects__aside">
-            <p className="hand projects__lede">Every name written here was carried through to the end.</p>
+            <p className="hand projects__lede">Each name below was written in my own ink, or in shared ink.</p>
             <p className="mono projects__tally">
               <span>{pad(projects.length)} names</span>
               <span aria-hidden="true"> · </span>

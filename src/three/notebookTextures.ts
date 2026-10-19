@@ -23,8 +23,9 @@ const STACK = {
 let fontPromise: Promise<boolean> | null = null
 
 /**
- * Loads the three TTFs used on the notebook. Never rejects: resolves true when
- * every face loaded, false otherwise (canvas text then uses the fallbacks).
+ * Loads the three faces used on the notebook (the page's own woff2 files, so
+ * normally from cache). Never rejects: resolves true when every face loaded,
+ * false otherwise (canvas text then uses the fallbacks).
  */
 export function loadNoteFonts(): Promise<boolean> {
   if (fontPromise) return fontPromise
@@ -33,9 +34,9 @@ export function loadNoteFonts(): Promise<boolean> {
     return fontPromise
   }
   const faces = [
-    new FontFace(NOTE_FONTS.gothic, `url(${fonts.gothic})`),
-    new FontFace(NOTE_FONTS.hand, `url(${fonts.hand})`, { weight: '400 700' }),
-    new FontFace(NOTE_FONTS.serif, `url(${fonts.serif})`),
+    new FontFace(NOTE_FONTS.gothic, `url(${fonts.gothic}) format('woff2')`),
+    new FontFace(NOTE_FONTS.hand, `url(${fonts.hand}) format('woff2')`, { weight: '400 700' }),
+    new FontFace(NOTE_FONTS.serif, `url(${fonts.serif}) format('woff2')`),
   ]
   fontPromise = Promise.allSettled(
     faces.map((face) =>
@@ -352,8 +353,9 @@ export function drawCoverTitle(c: HTMLCanvasElement, fontsReady: boolean) {
   ctx.strokeRect(W * 0.085, H * 0.061, W * 0.83, H * 0.878)
 
   if (!fontsReady) return
-  const title = 'DEATH NOTE'
-  let size = W * 0.15
+  // Title case: Fraktur was never set in capitals, and its lowercase reads cleanly.
+  const title = 'Death Note'
+  let size = W * 0.17
   ctx.font = `${size}px ${STACK.gothic}`
   const maxW = W * 0.74
   const measured = ctx.measureText(title).width
@@ -362,12 +364,10 @@ export function drawCoverTitle(c: HTMLCanvasElement, fontsReady: boolean) {
   ctx.textAlign = 'center'
   ctx.textBaseline = 'alphabetic'
   const cy = H * 0.3
-  // Soft halo so bloom has something to catch.
-  ctx.shadowColor = 'rgba(255,255,255,0.35)'
-  ctx.shadowBlur = W * 0.012
+  // Crisp letters only: the foil look comes from the material (metalness + an
+  // emboss from this same canvas as a bump map), not from a blurred halo.
   ctx.fillStyle = '#ffffff'
   ctx.fillText(title, W / 2, cy)
-  ctx.shadowBlur = 0
 
   // Hairline ornaments above and below.
   const tw = Math.min(ctx.measureText(title).width, maxW)

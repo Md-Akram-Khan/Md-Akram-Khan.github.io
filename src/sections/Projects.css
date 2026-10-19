@@ -46,16 +46,7 @@
 }
 
 .projects__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
   margin-bottom: clamp(10px, 1.6vw, 18px);
-}
-.projects__eyebrow::after {
-  content: '';
-  width: 56px;
-  height: 1px;
-  background: var(--blood);
 }
 
 .projects__title {
@@ -93,7 +84,7 @@
 .projects__tally > span[aria-hidden] {
   color: var(--blood-text);
 }
-@media (min-width: 761px) {
+@media (min-width: 1024px) {
   .projects__tally {
     justify-content: flex-end;
   }
@@ -117,9 +108,14 @@
   }
 }
 
-@media (min-width: 761px) {
+/* Two columns only once there is room: the heading column can never be narrower
+   than its longest word, and the aside is capped so its tally wraps instead. */
+.projects__heading {
+  min-width: min-content;
+}
+@media (min-width: 1024px) {
   .projects__intro {
-    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    grid-template-columns: minmax(min-content, 1fr) minmax(0, 26rem);
     align-items: end;
     column-gap: 56px;
   }

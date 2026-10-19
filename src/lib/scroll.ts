@@ -101,8 +101,14 @@ export function startScrollTracking() {
   window.addEventListener('scroll', schedule, { passive: true })
   window.addEventListener('resize', schedule)
   window.addEventListener('pointermove', onPointer, { passive: true })
+  // The document can change height without a scroll (late font swaps, names
+  // written in Contact, the eye deal): re-measure so section progress and the
+  // footer `tail` never go stale.
+  const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(schedule)
+  ro?.observe(document.body)
   measure()
   return () => {
+    ro?.disconnect()
     window.removeEventListener('scroll', schedule)
     window.removeEventListener('resize', schedule)
     window.removeEventListener('pointermove', onPointer)

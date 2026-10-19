@@ -4,6 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { profile, rules, sections } from '../data/portfolio'
 import { useReducedMotion } from '../lib/env'
+import RuleEyebrow from '../components/RuleEyebrow'
 import './Rules.css'
 
 const numeral = sections.find((s) => s.id === 'rules')?.numeral ?? 'I'
@@ -63,9 +64,7 @@ export default function Rules() {
           <span className="rules__corner rules__corner--br" aria-hidden="true" />
 
           <header className="rules__head" data-reveal>
-            <p className="eyebrow rules__eyebrow">
-              Rule {numeral} <span aria-hidden="true">·</span> About
-            </p>
+            <RuleEyebrow numeral={numeral} subtitle="About" className="rules__eyebrow" />
             <h2 id="rules-title" className="gothic rules__title">
               How to Use It
             </h2>

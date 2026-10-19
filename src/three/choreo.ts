@@ -62,8 +62,15 @@ export function sectionWeights(): Readonly<Record<SectionId, number>> {
  */
 export function aspectFit(aspect: number) {
   const k = aspect / 1.6
-  return { x: Math.min(1.15, Math.max(0.55, k)), s: Math.min(1, Math.max(0.72, k)) }
+  return { x: Math.min(1.15, Math.max(0.38, k)), s: Math.min(1, Math.max(0.6, k)) }
 }
+
+/** Camera field of view (degrees) and its resting distance, as set up in Experience. */
+export const CAMERA = { fov: 35, z: 7 }
+
+/** Half the visible world width at depth `z` for the given viewport aspect. */
+export const visibleHalfWidth = (aspect: number, z: number) =>
+  Math.tan((CAMERA.fov * Math.PI) / 360) * Math.max(0.5, CAMERA.z - z) * aspect
 
 /** Weighted blend of per-section poses into `out`. */
 export function blendPoses(map: PoseMap, out: Pose, w = sectionWeights()): Pose {
@@ -159,6 +166,12 @@ export const world = {
   notebook: { x: 1.9, y: 0, z: 0 },
   /** 0..1, how dimmed the notebook should be (the 'names' section, or crossing the page). */
   dim: 0,
+  /**
+   * 0..1, how open the notebook is (damped). Computed once per frame by NotebookRig
+   * (which runs first) and read by Notebook for the cover, so the cover angle and
+   * the spread-centring slide always use the very same value.
+   */
+  open: 0,
 }
 
 /** Cheap smooth pseudo-noise in about -1..1 (sum of incommensurate sines). */
