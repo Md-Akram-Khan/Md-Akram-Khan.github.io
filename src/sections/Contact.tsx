@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, CSSProperties, FormEvent, ReactNode } from 'react'
 import { profile, sections } from '../data/portfolio'
 import RuleEyebrow from '../components/RuleEyebrow'
+import PenReel from '../components/PenReel'
 import './Contact.css'
 
 const meta = sections.find((s) => s.id === 'contact') ?? { numeral: 'IV', label: 'Write a Name' }
@@ -156,6 +157,8 @@ export default function Contact() {
               name, see what happens, then say hello.
             </p>
           </header>
+
+          <PenReel replayKey={nextLine - 1} />
 
           <div className="panel contact__page">
             <div className="contact__page-head">

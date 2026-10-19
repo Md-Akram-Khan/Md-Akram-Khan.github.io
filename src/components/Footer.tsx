@@ -40,8 +40,8 @@ export default function Footer() {
         </a>
 
         <p className="footer__disclaimer">
-          A fan-made tribute. Death Note belongs to Tsugumi Ohba, Takeshi Obata and Shueisha; this site is not
-          affiliated with them.
+          A fan-made tribute. Death Note belongs to Tsugumi Ohba, Takeshi Obata and Shueisha, and the writing clip
+          comes from the anime by Madhouse; this site is not affiliated with them.
         </p>
       </div>
     </footer>
