@@ -1,7 +1,7 @@
 // Single source of truth for all portfolio content.
 // Every fact here comes from Md. Akram Khan's public GitHub repositories.
 
-export type SectionId = 'hero' | 'rules' | 'names' | 'cases' | 'eyes' | 'contact'
+export type SectionId = 'hero' | 'rules' | 'names' | 'cases' | 'eyes' | 'duels' | 'contact'
 
 export const sections: { id: SectionId; label: string; numeral: string }[] = [
   { id: 'hero', label: 'The Note', numeral: '0' },
@@ -9,7 +9,8 @@ export const sections: { id: SectionId; label: string; numeral: string }[] = [
   { id: 'names', label: 'Names Written', numeral: 'II' },
   { id: 'cases', label: 'Cases Closed', numeral: 'III' },
   { id: 'eyes', label: 'Shinigami Eyes', numeral: 'IV' },
-  { id: 'contact', label: 'Write a Name', numeral: 'V' },
+  { id: 'duels', label: 'Duels Fought', numeral: 'V' },
+  { id: 'contact', label: 'Write a Name', numeral: 'VI' },
 ]
 
 export const profile = {
@@ -254,6 +255,27 @@ export const judges: Judge[] = [
 
 /** When the counts above were last written down. */
 export const judgesAsOf = 'October 2026'
+
+// "Duels Fought" — contests: team CTFs and solo programming contests, newest first.
+// Akram's own results. `field` is the number of teams/participants; `fieldPlus`
+// marks counts given as "650+" (the true field was larger).
+export type Contest = {
+  kind: 'ctf' | 'cp'
+  year: number
+  name: string
+  organizer: string
+  team?: string
+  rank: number
+  field: number
+  fieldPlus?: boolean
+}
+
+export const contests: Contest[] = [
+  { kind: 'ctf', year: 2026, name: 'AL KHWARIZMI CTF', organizer: 'Bangladesh Islami Chattro Shibir', team: 'Restless_goblins', rank: 6, field: 650, fieldPlus: true },
+  { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', organizer: 'University of Dhaka', rank: 10, field: 105 },
+  { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', organizer: 'University of Dhaka', rank: 14, field: 68 },
+  { kind: 'ctf', year: 2023, name: 'DU CTF 2023', organizer: 'University of Dhaka', team: 'DU_CTF_NOOBS', rank: 10, field: 100, fieldPlus: true },
+]
 
 // Competitive programming and DSA practice repositories.
 export const problemSolving: { title: string; detail: string; repo: string; since?: number }[] = [

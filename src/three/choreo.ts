@@ -162,7 +162,7 @@ export function notebookOpenTarget(reduced: boolean): number {
   const s = scrollState.sections
   if (reduced) {
     const a = scrollState.active
-    return a === 'rules' || a === 'names' || a === 'cases' || a === 'eyes' ? 1 : 0
+    return a === 'rules' || a === 'names' || a === 'cases' || a === 'eyes' || a === 'duels' ? 1 : 0
   }
   return smooth(0.12, 0.42, s.rules.progress) * (1 - smooth(0.18, 0.5, s.contact.progress))
 }
