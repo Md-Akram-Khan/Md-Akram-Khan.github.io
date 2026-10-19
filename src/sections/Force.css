@@ -199,6 +199,23 @@
   color: var(--paper);
 }
 
+/* problem names, written in red ink and linked */
+.force__problem {
+  color: var(--blood-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blood) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition:
+    color 200ms var(--ease),
+    text-decoration-color 200ms var(--ease);
+}
+.force__problem:hover,
+.force__problem:focus-visible {
+  color: var(--blood-bright);
+  text-decoration-color: var(--blood-bright);
+}
+
 .force__links {
   list-style: none;
   margin: 0;

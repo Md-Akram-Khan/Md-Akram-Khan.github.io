@@ -123,6 +123,8 @@ export type Role = {
   kind: string
   points: string[]
   links?: { label: string; href: string }[]
+  /** Problems Akram set, listed in their own bullet with each name linked. */
+  problems?: { label: string; href: string }[]
 }
 
 export const roles: Role[] = [
@@ -144,12 +146,12 @@ export const roles: Role[] = [
     kind: 'Organizing',
     points: [
       'Organized an intra-university programming contest between freshers and sophomores.',
-      'Set two of its problems: B. “Ask for the Deck If you Wish ♠️” and I. “Tumi, Ami ar Ak Cup Coffee, kobe!?”',
     ],
-    links: [
-      { label: 'Contest', href: 'https://toph.co/c/battle-brains-2026' },
-      { label: 'Standings', href: 'https://toph.co/c/battle-brains-2026/standings' },
+    problems: [
+      { label: 'Ask for the Deck If you Wish ♠️', href: 'https://toph.co/_/challenges/6a47ebc1c22781da616684cd' },
+      { label: 'Tumi, Ami ar Ak Cup Coffee, kobe!?', href: 'https://toph.co/_/challenges/6a3eb9b7a627d883da7d862a' },
     ],
+    links: [{ label: 'Contest', href: 'https://toph.co/c/battle-brains-2026' }],
   },
   {
     title: 'Participant',

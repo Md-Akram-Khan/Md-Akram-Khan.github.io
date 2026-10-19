@@ -32,6 +32,19 @@ function RoleCard({ role, i }: { role: Role; i: number }) {
             {role.points.map((p) => (
               <li key={p.slice(0, 24)}>{p}</li>
             ))}
+            {role.problems && (
+              <li>
+                Set {role.problems.length === 2 ? 'two' : role.problems.length} of its problems:{' '}
+                {role.problems.map((pr, i) => (
+                  <span key={pr.href}>
+                    {i > 0 && (i === role.problems!.length - 1 ? ' and ' : ', ')}
+                    <a className="force__problem" href={pr.href} target="_blank" rel="noopener noreferrer">
+                      “{pr.label}”<span className="visually-hidden"> (problem on Toph, opens in a new tab)</span>
+                    </a>
+                  </span>
+                ))}
+              </li>
+            )}
           </ul>
           {role.links && (
             <ul className="force__links" role="list">
