@@ -81,6 +81,15 @@ function DuelCard({ c }: { c: Contest }) {
       </div>
 
       <p className="duels__line">{k.line}</p>
+      {c.standings && (
+        <a className="mono duels__standings" href={c.standings} target="_blank" rel="noopener noreferrer">
+          View standings
+          <span className="visually-hidden"> for {c.name} (opens in a new tab)</span>
+          <svg className="duels__standings-arrow" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+            <path d="M3 9 9 3M4.5 3H9v4.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          </svg>
+        </a>
+      )}
       <ul className="duels__tags" role="list">
         {k.tags.map((t) => (
           <li key={t} className="mono duels__tag">

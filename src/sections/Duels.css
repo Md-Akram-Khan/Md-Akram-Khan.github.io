@@ -247,6 +247,44 @@
   line-height: 1.55;
   color: var(--paper-dim);
 }
+.duels__standings {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  min-height: 40px;
+  margin-top: 1rem;
+  padding: 0.45em 1em;
+  font-size: calc(var(--step--1) * 0.78);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  transition:
+    border-color 250ms var(--ease),
+    background-color 250ms var(--ease),
+    box-shadow 250ms var(--ease);
+}
+.duels__standings:hover,
+.duels__standings:focus-visible {
+  color: var(--paper);
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 70%, transparent);
+  box-shadow: 0 0 22px -4px color-mix(in srgb, var(--blood) 70%, transparent);
+}
+.duels__standings-arrow {
+  width: 0.8em;
+  height: 0.8em;
+  transition: transform 250ms var(--ease);
+}
+.duels__standings:hover .duels__standings-arrow,
+.duels__standings:focus-visible .duels__standings-arrow {
+  transform: translate(2px, -2px);
+}
+
 .duels__tags {
   list-style: none;
   margin: auto 0 0;
