@@ -55,7 +55,7 @@ const links: ContactLink[] = [
     ? [
         {
           id: 'email',
-          label: 'Email',
+          label: 'Gmail',
           caption: profile.email,
           href: `mailto:${profile.email}`,
           external: false,

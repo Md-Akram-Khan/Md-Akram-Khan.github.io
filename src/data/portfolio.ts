@@ -28,7 +28,7 @@ export const profile = {
   /** Portrait in /public (webp + jpg fallback, 480×600, metadata stripped). */
   photo: { webp: 'media/akram-portrait.webp', jpg: 'media/akram-portrait.jpg', alt: 'Portrait of Md. Akram Khan' },
   // Leave empty to hide the email link. Add an address here to show it.
-  email: '',
+  email: 'thankyouakramkhan@gmail.com',
 }
 
 // "HOW TO USE IT" — the About section: the rules of this note, in Akram's own words.
