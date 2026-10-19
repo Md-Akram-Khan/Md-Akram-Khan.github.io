@@ -83,15 +83,15 @@
   color: var(--blood-text);
   text-shadow: 0 0 22px color-mix(in srgb, var(--blood-bright) 55%, transparent);
 }
-/* The name itself is set in a legible old-style serif at display size (Fraktur's
-   "A" and "k" misread as "U" and "f"); the blackletter stays for "Md." and headings. */
+/* The whole name is in the site's blackletter (Pirata One, whose "A" and "k"
+   stay legible at display size), matching "Md." and the headings. */
 .hero__title-name {
   position: relative;
   display: inline-block;
   white-space: nowrap;
-  font-family: var(--font-rules);
-  font-size: 0.94em;
-  letter-spacing: -0.025em;
+  font-family: var(--font-gothic);
+  font-size: 0.9em;
+  letter-spacing: 0.005em;
   line-height: 1;
   text-shadow:
     0 0 42px color-mix(in srgb, var(--blood) 38%, transparent),

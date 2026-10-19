@@ -1,7 +1,11 @@
 /* ───────────────────────── Fonts (self-hosted, SIL OFL) ───────────────────────── */
 @font-face {
-  font-family: 'Unifraktur';
-  src: url('/fonts/UnifrakturMaguntia.woff2') format('woff2');
+  /* Display blackletter for headings, the name and the notebook cover (Pirata One:
+     a Textura whose "A", "k" and "N" stay legible, unlike Fraktur faces). */
+  font-family: 'Blackletter';
+  src: url('/fonts/PirataOne.woff2') format('woff2');
+  /* One weight only; claim the range so browsers never fake-bold it. */
+  font-weight: 400 700;
   font-display: swap;
 }
 @font-face {
@@ -59,7 +63,7 @@
   --panel-border: rgba(193, 18, 31, 0.28);
 
   /* Type */
-  --font-gothic: 'Unifraktur', 'Old English Text MT', serif;
+  --font-gothic: 'Blackletter', 'Old English Text MT', serif;
   --font-rules: 'IM Fell English', 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Cormorant Garamond', 'IM Fell English', Georgia, serif;
   --font-hand: 'Caveat', 'Segoe Print', cursive;

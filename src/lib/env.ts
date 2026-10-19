@@ -9,7 +9,7 @@ export const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replac
  * page's @font-face rules use, so they come straight from the HTTP cache.
  */
 export const fonts = {
-  gothic: asset('fonts/UnifrakturMaguntia.woff2'),
+  gothic: asset('fonts/PirataOne.woff2'),
   hand: asset('fonts/Caveat.woff2'),
   serif: asset('fonts/IMFellEnglish-Regular.woff2'),
 }
