@@ -1,6 +1,6 @@
 // Fixed top navigation.
 // Wide screens: brand + inline section links with the active one marked.
-// Narrow screens (≤1080px): a disclosure button that opens a full-screen menu
+// Narrow screens (≤1300px): a disclosure button that opens a full-screen menu
 // (Escape closes it, focus stays inside while open, page scroll is locked).
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
@@ -11,7 +11,7 @@ import './Nav.css'
 
 const links = sections.filter((s) => s.id !== 'hero')
 /** Below this width the inline links collapse into the menu (keep in sync with Nav.css). */
-const COLLAPSE_QUERY = '(max-width: 1080px)'
+const COLLAPSE_QUERY = '(max-width: 1300px)'
 const MENU_ID = 'nav-menu'
 
 /** Smooth-scroll to a section, update the hash without jumping, and move focus there. */

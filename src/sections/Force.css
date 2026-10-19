@@ -1,0 +1,287 @@
+/* RULE II · The Task Force — experience. Full width (the notebook is pushed back
+   and dimmed). A crimson timeline runs down the left; each entry is a case-file
+   card: role, organization and dates on the left, details on the right.
+   Mobile (≤760px): the card stacks. */
+
+.force {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ───────── Heading ───────── */
+.force__intro {
+  margin-bottom: clamp(2rem, 4.5vw, 3rem);
+}
+.force__title {
+  margin-top: 0.8rem;
+  font-size: var(--step-4);
+  line-height: 0.95;
+  color: var(--paper);
+  text-shadow: 0 0 34px color-mix(in srgb, var(--blood) 35%, transparent);
+}
+.force__lede {
+  margin-top: 0.9rem;
+  max-width: 34ch;
+  font-size: var(--step-1);
+  line-height: 1.3;
+  color: var(--paper-dim);
+}
+
+/* ───────── Timeline ───────── */
+.force__timeline {
+  --rail: clamp(26px, 3vw, 40px);
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--rail);
+  display: grid;
+  gap: clamp(16px, 2.2vw, 26px);
+}
+/* the crimson rail */
+.force__timeline::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: calc(var(--rail) / 2 - 1px);
+  width: 2px;
+  background: linear-gradient(180deg, var(--blood-bright), var(--blood) 40%, color-mix(in srgb, var(--blood) 15%, transparent));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--blood) 60%, transparent);
+}
+.force__entry {
+  position: relative;
+}
+.force__node {
+  position: absolute;
+  top: clamp(30px, 3.4vw, 40px);
+  left: calc(var(--rail) / -2 - 6px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--blood);
+}
+.force__entry--current .force__node {
+  background: var(--blood-bright);
+  border-color: var(--blood-bright);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--blood-bright) 25%, transparent), 0 0 16px var(--blood-bright);
+}
+
+/* ───────── Case-file card ───────── */
+.force__card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: clamp(18px, 3vw, 44px);
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid color-mix(in srgb, var(--blood) 38%, transparent);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 85% at 50% 45%, transparent 55%, color-mix(in srgb, var(--ink) 75%, transparent)),
+    radial-gradient(60% 50% at 0% 0%, color-mix(in srgb, var(--blood-deep) 32%, transparent), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--paper) 4%, transparent) 33px 34px),
+    linear-gradient(170deg, color-mix(in srgb, var(--ink-3) 95%, transparent), color-mix(in srgb, var(--ink) 96%, transparent) 70%);
+  box-shadow: 0 30px 70px -30px color-mix(in srgb, var(--ink) 90%, transparent);
+  transition:
+    border-color 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+.force__card::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--blood) 14%, transparent);
+  pointer-events: none;
+}
+.force__card:hover {
+  border-color: color-mix(in srgb, var(--blood-bright) 70%, transparent);
+  box-shadow:
+    0 30px 70px -30px color-mix(in srgb, var(--ink) 90%, transparent),
+    0 0 40px -18px var(--blood-bright);
+}
+
+.force__side {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 0.35rem;
+}
+.force__file {
+  font-size: calc(var(--step--1) * 0.75);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.force__role {
+  margin-top: 0.35rem;
+  font-size: var(--step-2);
+  line-height: 1.05;
+  color: var(--paper);
+}
+.force__org {
+  font-family: var(--font-rules);
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: var(--paper);
+}
+.force__place {
+  font-size: calc(var(--step--1) * 0.82);
+  letter-spacing: 0.08em;
+  color: var(--ash);
+}
+/* the dates, stamped like a file label */
+.force__dates {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  margin-top: 0.75rem;
+  padding: 0.45em 0.85em;
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--paper) 30%, var(--gold));
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--ink) 80%, transparent);
+}
+.force__entry--current .force__dates {
+  color: var(--paper);
+  background: var(--blood);
+  border-color: var(--blood-bright);
+}
+.force__live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--paper);
+  animation: force-live 1.6s ease-in-out infinite;
+}
+@keyframes force-live {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.force__body {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+.force__points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+.force__points li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--paper-dim);
+  text-wrap: pretty;
+}
+.force__points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.8em;
+  width: 0.75rem;
+  height: 2px;
+  background: var(--blood);
+}
+.force__points li:first-child {
+  color: var(--paper);
+}
+
+.force__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.force__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  min-height: 40px;
+  padding: 0.45em 1em;
+  font-size: calc(var(--step--1) * 0.78);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  transition:
+    border-color 250ms var(--ease),
+    background-color 250ms var(--ease),
+    box-shadow 250ms var(--ease);
+}
+.force__link:hover,
+.force__link:focus-visible {
+  color: var(--paper);
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 70%, transparent);
+  box-shadow: 0 0 22px -4px color-mix(in srgb, var(--blood) 70%, transparent);
+}
+.force__link-arrow {
+  width: 0.8em;
+  height: 0.8em;
+  transition: transform 250ms var(--ease);
+}
+.force__link:hover .force__link-arrow,
+.force__link:focus-visible .force__link-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ───────── Reveal (armed by JS; never under reduced motion) ───────── */
+.force--armed [data-reveal] {
+  transition:
+    opacity 800ms var(--ease),
+    transform 800ms var(--ease);
+}
+.force--armed [data-reveal]:not(.is-in) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.force--armed .force__entry:not(.is-in) .force__node {
+  transform: scale(0);
+}
+.force--armed .force__entry .force__node {
+  transition: transform 500ms cubic-bezier(0.3, 1.6, 0.5, 1) 250ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .force__live {
+    animation: none;
+  }
+}
+
+/* ───────── Mobile ───────── */
+@media (max-width: 760px) {
+  .force__intro {
+    padding: 22px 18px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+  }
+  .force__title {
+    font-size: var(--step-3);
+  }
+  .force__timeline {
+    --rail: 22px;
+  }
+  .force__card {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 22px 18px;
+  }
+}

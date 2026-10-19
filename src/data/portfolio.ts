@@ -1,16 +1,17 @@
 // Single source of truth for all portfolio content.
 // Every fact here comes from Md. Akram Khan's public GitHub repositories.
 
-export type SectionId = 'hero' | 'rules' | 'names' | 'cases' | 'eyes' | 'duels' | 'contact'
+export type SectionId = 'hero' | 'rules' | 'force' | 'names' | 'cases' | 'eyes' | 'duels' | 'contact'
 
 export const sections: { id: SectionId; label: string; numeral: string }[] = [
   { id: 'hero', label: 'The Note', numeral: '0' },
   { id: 'rules', label: 'How to Use It', numeral: 'I' },
-  { id: 'names', label: 'Names Written', numeral: 'II' },
-  { id: 'cases', label: 'Cases Closed', numeral: 'III' },
-  { id: 'eyes', label: 'Shinigami Eyes', numeral: 'IV' },
-  { id: 'duels', label: 'Duels Fought', numeral: 'V' },
-  { id: 'contact', label: 'Write a Name', numeral: 'VI' },
+  { id: 'force', label: 'The Task Force', numeral: 'II' },
+  { id: 'names', label: 'Names Written', numeral: 'III' },
+  { id: 'cases', label: 'Cases Closed', numeral: 'IV' },
+  { id: 'eyes', label: 'Shinigami Eyes', numeral: 'V' },
+  { id: 'duels', label: 'Duels Fought', numeral: 'VI' },
+  { id: 'contact', label: 'Write a Name', numeral: 'VII' },
 ]
 
 export const profile = {
@@ -107,6 +108,78 @@ export const rules: Rule[] = [
     coda: 'Do you dare make the deal?',
     secret: true,
     page: 2,
+  },
+]
+
+// "The Task Force" — experience: research, organizing, leadership, workshops and
+// volunteering, newest first. Akram's own record.
+export type Role = {
+  title: string
+  org: string
+  place?: string
+  dates: string
+  /** Still ongoing: the date badge glows. */
+  current?: boolean
+  kind: string
+  points: string[]
+  links?: { label: string; href: string }[]
+}
+
+export const roles: Role[] = [
+  {
+    title: 'Research Collaborator',
+    org: 'University of Dhaka',
+    dates: 'Apr 2026 – Present',
+    current: true,
+    kind: 'Research',
+    points: [
+      'Research under the supervision of Dr. Md. Mosaddek Khan, Associate Professor, Department of Computer Science and Engineering, University of Dhaka.',
+    ],
+  },
+  {
+    title: 'Organizer & Problem Setter',
+    org: 'Battle of Brains 2026',
+    place: 'University of Dhaka',
+    dates: '2026',
+    kind: 'Organizing',
+    points: [
+      'Organized an intra-university programming contest between freshers and sophomores.',
+      'Set two of its problems: B. “Ask for the Deck If you Wish ♠️” and I. “Tumi, Ami ar Ak Cup Coffee, kobe!?”',
+    ],
+    links: [
+      { label: 'Contest', href: 'https://toph.co/c/battle-brains-2026' },
+      { label: 'Standings', href: 'https://toph.co/c/battle-brains-2026/standings' },
+    ],
+  },
+  {
+    title: 'Participant',
+    org: 'CAIL Workshop 2026',
+    dates: '2026',
+    kind: 'Workshop',
+    points: [
+      'Topic: “From Language Model to Service: LLM Inference, APIs and Scalable Deployment”.',
+      'Took part in a hands-on workshop on LLM inference, APIs and scalable deployment.',
+    ],
+  },
+  {
+    title: 'Executive Member',
+    org: 'CSEDU Students’ Club',
+    place: 'University of Dhaka',
+    dates: 'Feb 2024 – Nov 2025',
+    kind: 'Leadership',
+    points: [
+      'Organized departmental events.',
+      'Collaborated with other DU departments on inter-department activities.',
+    ],
+  },
+  {
+    title: 'Volunteer',
+    org: 'Code Samurai 2024',
+    dates: '2024',
+    kind: 'Volunteering',
+    points: [
+      'Volunteered at Code Samurai, the biggest inter-university hackathon in Bangladesh, organized by the University of Dhaka in collaboration with BJIT, Japan.',
+    ],
   },
 ]
 

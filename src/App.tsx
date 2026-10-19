@@ -9,6 +9,7 @@ import MusicPlayer from './components/MusicPlayer'
 import SceneFallback from './three/SceneFallback'
 import Hero from './sections/Hero'
 import Rules from './sections/Rules'
+import Force from './sections/Force'
 import Projects from './sections/Projects'
 import Cases from './sections/Cases'
 import Skills from './sections/Skills'
@@ -93,6 +94,7 @@ export default function App() {
       <main id="main">
         <Hero />
         <Rules />
+        <Force />
         <Projects />
         <Cases />
         <Skills />
