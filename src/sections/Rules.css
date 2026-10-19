@@ -198,6 +198,14 @@
 .rules__item--photo {
   display: flow-root; /* contain the floated photo */
 }
+/* Plain block flow (not grid) so the words wrap around the photo and run on
+   underneath it, instead of leaving an empty column below the print. */
+.rules__item--photo .rules__text {
+  display: block;
+}
+.rules__item--photo .rules__text p + p {
+  margin-top: 0.6rem;
+}
 .rules__photo {
   --tilt: 2.4deg;
   position: relative;
