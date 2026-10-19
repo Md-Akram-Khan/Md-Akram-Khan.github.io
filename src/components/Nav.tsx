@@ -208,7 +208,10 @@ export default function Nav() {
                     <span className="nav__dot" aria-hidden="true">
                       ·
                     </span>
-                    <span className="nav__label">{s.label}</span>
+                    <span className="nav__text">
+                      <span className="nav__label">{s.label}</span>
+                      <span className="nav__plain">{s.plain}</span>
+                    </span>
                   </a>
                 </li>
               )
@@ -252,7 +255,10 @@ export default function Nav() {
                       <span className="nav__menu-num mono" aria-hidden="true">
                         {s.numeral}
                       </span>
-                      <span className="nav__menu-label gothic">{s.label}</span>
+                      <span className="nav__menu-text">
+                        <span className="nav__menu-label gothic">{s.label}</span>
+                        <span className="nav__menu-plain mono">{s.plain}</span>
+                      </span>
                     </a>
                   </li>
                 )

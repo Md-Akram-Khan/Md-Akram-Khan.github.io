@@ -3,15 +3,16 @@
 
 export type SectionId = 'hero' | 'rules' | 'force' | 'names' | 'cases' | 'eyes' | 'duels' | 'contact'
 
-export const sections: { id: SectionId; label: string; numeral: string }[] = [
-  { id: 'hero', label: 'The Note', numeral: '0' },
-  { id: 'rules', label: 'How to Use It', numeral: 'I' },
-  { id: 'force', label: 'The Task Force', numeral: 'II' },
-  { id: 'names', label: 'Names Written', numeral: 'III' },
-  { id: 'cases', label: 'Cases Closed', numeral: 'IV' },
-  { id: 'eyes', label: 'Shinigami Eyes', numeral: 'V' },
-  { id: 'duels', label: 'Duels Fought', numeral: 'VI' },
-  { id: 'contact', label: 'Write a Name', numeral: 'VII' },
+/** `label` is the themed name; `plain` says what the section is, for the nav. */
+export const sections: { id: SectionId; label: string; plain: string; numeral: string }[] = [
+  { id: 'hero', label: 'The Note', plain: 'Home', numeral: '0' },
+  { id: 'rules', label: 'How to Use It', plain: 'About Me', numeral: 'I' },
+  { id: 'force', label: 'The Task Force', plain: 'Experience', numeral: 'II' },
+  { id: 'names', label: 'Names Written', plain: 'Projects', numeral: 'III' },
+  { id: 'cases', label: 'Cases Closed', plain: 'Problem Solving', numeral: 'IV' },
+  { id: 'eyes', label: 'Shinigami Eyes', plain: 'Skills', numeral: 'V' },
+  { id: 'duels', label: 'Duels Fought', plain: 'Contests', numeral: 'VI' },
+  { id: 'contact', label: 'Write a Name', plain: 'Contact', numeral: 'VII' },
 ]
 
 export const profile = {

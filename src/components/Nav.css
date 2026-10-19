@@ -122,7 +122,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.55em;
-  padding: 12px 0;
+  padding: 8px 0 9px;
   font-family: var(--font-mono);
   font-size: 0.74rem;
   letter-spacing: 0.1em;
@@ -134,6 +134,25 @@
 }
 .nav__num {
   color: var(--blood-text);
+}
+/* themed name on top, what the section actually is underneath */
+.nav__text {
+  display: inline-grid;
+  gap: 2px;
+}
+.nav__plain {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  line-height: 1.1;
+  color: var(--ash);
+  transition: color 220ms ease;
+}
+.nav__link:hover .nav__plain,
+.nav__link.is-active .nav__plain {
+  color: var(--paper-dim);
 }
 .nav__dot {
   color: var(--ash);
@@ -369,6 +388,16 @@
     transition:
       color 220ms ease,
       text-shadow 300ms ease;
+  }
+  .nav__menu-text {
+    display: grid;
+    gap: 4px;
+  }
+  .nav__menu-plain {
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ash);
   }
   .nav__menu-link:hover .nav__menu-label {
     color: var(--paper);
