@@ -10,6 +10,7 @@ import SceneFallback from './three/SceneFallback'
 import Hero from './sections/Hero'
 import Rules from './sections/Rules'
 import Projects from './sections/Projects'
+import Cases from './sections/Cases'
 import Skills from './sections/Skills'
 import Contact from './sections/Contact'
 
@@ -92,6 +93,7 @@ export default function App() {
         <Hero />
         <Rules />
         <Projects />
+        <Cases />
         <Skills />
         <Contact />
       </main>

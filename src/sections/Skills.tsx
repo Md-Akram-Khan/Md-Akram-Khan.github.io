@@ -4,7 +4,7 @@
 // once (keyboard and touch friendly). Reduced motion: no decode, no scan, no reveal delay.
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
-import { problemSolving, sections, skillGroups } from '../data/portfolio'
+import { sections, skillGroups } from '../data/portfolio'
 import { useReducedMotion } from '../lib/env'
 import RuleEyebrow from '../components/RuleEyebrow'
 import './Skills.css'
@@ -176,28 +176,6 @@ export default function Skills() {
             ))}
           </div>
 
-          <div className="skills__practice" data-reveal>
-            <h3 className="gothic skills__practice-title">Practice notebooks</h3>
-            <p className="skills__practice-lead">Competitive programming and DSA practice, kept in the open.</p>
-            <ul className="skills__notebooks" role="list">
-              {problemSolving.map((p) => (
-                <li key={p.repo}>
-                  <a className="skills__notebook" href={p.repo} target="_blank" rel="noopener noreferrer">
-                    <span className="skills__notebook-row">
-                      <span className="rules-text skills__notebook-title">{p.title}</span>{' '}
-                      <span className="skills__notebook-leader" aria-hidden="true" />
-                      {p.since ? <span className="mono skills__notebook-since">since {p.since}</span> : null}{' '}
-                      <svg className="skills__notebook-arrow" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-                        <path d="M3 9 9 3M4.5 3H9v4.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-                      </svg>
-                    </span>{' '}
-                    <span className="skills__notebook-detail">{p.detail}</span>
-                    <span className="visually-hidden"> (GitHub repository, opens in a new tab)</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </section>

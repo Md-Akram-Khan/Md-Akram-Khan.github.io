@@ -1,0 +1,372 @@
+/* RULE III · Cases Closed — competitive programming.
+   Full width (the notebook is pushed back and dimmed, as for the projects):
+   a case file with the total on the left, the ledger of judges on the right,
+   then the practice notebooks. Mobile (≤760px): stacked. */
+
+.cases {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ───────── Heading ───────── */
+.cases__intro {
+  margin-bottom: clamp(2rem, 4.5vw, 3.25rem);
+}
+.cases__title {
+  margin-top: 0.8rem;
+  font-size: var(--step-4);
+  line-height: 0.95;
+  color: var(--paper);
+  text-shadow: 0 0 34px color-mix(in srgb, var(--blood) 35%, transparent);
+}
+.cases__lede {
+  margin-top: 0.9rem;
+  max-width: 34ch;
+  font-size: var(--step-1);
+  line-height: 1.3;
+  color: var(--paper-dim);
+}
+
+/* ───────── Shared page texture (same family as the How to Use It pages) ───────── */
+.cases__file,
+.cases__ledger {
+  position: relative;
+  isolation: isolate;
+  border-color: color-mix(in srgb, var(--blood) 40%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background:
+    radial-gradient(120% 85% at 50% 45%, transparent 55%, color-mix(in srgb, var(--ink) 75%, transparent)),
+    radial-gradient(70% 45% at 8% 4%, color-mix(in srgb, var(--blood-deep) 30%, transparent), transparent 70%),
+    radial-gradient(55% 40% at 96% 92%, color-mix(in srgb, var(--gold) 7%, transparent), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--paper) 4%, transparent) 33px 34px),
+    linear-gradient(170deg, color-mix(in srgb, var(--ink-3) 95%, transparent), color-mix(in srgb, var(--ink) 96%, transparent) 70%);
+  box-shadow: 0 40px 90px -30px color-mix(in srgb, var(--ink) 90%, transparent);
+}
+.cases__file::before,
+.cases__ledger::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  z-index: -1;
+  border: 1px solid color-mix(in srgb, var(--blood) 16%, transparent);
+  pointer-events: none;
+}
+
+.cases__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(18px, 2.5vw, 32px);
+  align-items: stretch;
+}
+
+/* ───────── Case file (total) ───────── */
+.cases__file {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(28px, 3.5vw, 44px);
+}
+.cases__file-label,
+.cases__ledger-sub,
+.cases__notes-title {
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.cases__total {
+  display: grid;
+  margin-top: 1.4rem;
+}
+.cases__total-num {
+  font-size: clamp(4.2rem, 3rem + 5vw, 7.5rem);
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+  text-shadow:
+    0 0 40px color-mix(in srgb, var(--blood-bright) 45%, transparent),
+    0 2px 0 #000;
+}
+.cases__total-unit {
+  margin-top: 0.6rem;
+  font-size: var(--step--1);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+.cases__total-note {
+  margin-top: 1rem;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--paper-dim);
+}
+.cases__facts {
+  margin: 1.6rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px dashed color-mix(in srgb, var(--gold) 22%, transparent);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 1rem 1.5rem;
+}
+.cases__facts > div {
+  display: grid;
+  gap: 0.25rem;
+}
+.cases__facts dt {
+  font-size: calc(var(--step--1) * 0.75);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.cases__facts dd {
+  margin: 0;
+  font-family: var(--font-rules);
+  font-size: var(--step-0);
+  color: var(--paper);
+}
+.cases__fact-num {
+  color: var(--blood-text);
+}
+.cases__verdict {
+  margin-top: auto;
+  padding-top: 1.6rem;
+  font-size: var(--step-1);
+  color: var(--blood-text);
+  transform: rotate(-1deg);
+  transform-origin: left;
+}
+
+/* ───────── The ledger ───────── */
+.cases__ledger {
+  --margin: clamp(2.6rem, 4vw, 3.6rem);
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 3.2vw, 40px) clamp(20px, 3vw, 40px) clamp(20px, 2.6vw, 30px);
+  /* the double crimson margin line, like the note's pages */
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent calc(var(--margin) + clamp(20px, 3vw, 40px) - 4px),
+      color-mix(in srgb, var(--blood) 50%, transparent) calc(var(--margin) + clamp(20px, 3vw, 40px) - 4px)
+        calc(var(--margin) + clamp(20px, 3vw, 40px) - 3px),
+      transparent calc(var(--margin) + clamp(20px, 3vw, 40px) - 3px)
+    ),
+    radial-gradient(120% 85% at 50% 45%, transparent 55%, color-mix(in srgb, var(--ink) 75%, transparent)),
+    radial-gradient(70% 45% at 92% 6%, color-mix(in srgb, var(--blood-deep) 30%, transparent), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--paper) 4%, transparent) 33px 34px),
+    linear-gradient(170deg, color-mix(in srgb, var(--ink-3) 95%, transparent), color-mix(in srgb, var(--ink) 96%, transparent) 70%);
+}
+.cases__ledger-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+}
+.cases__ledger-title {
+  font-size: var(--step-2);
+  line-height: 1;
+  color: var(--paper);
+}
+
+.cases__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  flex: 1;
+  align-content: space-around;
+}
+.cases__row {
+  border-bottom: 1px dashed color-mix(in srgb, var(--paper) 10%, transparent);
+}
+.cases__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--margin) minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0;
+  padding: 0.9rem 0 1.15rem;
+  text-decoration: none;
+  color: inherit;
+}
+.cases__row-no {
+  font-size: var(--step--1);
+  color: var(--gold);
+}
+.cases__who {
+  display: grid;
+  min-width: 0;
+  padding-left: 0.9rem;
+}
+.cases__judge {
+  font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.1rem);
+  line-height: 1.05;
+  color: var(--paper);
+  transition: color 250ms var(--ease);
+}
+.cases__handle {
+  font-size: calc(var(--step--1) * 0.82);
+  letter-spacing: 0.06em;
+  color: var(--ash);
+  overflow-wrap: anywhere;
+}
+.cases__count {
+  display: grid;
+  justify-items: end;
+}
+.cases__count-num {
+  font-size: clamp(1.8rem, 1.3rem + 1.4vw, 2.6rem);
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+}
+.cases__count-unit {
+  font-size: calc(var(--step--1) * 0.72);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+/* ink bar: length = share of the largest count, a dot of the judge's colour at its end */
+.cases__bar {
+  position: absolute;
+  left: calc(var(--margin) + 0.9rem);
+  right: 0;
+  bottom: 0.45rem;
+  height: 3px;
+}
+.cases__bar-ink {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--share));
+  background: linear-gradient(90deg, var(--blood-deep), var(--blood) 70%, var(--blood-bright));
+  border-radius: 2px;
+  box-shadow: 0 0 10px -2px color-mix(in srgb, var(--blood-bright) 70%, transparent);
+}
+.cases__bar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--share) * 100%);
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 8px var(--brand);
+}
+.cases__link:hover .cases__judge,
+.cases__link:focus-visible .cases__judge {
+  color: var(--blood-bright);
+}
+.cases__asof {
+  margin-top: 1rem;
+  font-size: calc(var(--step--1) * 0.72);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ash);
+  text-align: right;
+}
+
+/* ───────── Case notes (practice repositories) ───────── */
+.cases__notes {
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.cases__notes-list {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.cases__note {
+  display: grid;
+  gap: 0.2rem;
+  height: 100%;
+  padding: 0.95rem 1.05rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, var(--blood) 30%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink-2) 85%, transparent);
+  transition:
+    border-color 250ms var(--ease),
+    background-color 250ms var(--ease),
+    transform 250ms var(--ease);
+}
+.cases__note:hover,
+.cases__note:focus-visible {
+  border-color: var(--blood-bright);
+  background: color-mix(in srgb, var(--blood-deep) 40%, var(--ink-2));
+  transform: translateY(-2px);
+}
+.cases__note-title {
+  font-size: var(--step-0);
+  color: var(--paper);
+}
+.cases__note-since {
+  font-size: calc(var(--step--1) * 0.72);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+.cases__note-detail {
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--paper-dim);
+}
+
+/* ───────── Reveal (only once JS armed it; never under reduced motion) ───────── */
+.cases--armed [data-reveal] {
+  transition:
+    opacity 900ms var(--ease),
+    transform 900ms var(--ease);
+}
+.cases--armed [data-reveal]:not(.is-in) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+.cases--armed .cases__ledger .cases__bar-ink {
+  transform: scaleX(0);
+  transition: transform 1200ms cubic-bezier(0.45, 0.05, 0.25, 1) calc(400ms + var(--i) * 140ms);
+}
+.cases--armed .cases__ledger.is-in .cases__bar-ink {
+  transform: scaleX(var(--share));
+}
+.cases--armed .cases__ledger .cases__bar::after {
+  opacity: 0;
+  transition: opacity 400ms ease calc(1400ms + var(--i) * 140ms);
+}
+.cases--armed .cases__ledger.is-in .cases__bar::after {
+  opacity: 1;
+}
+
+/* ───────── Responsive ───────── */
+@media (max-width: 1020px) {
+  .cases__notes-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .cases__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cases__intro {
+    padding: 22px 18px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius);
+  }
+  .cases__title {
+    font-size: var(--step-3);
+  }
+  .cases__ledger {
+    --margin: 2.2rem;
+  }
+}

@@ -30,6 +30,7 @@ const DESKTOP: PoseMap = {
   rulesLeft: pose(-2.75, -1.42, 0.6, 0.1, 0, -0.2, 0.21),
   // The names cards are full width: the apple sinks into the dark with the book.
   names: pose(-1.6, -1.2, -9, 0.2, 0, 0.3, 0.26),
+  cases: pose(-1.6, -1.2, -9, 0.2, 0, 0.3, 0.26),
   eyes: pose(-2.3, -1.4, 0.8, 0.1, 0, -0.2, 0.25),
   contact: pose(1.15, -1.22, 1.3, 0.2, 0, 0.18, 0.23),
 }
@@ -40,6 +41,7 @@ const MOBILE: PoseMap = {
   hero: pose(0.46, 0.45, 0.9, 0.15, 0, -0.25, 0.15),
   rules: pose(0.3, 0.2, -9, 0.1, 0, 0.2, 0.18),
   names: pose(0.3, 0.2, -9, 0.2, 0, 0.3, 0.18),
+  cases: pose(0.3, 0.2, -9, 0.2, 0, 0.3, 0.18),
   eyes: pose(0.3, 0.2, -9, 0.1, 0, -0.2, 0.18),
   contact: pose(0.3, 0.2, -9, 0.2, 0, 0.18, 0.18),
 }

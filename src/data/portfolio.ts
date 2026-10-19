@@ -1,14 +1,15 @@
 // Single source of truth for all portfolio content.
 // Every fact here comes from Md. Akram Khan's public GitHub repositories.
 
-export type SectionId = 'hero' | 'rules' | 'names' | 'eyes' | 'contact'
+export type SectionId = 'hero' | 'rules' | 'names' | 'cases' | 'eyes' | 'contact'
 
 export const sections: { id: SectionId; label: string; numeral: string }[] = [
   { id: 'hero', label: 'The Note', numeral: '0' },
   { id: 'rules', label: 'How to Use It', numeral: 'I' },
   { id: 'names', label: 'Names Written', numeral: 'II' },
-  { id: 'eyes', label: 'Shinigami Eyes', numeral: 'III' },
-  { id: 'contact', label: 'Write a Name', numeral: 'IV' },
+  { id: 'cases', label: 'Cases Closed', numeral: 'III' },
+  { id: 'eyes', label: 'Shinigami Eyes', numeral: 'IV' },
+  { id: 'contact', label: 'Write a Name', numeral: 'V' },
 ]
 
 export const profile = {
@@ -239,6 +240,20 @@ export const skillGroups: { title: string; items: string[] }[] = [
   { title: 'Databases', items: ['PostgreSQL', 'Supabase', 'MongoDB'] },
   { title: 'Tools', items: ['Git & GitHub', 'Docker', 'Nginx', 'Vercel', 'Render', 'GitHub Pages'] },
 ]
+
+// "Cases Closed" — competitive programming: problems solved per online judge.
+// Counts are Akram's own figures; update them here (and `judgesAsOf`) as they grow.
+export type Judge = { name: string; handle: string; url: string; solved: number; color: string }
+
+export const judges: Judge[] = [
+  { name: 'Codeforces', handle: 'Thank_you', url: 'https://codeforces.com/profile/Thank_you', solved: 575, color: '#3b8fd1' },
+  { name: 'Virtual Judge', handle: 'Thank_youu', url: 'https://vjudge.net/user/Thank_youu', solved: 175, color: '#b89b5e' },
+  { name: 'LeetCode', handle: 'Thank_you', url: 'https://leetcode.com/u/Thank_you/', solved: 67, color: '#ffa116' },
+  { name: 'GeeksforGeeks', handle: 'thankyou05', url: 'https://www.geeksforgeeks.org/profile/thankyou05', solved: 24, color: '#2f8d46' },
+]
+
+/** When the counts above were last written down. */
+export const judgesAsOf = 'October 2026'
 
 // Competitive programming and DSA practice repositories.
 export const problemSolving: { title: string; detail: string; repo: string; since?: number }[] = [

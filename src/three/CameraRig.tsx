@@ -20,6 +20,7 @@ const DOLLY: Record<SectionId, number> = {
   hero: 7,
   rules: 6.8,
   names: 7.3,
+  cases: 7.3,
   eyes: 6.85,
   contact: 6.65,
 }
@@ -29,6 +30,7 @@ const LIFT: Record<SectionId, number> = {
   hero: 0,
   rules: -0.04,
   names: 0.06,
+  cases: 0.06,
   eyes: 0.04,
   contact: 0,
 }
