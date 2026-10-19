@@ -259,6 +259,6 @@ export const judgesAsOf = 'October 2026'
 export const problemSolving: { title: string; detail: string; repo: string; since?: number }[] = [
   { title: 'Number Theory', detail: 'C++ solutions, practised since 2020', repo: 'https://github.com/Md-Akram-Khan/Number-theory', since: 2020 },
   { title: 'Data Structures & Algorithms', detail: 'The largest of the practice notebooks', repo: 'https://github.com/Md-Akram-Khan/DSA', since: 2024 },
-  { title: 'Graph Theory', detail: 'Traversals, shortest paths and trees', repo: 'https://github.com/Md-Akram-Khan/Graph-Theory', since: 2024 },
+  { title: 'Graph Theory', detail: 'Traversals, shortest paths and trees', repo: 'https://github.com/Md-Akram-Khan/Graph-Theory/tree/Topics', since: 2024 },
   { title: 'CSES Problem Set', detail: 'Working through the CSES archive', repo: 'https://github.com/Md-Akram-Khan/CSES-problems', since: 2024 },
 ]
