@@ -2,7 +2,7 @@
 // Each rule is "written in" (ink wipe) as it scrolls into view. Under reduced
 // motion, or without IntersectionObserver, every rule is shown immediately.
 import { useEffect, useLayoutEffect, useRef } from 'react'
-import { profile, rules, sections } from '../data/portfolio'
+import { about, profile, rules, sections } from '../data/portfolio'
 import { useReducedMotion } from '../lib/env'
 import RuleEyebrow from '../components/RuleEyebrow'
 import './Rules.css'
@@ -87,8 +87,19 @@ export default function Rules() {
           </ol>
 
           <div className="rules__owner" data-reveal>
-            <h3 className="rules__owner-label mono">Owner of this note</h3>
+            <p className="rules__owner-label mono">{about.label}</p>
+            <h3 className="gothic rules__owner-title">{about.title}</h3>
             <p className="hand rules__owner-name">{profile.name}</p>
+            <div className="rules__bio">
+              {about.paragraphs.map((p) => (
+                <p key={p.slice(0, 24)}>{p}</p>
+              ))}
+            </div>
+            <p className="hand rules__verdict">
+              {about.verdict.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </p>
             <dl className="rules__owner-facts">
               <div>
                 <dt className="mono">Role</dt>

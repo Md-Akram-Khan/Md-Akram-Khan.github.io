@@ -185,6 +185,51 @@
   color: var(--gold);
 }
 
+.rules__owner-title {
+  margin-top: 0.45rem;
+  font-size: var(--step-2);
+  line-height: 1.05;
+  color: var(--paper);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--blood) 35%, transparent);
+}
+
+/* The bio: the owner's own words, set like a typed case report. */
+.rules__bio {
+  justify-self: stretch;
+  display: grid;
+  gap: 0.85rem;
+  margin: 0 0 1.4rem;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--paper-dim);
+}
+.rules__bio p:first-child {
+  color: var(--paper);
+}
+
+/* Closing lines in red ink, slightly askew, like a note scrawled at the end of the file. */
+.rules__verdict {
+  justify-self: stretch;
+  display: grid;
+  gap: 0.1rem;
+  margin: 0 0 1.5rem;
+  padding: 0.9rem 0 0.2rem 1rem;
+  border-top: 1px dashed color-mix(in srgb, var(--gold) 22%, transparent);
+  border-left: 2px solid var(--blood);
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: var(--blood-text);
+  transform: rotate(-0.8deg);
+  transform-origin: left top;
+}
+.rules__verdict span {
+  display: block;
+}
+.rules__verdict span:last-child {
+  color: var(--paper);
+}
+
 .rules__owner-name {
   margin: 0.35rem 0 1.25rem;
   padding: 0 0.6rem 0.1rem 0.15rem;

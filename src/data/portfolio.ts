@@ -53,6 +53,20 @@ export const rules: { numeral: string; text: string }[] = [
   },
 ]
 
+// "The Mind Behind the Note" — Akram's own words, framed as the owner's case file.
+export const about = {
+  label: 'Owner of this note · Case file',
+  title: 'The Mind Behind the Note',
+  paragraphs: [
+    'I’m a Computer Science undergraduate who works by one principle: every problem has a solution, waiting to be uncovered, like a name waiting to be written.',
+    'I design and build software that turns ideas into practical, reliable and scalable solutions. From intuitive interfaces to the backend systems beneath them, I write with intent: clean architecture, efficient algorithms and experiences that mean something to the people who use them.',
+    'My interests span full-stack development, software engineering, cybersecurity and emerging technologies. Like any investigator, I follow the clues into complex problems and unfamiliar tools, until each technical challenge becomes a chance to build something better.',
+    'My objective is clear: engineer software with real impact, sharpen my skills with every case, and create technology that leaves its mark.',
+  ],
+  /** Closing lines, handwritten in red ink. */
+  verdict: ['Every system has a weakness.', 'Every problem has a solution.', 'The investigation never ends.'],
+}
+
 export type Project = {
   id: string
   title: string
