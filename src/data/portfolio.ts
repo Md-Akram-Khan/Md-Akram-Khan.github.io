@@ -75,14 +75,13 @@ export const projects: Project[] = [
   {
     id: 'chattogram-routing',
     title: 'Chattogram Emergency Routing',
-    subtitle: 'AI search for ambulances in a flooding port city',
+    subtitle: 'AI routing for ambulances',
     description:
-      'A dispatch and routing simulator for ambulances, fire service and rescue teams across Chattogram. It models monsoon tidal flooding, port-lorry congestion, hillside landslide risk and night-time safety, then compares six graph search algorithms on the same map.',
+      'A dispatch and routing simulator for ambulances and rescue teams across Chattogram. It models monsoon flooding, port traffic, landslide risk and night-time safety, then compares six graph search algorithms.',
     highlights: [
       '45 metropolitan nodes and 60+ road links, including hospitals, port gates and flyovers',
       'Dynamic edge costs from road type, traffic, flood depth and day/night safety',
-      'A* with a Haversine heuristic, benchmarked against BFS, DFS, UCS, IDS and Greedy',
-      'Chart.js benchmarks, CSV export and one-click Google Maps directions',
+      'A* with a Haversine heuristic, benchmarked against BFS, DFS, UCS, IDS and Greedy in Chart.js',
     ],
     stack: ['JavaScript', 'HTML', 'CSS', 'Google Maps', 'Chart.js'],
     repo: 'https://github.com/Md-Akram-Khan/chattogram-emergency-routing-simulator',
@@ -97,10 +96,9 @@ export const projects: Project[] = [
     description:
       'A Java Swing desktop app for an electricity provider, built as a university OOP project. Admins manage customers, meters and monthly bills; customers view, understand and pay them. Data lives in PostgreSQL on Supabase behind a small backend API.',
     highlights: [
-      'BERC slab tariff with the lifeline rate, demand charge, 5% VAT, meter rent and late fees',
+      'BERC slab tariff with the lifeline rate, demand charge, 5% VAT and late fees',
       'Bills created from a meter photo, with a checker that flags suspicious bills',
       'Online payment through SSLCommerz: bKash, Nagad, Rocket and cards',
-      'Reports, audit log, complaints, and new-meter sign-up with phone OTP and NID check',
     ],
     stack: ['Java', 'Swing', 'PostgreSQL', 'Supabase', 'Python'],
     repo: 'https://github.com/Md-Akram-Khan/OOP-project',

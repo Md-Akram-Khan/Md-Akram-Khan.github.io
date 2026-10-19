@@ -5,8 +5,8 @@ import RuleEyebrow from '../components/RuleEyebrow'
 import './Projects.css'
 
 const meta = sections.find((s) => s.id === 'names')
-/** The first entries are the solo flagship projects; they get the wide "feature" page. */
-const FEATURED = 2
+/** How many leading entries get the wide two-column "feature" page (0: every page is the same size). */
+const FEATURED = 0
 const pad = (n: number) => String(n).padStart(2, '0')
 const solo = projects.filter((p) => !p.team).length
 const team = projects.length - solo
