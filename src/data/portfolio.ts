@@ -311,6 +311,24 @@ export const projects: Project[] = [
     team: true,
     reveal: 'QR prescriptions · delivery · ambulance',
   },
+  {
+    id: 'death-note-portfolio',
+    title: 'Death Note Portfolio',
+    subtitle: 'This website: a 3D note you scroll through',
+    description:
+      'A Death Note–inspired 3D portfolio. Scrolling opens a black notebook built in Three.js; each section is a page of the note, and a built-in AI assistant answers visitors’ questions from the portfolio itself.',
+    highlights: [
+      'A 3D notebook, apple and atmosphere in React Three Fiber, choreographed to the scroll',
+      'Shinigami AI: answers from the portfolio’s facts via Groq, behind a Cloudflare Worker that keeps the key secret',
+      'Accessible and responsive: keyboard support, reduced-motion mode and a no-WebGL fallback',
+    ],
+    stack: ['React', 'TypeScript', 'Three.js', 'React Three Fiber', 'Vite', 'Cloudflare Workers', 'Groq'],
+    repo: 'https://github.com/Md-Akram-Khan/My-Portfolio',
+    live: 'https://md-akram-khan.github.io/My-Portfolio/',
+    team: false,
+    year: 2026,
+    reveal: '3D note · 8 sections · Shinigami AI',
+  },
 ]
 
 export const skillGroups: { title: string; items: string[] }[] = [

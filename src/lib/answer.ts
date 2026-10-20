@@ -71,6 +71,7 @@ const PROJECT_ALIASES: Record<string, string[]> = {
   cognify: ['cognify', 'learning platform', 'tutor'],
   stockhub: ['stockhub', 'stock hub', 'warehouse', 'inventory'],
   drugscript: ['drugscript', 'drug script', 'prescription', 'medicine', 'pharmacy'],
+  'death-note-portfolio': ['this portfolio', 'this website', 'this site', 'death note portfolio', 'portfolio project', 'website built', 'site built', 'how was this'],
 }
 
 const JUDGE_ALIASES: Record<string, string[]> = {
