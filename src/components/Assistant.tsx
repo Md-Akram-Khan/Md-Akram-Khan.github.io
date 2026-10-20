@@ -20,62 +20,83 @@ const GREETING: Msg = {
 }
 
 // ───────── light markdown → React (no innerHTML) ─────────
+const link = (href: string, label: ReactNode, key: string) => {
+  const external = !href.startsWith('mailto:')
+  return (
+    <a key={key} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      {label}
+    </a>
+  )
+}
+
+/**
+ * Inline markdown: [label](url) · **bold** (which may itself hold a link) ·
+ * *emphasis* · bare https://… addresses. Anything else stays plain text.
+ */
 function inline(text: string, key: string): ReactNode[] {
   const out: ReactNode[] = []
-  // **bold** · [label](url) · bare https://… addresses (AI answers sometimes write those)
-  const re = /\*\*([^*]+)\*\*|\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)|(https?:\/\/[^\s<>()\]]+[^\s<>()\].,;:!?'"])/g
+  const re =
+    /\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)|\*\*(.+?)\*\*|__(.+?)__|(?<![*\w])\*([^*\n]+)\*(?![*\w])|(https?:\/\/[^\s<>()\]]+[^\s<>()\].,;:!?'"*])/g
   let last = 0
   let m: RegExpExecArray | null
   let i = 0
   while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index))
-    if (m[1]) out.push(<strong key={`${key}-${i++}`}>{m[1]}</strong>)
-    else if (m[4]) {
-      out.push(
-        <a key={`${key}-${i++}`} href={m[4]} target="_blank" rel="noopener noreferrer">
-          {m[4].replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
-        </a>,
-      )
-    } else {
-      const external = !m[3].startsWith('mailto:')
-      out.push(
-        <a key={`${key}-${i++}`} href={m[3]} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-          {m[2]}
-        </a>,
-      )
-    }
+    const k = `${key}-${i++}`
+    if (m[1]) out.push(link(m[2], m[1], k))
+    else if (m[3] ?? m[4]) out.push(<strong key={k}>{inline(m[3] ?? m[4], k)}</strong>)
+    else if (m[5]) out.push(<em key={k}>{inline(m[5], k)}</em>)
+    else if (m[6]) out.push(link(m[6], m[6].replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), k))
     last = re.lastIndex
   }
   if (last < text.length) out.push(text.slice(last))
   return out
 }
 
+const BULLET = /^\s*(?:[-*•]|\d+[.)])\s+/
+
+/**
+ * Block markdown: groups consecutive bullet / numbered lines into a list, turns
+ * headings into bold lines, and joins other lines into paragraphs.
+ */
 function Rich({ text }: { text: string }) {
-  const blocks = text.split(/\n{2,}/)
+  type Block = { kind: 'p' | 'ul'; lines: string[] }
+  const blocks: Block[] = []
+  for (const raw of text.replace(/\r/g, '').split('\n')) {
+    const line = raw.trimEnd()
+    if (!line.trim()) {
+      blocks.push({ kind: 'p', lines: [] }) // paragraph break
+      continue
+    }
+    const heading = line.match(/^\s*#{1,6}\s+(.*)$/)
+    const kind = BULLET.test(line) ? 'ul' : 'p'
+    const content = heading ? `**${heading[1].replace(/\*\*/g, '')}**` : kind === 'ul' ? line.replace(BULLET, '') : line.trim()
+    const prev = blocks[blocks.length - 1]
+    if (prev && prev.kind === kind && (kind === 'ul' || prev.lines.length > 0)) prev.lines.push(content)
+    else blocks.push({ kind, lines: [content] })
+  }
   return (
     <>
-      {blocks.map((block, bi) => {
-        const lines = block.split('\n')
-        if (lines.every((l) => /^\s*[-*•] /.test(l))) {
-          return (
+      {blocks
+        .filter((b) => b.lines.length)
+        .map((b, bi) =>
+          b.kind === 'ul' ? (
             <ul key={bi}>
-              {lines.map((l, li) => (
-                <li key={li}>{inline(l.replace(/^\s*[-*•] /, ''), `${bi}-${li}`)}</li>
+              {b.lines.map((l, li) => (
+                <li key={li}>{inline(l, `${bi}-${li}`)}</li>
               ))}
             </ul>
-          )
-        }
-        return (
-          <p key={bi}>
-            {lines.map((l, li) => (
-              <span key={li}>
-                {li > 0 && <br />}
-                {inline(l.replace(/^\s*[-*•] /, '• '), `${bi}-${li}`)}
-              </span>
-            ))}
-          </p>
-        )
-      })}
+          ) : (
+            <p key={bi}>
+              {b.lines.map((l, li) => (
+                <span key={li}>
+                  {li > 0 && <br />}
+                  {inline(l, `${bi}-${li}`)}
+                </span>
+              ))}
+            </p>
+          ),
+        )}
     </>
   )
 }
