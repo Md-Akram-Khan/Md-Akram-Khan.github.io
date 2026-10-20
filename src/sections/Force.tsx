@@ -28,6 +28,8 @@ function RoleCard({ role, i }: { role: Role; i: number }) {
           </p>
         </div>
         <div className="force__body">
+          {role.summary && <p className="force__summary">{role.summary}</p>}
+          {role.pointsLabel && <p className="mono force__label">{role.pointsLabel}</p>}
           <ul className="force__points" role="list">
             {role.points.map((p) => (
               <li key={p.slice(0, 24)}>{p}</li>
@@ -46,6 +48,16 @@ function RoleCard({ role, i }: { role: Role; i: number }) {
               </li>
             )}
           </ul>
+          {role.achievements && (
+            <>
+              <p className="mono force__label force__label--achieve">Key achievements</p>
+              <ul className="force__points force__points--achieve" role="list">
+                {role.achievements.map((a) => (
+                  <li key={a.slice(0, 24)}>{a}</li>
+                ))}
+              </ul>
+            </>
+          )}
           {role.links && (
             <ul className="force__links" role="list">
               {role.links.map((l) => (

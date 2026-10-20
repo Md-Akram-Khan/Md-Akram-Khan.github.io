@@ -130,6 +130,12 @@ export type Role = {
   links?: { label: string; href: string }[]
   /** Problems Akram set, listed in their own bullet with each name linked. */
   problems?: { label: string; href: string }[]
+  /** One-line summary shown above the bullets. */
+  summary?: string
+  /** Heading for `points` when the card also lists achievements. */
+  pointsLabel?: string
+  /** Key achievements, listed under their own heading. */
+  achievements?: string[]
 }
 
 export const roles: Role[] = [
@@ -141,6 +147,28 @@ export const roles: Role[] = [
     kind: 'Research',
     points: [
       'Research under the supervision of Dr. Md. Mosaddek Khan, Associate Professor, Department of Computer Science and Engineering, University of Dhaka.',
+    ],
+  },
+  {
+    title: 'Math & ICT Content Developer',
+    org: 'Udvash Academic & Admission Care',
+    place: 'Dhaka, Bangladesh',
+    dates: '2023 – Present',
+    current: true,
+    kind: 'Work',
+    summary: 'Creating educational content and simplifying complex mathematical and ICT concepts for academic learners.',
+    pointsLabel: 'Key responsibilities',
+    points: [
+      'Developing comprehensive study materials for mathematics and ICT',
+      'Creating practice problems and solution guides',
+      'Designing visual aids and interactive content',
+      'Reviewing and updating existing educational materials',
+      'Collaborating with educators to improve content quality',
+    ],
+    achievements: [
+      'Developed 100+ practice problems with detailed solutions',
+      'Created visual learning aids that improved student comprehension',
+      'Received positive feedback from students and educators',
     ],
   },
   {

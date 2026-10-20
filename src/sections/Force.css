@@ -302,3 +302,45 @@
     padding: 22px 18px;
   }
 }
+
+/* Summary line and sub-headings (responsibilities / achievements) */
+.force__summary {
+  font-family: var(--font-rules);
+  font-style: italic;
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--paper);
+}
+.force__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0.2rem;
+  font-size: calc(var(--step--1) * 0.78);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.force__label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: color-mix(in srgb, var(--paper) 14%, transparent);
+}
+.force__label--achieve {
+  color: var(--gold);
+}
+.force__points--achieve li {
+  color: var(--paper);
+}
+.force__points--achieve li::before {
+  top: 0.55em;
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+/* with a summary line above, the responsibilities are all one weight */
+.force__summary ~ .force__points:not(.force__points--achieve) li:first-child {
+  color: var(--paper-dim);
+}
