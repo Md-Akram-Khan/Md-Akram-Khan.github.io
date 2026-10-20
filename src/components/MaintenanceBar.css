@@ -40,16 +40,20 @@
   animation: maint-pulse 1.6s ease-in-out infinite;
 }
 .maintenance__text {
-  /* fixed width for the full sentence, so the bar never shifts while typing */
-  width: 76ch;
-  max-width: calc(100% - 150px);
+  display: grid;
   min-width: 0;
-  overflow: hidden;
   white-space: nowrap;
-  text-overflow: clip;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   color: var(--paper-dim);
+}
+/* ghost and typed text share one grid cell: the ghost sets the size, the typed text overlays it */
+.maintenance__ghost,
+.maintenance__typed {
+  grid-area: 1 / 1;
+}
+.maintenance__ghost {
+  visibility: hidden;
 }
 .maintenance__prompt {
   color: var(--blood-text);
@@ -79,7 +83,8 @@
     animation: none;
   }
 }
-@media (max-width: 760px) {
+/* narrower screens: the sentence wraps onto two lines */
+@media (max-width: 1000px) {
   .maintenance {
     --maint-h: 40px;
     justify-content: flex-start;
@@ -92,8 +97,6 @@
     font-size: 0;
   }
   .maintenance__text {
-    width: auto;
-    max-width: none;
     font-size: 0.7rem;
     white-space: normal;
     line-height: 1.25;

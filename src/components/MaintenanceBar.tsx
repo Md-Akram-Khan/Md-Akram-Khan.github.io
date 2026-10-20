@@ -39,9 +39,16 @@ export default function MaintenanceBar() {
         Maintenance
       </span>
       <span className="visually-hidden">{MESSAGE}</span>
+      {/* The invisible full sentence reserves exactly the room the typed one needs. */}
       <span className="maintenance__text mono" aria-hidden="true">
-        <span className="maintenance__prompt">&gt;</span> {shown}
-        <span className="maintenance__caret" />
+        <span className="maintenance__ghost">
+          <span className="maintenance__prompt">&gt;</span> {MESSAGE}
+          <span className="maintenance__caret" />
+        </span>
+        <span className="maintenance__typed">
+          <span className="maintenance__prompt">&gt;</span> {shown}
+          <span className="maintenance__caret" />
+        </span>
       </span>
     </div>
   )
