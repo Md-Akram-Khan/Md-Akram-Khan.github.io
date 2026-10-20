@@ -5,6 +5,6 @@ compatibility_date = "2026-10-01"
 [vars]
 ALLOWED_ORIGINS = "https://md-akram-khan.github.io"
 KNOWLEDGE_URL = "https://md-akram-khan.github.io/My-Portfolio/knowledge.txt"
-# MODEL = "llama-3.3-70b-versatile"   # optional: any chat model listed at console.groq.com/docs/models
+# MODELS = "openai/gpt-oss-120b,openai/gpt-oss-20b"   # optional: chat models from console.groq.com/docs/models, tried in order
 
 # The API key is a secret, never written here:  npx wrangler secret put GROQ_API_KEY

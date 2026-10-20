@@ -1,7 +1,7 @@
 # Ask the Note — AI chat Worker
 
 The portfolio's chat works without this: it answers from the portfolio data in the
-browser. This Worker upgrades it to a real AI (Llama via Groq's free API) without
+browser. This Worker upgrades it to a real AI (OpenAI's open gpt-oss models via Groq's free API) without
 putting the API key in the website, where anyone could copy it.
 
 It reads the facts from the live site's `knowledge.txt` (generated from
@@ -31,5 +31,6 @@ down, over its limits or misconfigured, the chat quietly falls back to the built
 - Only `ALLOWED_ORIGINS` (and `localhost` for testing) may call it.
 - 20 questions per visitor per 10 minutes; last 8 messages, 600 characters each.
 - The model is told to answer only from the facts and to decline unrelated requests.
-- Free tiers: Groq and Cloudflare both have generous free daily limits for a portfolio.
+- Groq's free tier allows about 8,000 tokens per minute per model; one question uses about 2,800, so
+  roughly 3 questions a minute per model. When both models are busy, the chat falls back to built-in answers.
 - Visitors' questions are sent to Groq to generate answers.

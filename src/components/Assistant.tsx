@@ -22,14 +22,21 @@ const GREETING: Msg = {
 // ───────── light markdown → React (no innerHTML) ─────────
 function inline(text: string, key: string): ReactNode[] {
   const out: ReactNode[] = []
-  const re = /\*\*([^*]+)\*\*|\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)/g
+  // **bold** · [label](url) · bare https://… addresses (AI answers sometimes write those)
+  const re = /\*\*([^*]+)\*\*|\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)|(https?:\/\/[^\s<>()\]]+[^\s<>()\].,;:!?'"])/g
   let last = 0
   let m: RegExpExecArray | null
   let i = 0
   while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index))
     if (m[1]) out.push(<strong key={`${key}-${i++}`}>{m[1]}</strong>)
-    else {
+    else if (m[4]) {
+      out.push(
+        <a key={`${key}-${i++}`} href={m[4]} target="_blank" rel="noopener noreferrer">
+          {m[4].replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+        </a>,
+      )
+    } else {
       const external = !m[3].startsWith('mailto:')
       out.push(
         <a key={`${key}-${i++}`} href={m[3]} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>

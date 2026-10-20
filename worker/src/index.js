@@ -7,9 +7,11 @@
 //   GROQ_API_KEY     secret, from console.groq.com
 //   ALLOWED_ORIGINS  comma-separated, e.g. https://md-akram-khan.github.io
 //   KNOWLEDGE_URL    https://md-akram-khan.github.io/My-Portfolio/knowledge.txt
-//   MODEL            optional, default below
+//   MODELS           optional, comma-separated; tried in order (the next one when a
+//                    model is rate-limited). Default below.
 
-const DEFAULT_MODEL = 'llama-3.3-70b-versatile'
+// Groq's free tier limits tokens per minute per model, so a busy model hands over to the next.
+const DEFAULT_MODELS = 'openai/gpt-oss-120b,openai/gpt-oss-20b'
 const MAX_MESSAGES = 8
 const MAX_CHARS = 600
 const RATE = { max: 20, windowMs: 10 * 60 * 1000 } // 20 questions per 10 minutes per visitor
@@ -94,21 +96,23 @@ export default {
 
     try {
       const facts = await getKnowledge(env)
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: env.MODEL || DEFAULT_MODEL,
-          temperature: 0.3,
-          max_tokens: 450,
-          messages: [{ role: 'system', content: systemPrompt(facts) }, ...clean],
-        }),
-      })
-      if (!res.ok) return json({ error: `model ${res.status}` }, 502, headers)
-      const data = await res.json()
-      const reply = data?.choices?.[0]?.message?.content
-      if (typeof reply !== 'string' || !reply.trim()) return json({ error: 'empty' }, 502, headers)
-      return json({ reply: reply.trim() }, 200, headers)
+      const prompt = [{ role: 'system', content: systemPrompt(facts) }, ...clean]
+      const models = (env.MODELS || DEFAULT_MODELS).split(',').map((m) => m.trim()).filter(Boolean)
+      let status = 502
+      for (const model of models) {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, temperature: 0.3, max_tokens: 700, reasoning_effort: 'low', messages: prompt }),
+        })
+        status = res.status
+        if (res.status === 429 || res.status >= 500) continue // busy or down: try the next model
+        if (!res.ok) break
+        const data = await res.json()
+        const reply = data?.choices?.[0]?.message?.content
+        if (typeof reply === 'string' && reply.trim()) return json({ reply: reply.trim() }, 200, headers)
+      }
+      return json({ error: `model ${status}` }, status === 429 ? 429 : 502, headers)
     } catch {
       return json({ error: 'upstream failed' }, 502, headers)
     }
