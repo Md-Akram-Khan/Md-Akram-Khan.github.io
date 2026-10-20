@@ -439,6 +439,18 @@ export const gallery: GalleryItem[] = [
     alt: 'NahamCon CTF 2025 certificate of completion for team Restless_goblins: 1326 points, 74th of 859 teams, 8 of 25 challenges solved',
     pdf: 'media/nahamcon-2025-certificate.pdf',
   },
+  {
+    id: 'du-ctf-2023',
+    kind: 'award',
+    title: 'DU CTF 2023',
+    caption: 'Prize-giving at the Department of CSE, University of Dhaka · team DU_CTF_NOOBS · 10th of 100+ teams',
+    date: '2023',
+    webp: 'media/gallery/du-ctf-2023-prize.webp',
+    jpg: 'media/gallery/du-ctf-2023-prize.jpg',
+    width: 1280,
+    height: 854,
+    alt: 'Prize-giving for DU CTF 2023 at the Department of Computer Science and Engineering, University of Dhaka: team DU_CTF_NOOBS receives a prize envelope on stage.',
+  },
 ]
 
 // Competitive programming and DSA practice repositories.
