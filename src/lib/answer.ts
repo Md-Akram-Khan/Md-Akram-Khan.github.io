@@ -17,6 +17,7 @@ export type Reply = {
 }
 
 const name = profile.shortName
+const SCOPE_WORD = { international: 'international', national: 'national', intra: 'intra-university' } as const
 const total = judges.reduce((n, j) => n + j.solved, 0)
 /** profile.role as a phrase: 'CS student · Full-stack & AI/ML developer' → 'a CS student and full-stack & AI/ML developer'. */
 const rolePhrase = `a ${profile.role.replace(' · ', ' and ').replace(' and Full', ' and full')}`
@@ -127,7 +128,7 @@ function contestReply(cName: string): Reply {
   return {
     text:
       `**${c.name}** (${c.year}), organized by ${c.organizer}: ` +
-      `${c.kind === 'ctf' ? `a team CTF, as **${c.team}**` : 'a solo programming contest'}. ` +
+      `${c.scope === 'national' ? 'a' : 'an'} ${SCOPE_WORD[c.scope]} ${c.kind === 'ctf' ? `team CTF, as **${c.team}**` : 'solo programming contest'}. ` +
       `Result: **${ordinal(c.rank)} place** among ${field}.` +
       (c.details ? `\n\n${c.details.map((d) => `- ${d}`).join('\n')}` : '') +
       (c.standings ? `\n\n[See the standings](${c.standings})` : '') +
@@ -221,7 +222,7 @@ const R = {
     text:
       `Contest record, newest first:\n\n` +
       contests
-        .map((c) => `- **${c.name}** (${c.year}, ${c.kind === 'ctf' ? 'team CTF' : 'solo'}): ${ordinal(c.rank)} of ${c.field}${c.fieldPlus ? '+' : ''}`)
+        .map((c) => `- **${c.name}** (${c.year}, ${SCOPE_WORD[c.scope]} ${c.kind === 'ctf' ? 'team CTF' : 'solo'}): ${ordinal(c.rank)} of ${c.field}${c.fieldPlus ? '+' : ''}`)
         .join('\n') +
       `\n\nBest: **6th of 650+ teams** at AL KHWARIZMI CTF.`,
     section: 'duels',

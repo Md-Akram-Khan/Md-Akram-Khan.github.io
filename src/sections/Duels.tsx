@@ -33,6 +33,13 @@ const KIND = {
   },
 } as const
 
+/** Contest level, stamped beside the placing. */
+const SCOPE = {
+  international: 'International',
+  national: 'National',
+  intra: 'Intra-University',
+} as const
+
 const ordinal = (n: number) => {
   const s = ['th', 'st', 'nd', 'rd']
   const v = n % 100
@@ -75,8 +82,11 @@ function DuelCard({ c, onCertificate }: { c: Contest; onCertificate: (c: Contest
             place, among <strong>{field}</strong> {k.unit}
           </span>
         </p>
-        <span className="mono duels__stamp" aria-label={`Top ${topShare(c)} percent`}>
-          Top {topShare(c)}%
+        <span className="duels__stamps">
+          <span className="mono duels__stamp" aria-label={`Top ${topShare(c)} percent`}>
+            Top {topShare(c)}%
+          </span>
+          <span className={`mono duels__scope duels__scope--${c.scope}`}>{SCOPE[c.scope]}</span>
         </span>
       </div>
 

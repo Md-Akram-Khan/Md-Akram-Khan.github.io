@@ -344,6 +344,8 @@ export type Contest = {
   rank: number
   field: number
   fieldPlus?: boolean
+  /** How wide the field was: who could take part. */
+  scope: 'international' | 'national' | 'intra'
   /** Public final standings page, if there is one. */
   standings?: string
   /** Extra result details, shown under the placing (e.g. points, challenges solved). */
@@ -360,6 +362,7 @@ export const contests: Contest[] = [
     year: 2025,
     when: 'December 17–18, 2025',
     name: 'NahamCon CTF 2025',
+    scope: 'international',
     organizer: 'NahamCon',
     team: 'Restless_goblins',
     rank: 74,
@@ -372,10 +375,10 @@ export const contests: Contest[] = [
       alt: 'NahamCon CTF 2025 certificate of completion for team Restless_goblins: 1326 points, 74th of 859 teams, 8 of 25 challenges solved',
     },
   },
-  { kind: 'ctf', year: 2025, name: 'AL KHWARIZMI CTF', organizer: 'Bangladesh Islami Chhatrashibir Science', team: 'DU_Restless_goblins', rank: 6, field: 650, fieldPlus: true },
-  { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', organizer: 'University of Dhaka', rank: 10, field: 105, standings: 'https://toph.co/c/battle-brains-2025/standings' },
-  { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', organizer: 'University of Dhaka', rank: 14, field: 68, standings: 'https://toph.co/c/battle-brains-2024/standings' },
-  { kind: 'ctf', year: 2023, name: 'DU CTF 2023', organizer: 'University of Dhaka', team: 'DU_CTF_NOOBS', rank: 10, field: 100, fieldPlus: true },
+  { kind: 'ctf', year: 2025, name: 'AL KHWARIZMI CTF', scope: 'national', organizer: 'Bangladesh Islami Chhatrashibir Science', team: 'DU_Restless_goblins', rank: 6, field: 650, fieldPlus: true },
+  { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', scope: 'intra', organizer: 'University of Dhaka', rank: 10, field: 105, standings: 'https://toph.co/c/battle-brains-2025/standings' },
+  { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', scope: 'intra', organizer: 'University of Dhaka', rank: 14, field: 68, standings: 'https://toph.co/c/battle-brains-2024/standings' },
+  { kind: 'ctf', year: 2023, name: 'DU CTF 2023', scope: 'intra', organizer: 'University of Dhaka', team: 'DU_CTF_NOOBS', rank: 10, field: 100, fieldPlus: true },
 ]
 
 // Competitive programming and DSA practice repositories.
