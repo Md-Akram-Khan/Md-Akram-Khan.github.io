@@ -37,7 +37,9 @@ export function buildKnowledge(): string {
   line('## Experience ("The Task Force")')
   for (const r of roles) {
     line(`- ${r.title} — ${r.org}${r.place ? `, ${r.place}` : ''} (${r.dates}; ${r.kind})`)
+    if (r.summary) line(`  ${r.summary}`)
     for (const p of r.points) line(`  - ${p}`)
+    for (const a of r.achievements ?? []) line(`  - Achievement: ${a}`)
     for (const p of r.problems ?? []) line(`  - Problem set: "${p.label}" ${p.href}`)
     for (const l of r.links ?? []) line(`  - ${l.label}: ${l.href}`)
   }
