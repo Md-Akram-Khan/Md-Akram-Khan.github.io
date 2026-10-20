@@ -583,3 +583,92 @@
     mask: none;
   }
 }
+
+/* ───────────────────────── The black rules page ─────────────────────────
+   Each project is a page in the style of the note's rule pages: a black page,
+   a thin parchment frame, flourishes in the corners and a skull medallion on the
+   top edge (see PageOrnaments). Overrides the torn-paper look above. */
+.project-card {
+  --card-ink: var(--paper);
+  --card-ink-2: var(--paper-dim);
+  --card-ink-3: var(--ash);
+  --ornament-bg: #050505;
+}
+.project-card__tape {
+  display: none;
+}
+.project-card__page {
+  /* clear the frame: medallion on top, corner flourishes at the sides */
+  /* top: below the frame line (58px) and the corner flourishes (46px) */
+  padding: 122px clamp(34px, 4.4vw, 62px) calc(var(--pad-y) + 30px);
+  background-color: #050505;
+  background-image:
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--blood-deep) 26%, transparent), transparent 60%),
+    radial-gradient(140% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.6));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 8%, transparent);
+  -webkit-mask: none;
+  mask: none;
+}
+/* no red margin rule on this page */
+.project-card__page::before {
+  display: none;
+}
+.project-card__page::after {
+  background: radial-gradient(60% 45% at 50% 0%, color-mix(in srgb, var(--blood) 22%, transparent), transparent 72%);
+}
+/* the medallion glows red and its rays turn when the page is "seen" */
+.project-card:is(:hover, :focus-within) .ornament-medallion {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--blood-bright) 75%, transparent));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .project-card:is(:hover, :focus-within) .ornament-medallion__rays {
+    rotate: 12deg;
+  }
+}
+
+/* text on black */
+.project-card__eyes {
+  color: var(--blood-text);
+}
+.project-card__stamp {
+  color: var(--blood-text);
+  box-shadow: inset 0 0 0 2px #050505, inset 0 0 0 3px color-mix(in srgb, currentColor 55%, transparent);
+}
+.project-card__stamp--team {
+  color: var(--paper-dim);
+}
+.project-card__label::after {
+  background: color-mix(in srgb, var(--paper) 16%, transparent);
+}
+.project-card__stack li {
+  border-color: color-mix(in srgb, var(--paper) 24%, transparent);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+}
+.project-card__link {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+.project-card__link:hover {
+  color: #050505;
+  background-color: var(--paper);
+}
+.project-card__link-icon {
+  color: var(--blood-text);
+}
+.project-card__link--live {
+  color: #050505;
+  background-color: var(--paper);
+  border-color: var(--paper);
+}
+.project-card__link--live:hover {
+  color: var(--paper);
+  background-color: var(--blood);
+  border-color: var(--blood);
+}
+
+@media (max-width: 760px) {
+  .project-card__page {
+    /* frame line 46px + corner flourish 34px */
+    padding: 100px 26px calc(var(--pad-y) + 20px);
+  }
+}

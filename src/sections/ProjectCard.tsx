@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type FocusEvent, type PointerEvent } from 'react'
 import type { Project } from '../data/portfolio'
+import PageOrnaments from './PageOrnaments'
 import './ProjectCard.css'
 
 type Props = {
@@ -82,6 +83,7 @@ export default function ProjectCard({ project, index, total, featured, offset }:
         onPointerEnter={onPointerEnter}
         onFocus={onFocus}
       >
+        <PageOrnaments />
         <header className="project-card__head">
           {/* DOM order keeps the name first for screen readers; CSS lifts the meta + eyes lines above it. */}
           <h3 className="project-card__title" id={titleId}>

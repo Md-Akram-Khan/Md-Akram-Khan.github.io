@@ -1,0 +1,80 @@
+/* Black "rules page" ornaments: frame, corner flourishes, top medallion.
+   Positioned inside a relatively positioned page; geometry via custom properties. */
+.page-ornaments {
+  --frame-inset: 16px;
+  --frame-top: 58px; /* the frame's top edge sits lower: the medallion rides on it */
+  --medallion: 96px;
+  --corner: 46px;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+.page-ornaments__frame {
+  position: absolute;
+  top: var(--frame-top);
+  right: var(--frame-inset);
+  bottom: var(--frame-inset);
+  left: var(--frame-inset);
+  border: 1.5px solid currentColor;
+}
+/* a gap in the frame's top line behind the medallion */
+.page-ornaments__frame::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: calc(var(--medallion) * 0.62);
+  height: 3px;
+  translate: -50% 0;
+  background: var(--ornament-bg, #050505);
+}
+
+.ornament-corner {
+  position: absolute;
+  width: var(--corner);
+  height: var(--corner);
+}
+.ornament-corner--tl {
+  top: calc(var(--frame-top) + 5px);
+  left: calc(var(--frame-inset) + 5px);
+}
+.ornament-corner--tr {
+  top: calc(var(--frame-top) + 5px);
+  right: calc(var(--frame-inset) + 5px);
+  scale: -1 1;
+}
+.ornament-corner--bl {
+  bottom: calc(var(--frame-inset) + 5px);
+  left: calc(var(--frame-inset) + 5px);
+  scale: 1 -1;
+}
+.ornament-corner--br {
+  bottom: calc(var(--frame-inset) + 5px);
+  right: calc(var(--frame-inset) + 5px);
+  scale: -1 -1;
+}
+
+.ornament-medallion {
+  position: absolute;
+  top: calc(var(--frame-top) - var(--medallion) / 2);
+  left: 50%;
+  width: var(--medallion);
+  height: var(--medallion);
+  translate: -50% 0;
+  overflow: visible;
+  transition: filter 500ms ease;
+}
+.ornament-medallion__rays {
+  transform-origin: 0 0;
+  transition: rotate 1.2s var(--ease);
+}
+
+@media (max-width: 760px) {
+  .page-ornaments {
+    --frame-inset: 10px;
+    --frame-top: 46px;
+    --medallion: 76px;
+    --corner: 34px;
+  }
+}
