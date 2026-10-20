@@ -1,6 +1,9 @@
-import type { MouseEvent } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { profile } from '../data/portfolio'
 import { scrollToSection } from '../lib/scroll'
+import { REPO_URL, useStars } from '../lib/stars'
+import { StarIcon } from './StarPrompt'
+import './StarPrompt.css'
 import './Footer.css'
 
 const YEAR = 2026
@@ -18,8 +21,25 @@ function backToTop(e: MouseEvent<HTMLAnchorElement>) {
 }
 
 export default function Footer() {
+  // Ask GitHub for the star count only once the footer is near.
+  const ref = useRef<HTMLElement>(null)
+  const [near, setNear] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setNear(true)
+        io.disconnect()
+      }
+    }, { rootMargin: '300px 0px' })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+  const stars = useStars(near)
+
   return (
-    <footer className="footer">
+    <footer className="footer" ref={ref}>
       <div className="container footer__inner">
         <div className="footer__mark" aria-hidden="true">
           <span className="footer__mark-line" />
@@ -31,6 +51,17 @@ export default function Footer() {
           <span className="mono footer__year">© {YEAR}</span> {profile.name}
         </p>
         <p className="footer__built">Built with too many apples and Shinigami.</p>
+
+        <a className="star-btn footer__star" href={REPO_URL} target="_blank" rel="noopener noreferrer">
+          <StarIcon />
+          <span>Liked the note? Star it on GitHub</span>
+          {stars !== null && (
+            <span className="star-btn__count" aria-label={`${stars} stars so far`}>
+              {stars}
+            </span>
+          )}
+          <span className="visually-hidden"> (opens the repository in a new tab)</span>
+        </a>
 
         <a className="footer__top" href="#hero" onClick={backToTop}>
           <span className="footer__top-arrow" aria-hidden="true">

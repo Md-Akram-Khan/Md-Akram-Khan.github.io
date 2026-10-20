@@ -1,0 +1,139 @@
+/* "Leave your mark" card: bottom-left (Shinigami AI holds the bottom-right). */
+.star-prompt {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: var(--z-nav);
+  width: min(340px, calc(100vw - 32px));
+  padding: 18px 18px 18px 20px;
+  color: var(--paper);
+  background:
+    radial-gradient(90% 60% at 0% 0%, color-mix(in srgb, var(--blood-deep) 55%, transparent), transparent 70%),
+    var(--ink-2);
+  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  border-radius: 6px;
+  box-shadow:
+    0 24px 60px -18px rgba(0, 0, 0, 0.95),
+    0 0 40px -16px color-mix(in srgb, var(--gold) 60%, transparent);
+  animation: star-in 520ms var(--ease) both;
+}
+@keyframes star-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+.star-prompt__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--paper-dim);
+  font-size: 1.2rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.star-prompt__close:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+}
+.star-prompt__kicker {
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.star-prompt__title {
+  margin: 0.25rem 2.2rem 0.4rem 0;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+.star-prompt__text {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--paper-dim);
+}
+.star-prompt__btn,
+.star-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 8px 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 3px;
+  transition:
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+.star-prompt__btn {
+  margin-top: 14px;
+}
+.star-prompt__btn:hover,
+.star-btn:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 82%, white);
+  box-shadow: 0 0 22px -4px var(--gold);
+}
+.star-icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.star-prompt__btn .star-icon {
+  animation: star-twinkle 2.4s ease-in-out infinite;
+}
+@keyframes star-twinkle {
+  0%,
+  70%,
+  100% {
+    transform: scale(1) rotate(0);
+  }
+  80% {
+    transform: scale(1.3) rotate(-12deg);
+  }
+  90% {
+    transform: scale(1) rotate(6deg);
+  }
+}
+.star-prompt__count,
+.star-btn__count {
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .star-prompt,
+  .star-prompt__btn .star-icon {
+    animation: none;
+  }
+}
+@media (max-width: 760px) {
+  /* sit above the Shinigami AI button instead of covering it */
+  .star-prompt {
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 58px);
+  }
+  .star-btn {
+    gap: 7px;
+    padding: 6px 8px 6px 12px;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-align: left;
+  }
+}

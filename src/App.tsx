@@ -8,6 +8,7 @@ import MaintenanceBar from './components/MaintenanceBar'
 import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
 import Assistant from './components/Assistant'
+import StarPrompt from './components/StarPrompt'
 import SceneFallback from './three/SceneFallback'
 import Hero from './sections/Hero'
 import Rules from './sections/Rules'
@@ -109,6 +110,7 @@ export default function App() {
       <Footer />
       <MusicPlayer />
       <Assistant />
+      <StarPrompt />
       <div className="grain" aria-hidden="true" />
     </>
   )
