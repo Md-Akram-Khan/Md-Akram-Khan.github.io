@@ -1,4 +1,4 @@
-// The built-in answerer for "Ask the Note": answers visitors' questions straight
+// The built-in answerer for "Shinigami AI": answers visitors' questions straight
 // from src/data/portfolio.ts, in the browser, with no network and no AI. It finds
 // the things a question mentions (a project, a skill, a judge, a contest, a role)
 // and what kind of answer it wants (contact, skills, experience…), then writes the

@@ -1,4 +1,4 @@
-// "Ask the Note" — a chat that answers visitors' questions about Akram from the
+// "Shinigami AI" — a chat that answers visitors' questions about Akram from the
 // portfolio itself. With an AI endpoint configured (VITE_CHAT_ENDPOINT) it uses
 // the AI and falls back to the built-in answerer on any failure; without one it
 // uses the built-in answerer only. A floating launcher opens a dialog panel.
@@ -168,7 +168,7 @@ export default function Assistant() {
             <span className="assistant__meta">
               <span className="mono assistant__kicker">{aiEnabled ? 'AI · answers from this portfolio' : 'Answers from this portfolio'}</span>
               <h2 className="gothic assistant__title" id={titleId}>
-                Ask the Note
+                Shinigami AI
               </h2>
             </span>
             <button type="button" className="assistant__close" onClick={close}>
@@ -180,7 +180,7 @@ export default function Assistant() {
           <div className="assistant__log" ref={logRef} aria-live="polite" aria-busy={busy}>
             {msgs.map((m) => (
               <div key={m.id} className={`assistant__msg assistant__msg--${m.role}`}>
-                <span className="visually-hidden">{m.role === 'user' ? 'You:' : 'The Note:'}</span>
+                <span className="visually-hidden">{m.role === 'user' ? 'You:' : 'Shinigami AI:'}</span>
                 <div className="assistant__bubble">
                   {m.role === 'assistant' ? <Rich text={m.text} /> : <p>{m.text}</p>}
                   {m.role === 'assistant' && m.section && (
@@ -245,7 +245,7 @@ export default function Assistant() {
         onClick={() => (open ? close() : setOpen(true))}
       >
         <EyeIcon />
-        <span className="mono assistant__launcher-label">{open ? 'Close' : 'Ask the Note'}</span>
+        <span className="mono assistant__launcher-label">{open ? 'Close' : 'Shinigami AI'}</span>
         <span className="visually-hidden">{open ? '' : `: chat about ${profile.name}`}</span>
       </button>
     </div>

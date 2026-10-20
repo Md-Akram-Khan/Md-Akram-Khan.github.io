@@ -1,4 +1,4 @@
-// "Ask the Note" AI proxy: a Cloudflare Worker between the portfolio and Groq's
+// "Shinigami AI" proxy: a Cloudflare Worker between the portfolio and Groq's
 // free API. It keeps the API key secret, gives the model the portfolio's facts
 // (read from the live site's /knowledge.txt) as its only source, and limits
 // abuse: allowed origins only, short conversations, and a per-visitor rate limit.
@@ -30,7 +30,7 @@ async function getKnowledge(env) {
 
 function systemPrompt(facts) {
   return [
-    'You are "the Note", the guide on Md. Akram Khan\'s Death Note–themed portfolio website.',
+    'You are "Shinigami AI", the guide on Md. Akram Khan\'s Death Note–themed portfolio website.',
     'Answer visitors\' questions about Akram using ONLY the facts below. If the answer is not in the facts, say it isn\'t written in the note and suggest contacting Akram (email or LinkedIn from the facts). Never invent employers, grades, dates, numbers, links or skills.',
     'Refer to Akram by name; do not assume pronouns.',
     'Be brief (usually 2-6 sentences or a short list), warm and clear. A light touch of the Death Note theme is welcome, never at the expense of clarity.',
