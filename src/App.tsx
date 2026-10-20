@@ -4,6 +4,7 @@ import { hasWebGL } from './lib/env'
 import { sections, type SectionId } from './data/portfolio'
 import Intro from './components/Intro'
 import Nav from './components/Nav'
+import MaintenanceBar from './components/MaintenanceBar'
 import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
 import Assistant from './components/Assistant'
@@ -81,6 +82,7 @@ export default function App() {
       </a>
       <Intro />
       <Nav />
+      <MaintenanceBar />
 
       {/* Fixed, full-viewport 3D background (z-index: var(--z-canvas)). */}
       <div className="scene-layer" aria-hidden="true">

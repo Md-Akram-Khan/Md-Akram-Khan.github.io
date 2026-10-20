@@ -1,0 +1,101 @@
+/* Maintenance notice: a slim bar fixed directly under the nav. */
+.maintenance {
+  --maint-h: 34px;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-nav) - 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: var(--maint-h);
+  padding: 0 var(--gutter);
+  background: color-mix(in srgb, var(--ink) 86%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid color-mix(in srgb, var(--blood) 45%, transparent);
+  pointer-events: none;
+}
+.maintenance__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 3px 9px;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius: 2px;
+}
+.maintenance__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  animation: maint-pulse 1.6s ease-in-out infinite;
+}
+.maintenance__text {
+  /* fixed width for the full sentence, so the bar never shifts while typing */
+  width: 76ch;
+  max-width: calc(100% - 150px);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+}
+.maintenance__prompt {
+  color: var(--blood-text);
+}
+.maintenance__caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.18em;
+  background: var(--blood-bright);
+  animation: maint-caret 1s steps(1, end) infinite;
+}
+@keyframes maint-caret {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes maint-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .maintenance__dot,
+  .maintenance__caret {
+    animation: none;
+  }
+}
+@media (max-width: 760px) {
+  .maintenance {
+    --maint-h: 40px;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+  /* phones: the badge shrinks to its pulsing dot to leave room for the sentence */
+  .maintenance__badge {
+    padding: 0;
+    border: 0;
+    font-size: 0;
+  }
+  .maintenance__text {
+    width: auto;
+    max-width: none;
+    font-size: 0.7rem;
+    white-space: normal;
+    line-height: 1.25;
+  }
+}

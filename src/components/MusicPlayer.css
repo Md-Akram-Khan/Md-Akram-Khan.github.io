@@ -4,7 +4,7 @@
    (absolute, not fixed). The launcher comes first, the card opens below it. */
 .music {
   position: absolute;
-  top: calc(var(--nav-h) + 12px);
+  top: calc(var(--nav-h) + 48px); /* below the nav and the maintenance bar */
   right: max(var(--gutter), env(safe-area-inset-right));
   /* below the fixed nav, so the nav covers it once the page scrolls */
   z-index: calc(var(--z-nav) - 1);
