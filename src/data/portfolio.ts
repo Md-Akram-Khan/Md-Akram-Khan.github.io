@@ -46,6 +46,8 @@ export type Rule = {
   photo?: boolean
   /** The final, secret rule: styled as sealed. Its interaction comes later. */
   secret?: boolean
+  /** Marks a rule whose feature isn't live yet: shown as a "coming soon" stamp and note. Remove when it ships. */
+  comingSoon?: string
   page: 1 | 2
 }
 
@@ -109,6 +111,7 @@ export const rules: Rule[] = [
     ],
     coda: 'Do you dare make the deal?',
     secret: true,
+    comingSoon: 'The deal isn’t open yet. The Shinigami is still preparing the eyes: this feature arrives soon.',
     page: 2,
   },
 ]

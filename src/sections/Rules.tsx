@@ -65,6 +65,11 @@ function RuleItem({ rule }: { rule: Rule }) {
           Final and secret rule
         </p>
       )}
+      {rule.comingSoon && (
+        <span className="mono rules__soon-stamp" aria-hidden="true">
+          Coming soon
+        </span>
+      )}
       <h3 className="gothic rules__rule-title">{rule.title}</h3>
       <div className="rules-text rules__text">
         {rule.paragraphs.map((p) => (
@@ -72,6 +77,14 @@ function RuleItem({ rule }: { rule: Rule }) {
         ))}
       </div>
       {rule.coda && <p className="hand rules__coda">{rule.coda}</p>}
+      {rule.comingSoon && (
+        <p className="mono rules__soon" role="note">
+          <span className="rules__soon-dot" aria-hidden="true" />
+          <span>
+            <strong>Coming soon.</strong> {rule.comingSoon}
+          </span>
+        </p>
+      )}
     </li>
   )
 }

@@ -504,3 +504,66 @@
     font-size: 0.5rem;
   }
 }
+
+/* ───────── Rule 07 not live yet: "coming soon" stamp + note ───────── */
+.rules__soon-stamp {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  padding: 0.3em 0.65em;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  border-radius: 3px;
+  transform: rotate(6deg);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.rules__soon {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  color: var(--paper-dim);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 2px;
+}
+.rules__soon strong {
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.rules__soon-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.45em;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  animation: rules-soon 1.8s ease-in-out infinite;
+}
+@keyframes rules-soon {
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rules__soon-dot {
+    animation: none;
+  }
+}
+/* phones: the note at the foot of the card says it; the stamp would crowd the label */
+@media (max-width: 760px) {
+  .rules__soon-stamp {
+    display: none;
+  }
+}
