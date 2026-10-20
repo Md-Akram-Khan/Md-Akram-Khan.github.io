@@ -15,6 +15,7 @@ import Projects from './sections/Projects'
 import Cases from './sections/Cases'
 import Skills from './sections/Skills'
 import Duels from './sections/Duels'
+import Gallery from './sections/Gallery'
 import Contact from './sections/Contact'
 
 // The 3D scene is code-split so text content paints first. If its chunk (or the
@@ -100,6 +101,7 @@ export default function App() {
         <Cases />
         <Skills />
         <Duels />
+        <Gallery />
         <Contact />
       </main>
       <Footer />

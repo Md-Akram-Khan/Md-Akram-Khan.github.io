@@ -25,3 +25,6 @@ dist-ssr
 
 # QA screenshots
 shots/
+
+# Original photos for the gallery (converted copies go to public/media/gallery)
+gallery-inbox/

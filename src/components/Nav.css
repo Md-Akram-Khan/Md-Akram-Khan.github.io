@@ -290,6 +290,17 @@
   display: none;
 }
 
+/* Eight sections: on laptop widths the roman numerals step aside so the names fit. */
+@media (max-width: 1600px) {
+  .nav__inline .nav__num,
+  .nav__inline .nav__dot {
+    display: none;
+  }
+  .nav__list {
+    gap: clamp(14px, 1.4vw, 24px);
+  }
+}
+
 @media (max-width: 1300px) {
   .nav__inline {
     display: none;

@@ -1,7 +1,7 @@
 // Single source of truth for all portfolio content.
 // Every fact here comes from Md. Akram Khan's public GitHub repositories.
 
-export type SectionId = 'hero' | 'rules' | 'force' | 'names' | 'cases' | 'eyes' | 'duels' | 'contact'
+export type SectionId = 'hero' | 'rules' | 'force' | 'names' | 'cases' | 'eyes' | 'duels' | 'gallery' | 'contact'
 
 /** `label` is the themed name; `plain` says what the section is, for the nav. */
 export const sections: { id: SectionId; label: string; plain: string; numeral: string }[] = [
@@ -12,7 +12,8 @@ export const sections: { id: SectionId; label: string; plain: string; numeral: s
   { id: 'cases', label: 'Cases Closed', plain: 'Problem Solving', numeral: 'IV' },
   { id: 'eyes', label: 'Shinigami Eyes', plain: 'Skills', numeral: 'V' },
   { id: 'duels', label: 'Duels Fought', plain: 'Contests', numeral: 'VI' },
-  { id: 'contact', label: 'Write a Name', plain: 'Contact', numeral: 'VII' },
+  { id: 'gallery', label: 'Evidence Room', plain: 'Gallery', numeral: 'VII' },
+  { id: 'contact', label: 'Write a Name', plain: 'Contact', numeral: 'VIII' },
 ]
 
 export const profile = {
@@ -379,6 +380,44 @@ export const contests: Contest[] = [
   { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', scope: 'intra', organizer: 'University of Dhaka', rank: 10, field: 105, standings: 'https://toph.co/c/battle-brains-2025/standings' },
   { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', scope: 'intra', organizer: 'University of Dhaka', rank: 14, field: 68, standings: 'https://toph.co/c/battle-brains-2024/standings' },
   { kind: 'ctf', year: 2023, name: 'DU CTF 2023', scope: 'intra', organizer: 'University of Dhaka', team: 'DU_CTF_NOOBS', rank: 10, field: 100, fieldPlus: true },
+]
+
+// "The Evidence Room" — photo gallery: award photos, certificates and event moments.
+// To add a photo: put a web-sized image in public/media/gallery/ (webp + jpg
+// fallback) and add an entry here; the gallery, filters and lightbox update
+// automatically. `width`/`height` are the image's pixel size (keeps the layout steady).
+export type GalleryKind = 'certificate' | 'award' | 'event'
+
+export type GalleryItem = {
+  id: string
+  kind: GalleryKind
+  title: string
+  caption?: string
+  /** When, as shown on the print, e.g. "Dec 2025". */
+  date?: string
+  webp: string
+  jpg: string
+  width: number
+  height: number
+  alt: string
+  /** Original document, if the photo is of one. */
+  pdf?: string
+}
+
+export const gallery: GalleryItem[] = [
+  {
+    id: 'nahamcon-2025',
+    kind: 'certificate',
+    title: 'NahamCon CTF 2025',
+    caption: 'Certificate of completion · team Restless_goblins · 74th of 859 teams',
+    date: 'Dec 2025',
+    webp: 'media/nahamcon-2025-certificate.webp',
+    jpg: 'media/nahamcon-2025-certificate.jpg',
+    width: 1280,
+    height: 720,
+    alt: 'NahamCon CTF 2025 certificate of completion for team Restless_goblins: 1326 points, 74th of 859 teams, 8 of 25 challenges solved',
+    pdf: 'media/nahamcon-2025-certificate.pdf',
+  },
 ]
 
 // Competitive programming and DSA practice repositories.
