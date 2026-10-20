@@ -5,7 +5,7 @@
 // answer from the data. It never invents: unknown questions get an honest "not in
 // the note" plus suggestions. Used alone, or as the fallback when the AI is down.
 import { contests, judges, judgesAsOf, problemSolving, profile, projects, roles, skillGroups, type SectionId } from '../data/portfolio.ts'
-import { ordinal } from './knowledge.ts'
+import { cvUrl, ordinal } from './knowledge.ts'
 
 export type Reply = {
   /** Light markdown: **bold**, [label](url), "- " bullets, blank-line paragraphs. */
@@ -188,8 +188,9 @@ const R = {
       `You can reach ${name} here:\n\n` +
       (profile.email ? `- **Email:** [${profile.email}](mailto:${profile.email})\n` : '') +
       `- **LinkedIn:** [${profile.name}](${profile.links.linkedin})\n` +
-      `- **GitHub:** [Md-Akram-Khan](${profile.links.github})\n\n` +
-      `Based in ${profile.location}, and open to collaboration.`,
+      `- **GitHub:** [Md-Akram-Khan](${profile.links.github})\n` +
+      (cvUrl ? `- **CV:** [PDF](${cvUrl})\n` : '') +
+      `\nBased in ${profile.location}, and open to collaboration.`,
     section: 'contact',
     suggest: [`Who is ${name}?`, 'Show all projects'],
   }),
@@ -243,7 +244,8 @@ const R = {
     text:
       `${name} is open to collaboration. The fastest way to start is ` +
       (profile.email ? `an email to [${profile.email}](mailto:${profile.email}), or ` : '') +
-      `a message on [LinkedIn](${profile.links.linkedin}).\n\nThe note doesn't include a CV; ask ${name} for one directly.`,
+      `a message on [LinkedIn](${profile.links.linkedin}).\n\n` +
+      (cvUrl ? `${name}'s CV is here: [download the PDF](${cvUrl}).` : `The note doesn't include a CV; ask ${name} for one directly.`),
     section: 'contact',
     suggest: [`Who is ${name}?`, 'Show all projects'],
   }),

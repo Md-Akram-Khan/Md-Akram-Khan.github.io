@@ -5,6 +5,7 @@
 import { contests, judges, judgesAsOf, problemSolving, profile, projects, roles, rules, skillGroups } from '../data/portfolio.ts'
 
 const SITE = 'https://md-akram-khan.github.io/My-Portfolio/'
+export const cvUrl = profile.cv ? `${SITE}${profile.cv}` : ''
 
 export const ordinal = (n: number) => {
   const s = ['th', 'st', 'nd', 'rd']
@@ -25,6 +26,7 @@ export function buildKnowledge(): string {
   line(`GitHub: ${profile.links.github}`)
   line(`LinkedIn: ${profile.links.linkedin}`)
   if (profile.email) line(`Email: ${profile.email}`)
+  if (cvUrl) line(`CV (PDF): ${cvUrl}`)
 
   line()
   line(`## About (in ${profile.shortName}'s own words: the site's "How to Use It" rules)`)

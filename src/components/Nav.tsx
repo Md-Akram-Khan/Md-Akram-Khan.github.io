@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import type { MouseEvent as ReactMouseEvent } from 'react'
 import { profile, sections } from '../data/portfolio'
 import type { SectionId } from '../data/portfolio'
+import { asset } from '../lib/env'
 import { onActiveSection, scrollState, scrollToSection } from '../lib/scroll'
 import './Nav.css'
 
@@ -278,6 +279,13 @@ export default function Nav() {
                   LinkedIn<span className="visually-hidden"> (opens in a new tab)</span>
                 </a>
               </li>
+              {profile.cv && (
+                <li>
+                  <a href={asset(profile.cv)} target="_blank" rel="noopener noreferrer">
+                    CV<span className="visually-hidden"> (PDF, opens in a new tab)</span>
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

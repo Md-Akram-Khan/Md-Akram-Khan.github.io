@@ -30,6 +30,8 @@ export const profile = {
   photo: { webp: 'media/akram-portrait.webp', jpg: 'media/akram-portrait.jpg', alt: 'Portrait of Md. Akram Khan' },
   // Leave empty to hide the email link. Add an address here to show it.
   email: 'thankyouakramkhan@gmail.com',
+  /** CV in /public. Leave empty to hide every CV link. */
+  cv: 'Md_Akram_Khan_CV.pdf',
 }
 
 // "HOW TO USE IT" — the About section: the rules of this note, in Akram's own words.

@@ -4,6 +4,7 @@
 import { Fragment, useState, useSyncExternalStore } from 'react'
 import type { CSSProperties } from 'react'
 import { profile, sections } from '../data/portfolio'
+import { asset } from '../lib/env'
 import { scrollToSection } from '../lib/scroll'
 import RuleEyebrow from '../components/RuleEyebrow'
 import './Hero.css'
@@ -149,6 +150,15 @@ function HeroBody() {
                 <path d="M7 17 17 7M9 7h8v8" />
               </svg>
             </a>
+            {profile.cv && (
+              <a className="hero__cta hero__cta--ghost" href={asset(profile.cv)} target="_blank" rel="noopener noreferrer">
+                <span>CV</span>
+                <span className="visually-hidden"> (PDF, opens in a new tab)</span>
+                <svg className="hero__cta-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M7 17 17 7M9 7h8v8" />
+                </svg>
+              </a>
+            )}
           </div>
 
           <p className="hero__location mono hero__reveal" style={v({ '--d': 6 })}>

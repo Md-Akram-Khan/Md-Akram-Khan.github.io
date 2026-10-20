@@ -3,6 +3,7 @@ import type { ChangeEvent, CSSProperties, FormEvent, ReactNode } from 'react'
 import { profile, sections } from '../data/portfolio'
 import RuleEyebrow from '../components/RuleEyebrow'
 import PenReel from '../components/PenReel'
+import { asset } from '../lib/env'
 import './Contact.css'
 
 const meta = sections.find((s) => s.id === 'contact') ?? { numeral: 'IV', label: 'Write a Name' }
@@ -60,6 +61,18 @@ const links: ContactLink[] = [
           href: `mailto:${profile.email}`,
           external: false,
           icon: <MailIcon />,
+        },
+      ]
+    : []),
+  ...(profile.cv
+    ? [
+        {
+          id: 'cv',
+          label: 'CV',
+          caption: 'The whole file, as a PDF',
+          href: asset(profile.cv),
+          external: true,
+          icon: <DocIcon />,
         },
       ]
     : []),
@@ -348,6 +361,20 @@ function MailIcon() {
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
       <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
       <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function DocIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path
+        d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M14 3v5h5M8.5 13h7M8.5 16.5h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
