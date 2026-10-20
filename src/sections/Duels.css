@@ -355,3 +355,167 @@
     flex-wrap: wrap;
   }
 }
+
+/* ───────── Result details (points, challenges…) ───────── */
+.duels__details {
+  list-style: none;
+  margin: -0.35rem 0 1.1rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.duels__detail {
+  position: relative;
+  padding-left: 0.95em;
+  font-size: calc(var(--step--1) * 0.8);
+  letter-spacing: 0.08em;
+  color: var(--paper-dim);
+}
+.duels__detail::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.45em;
+  height: 0.45em;
+  margin-top: -0.22em;
+  background: var(--blood);
+  transform: rotate(45deg);
+}
+
+/* ───────── Certificate: an evidence print on the card ───────── */
+.duels__cert {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 1rem;
+  padding: 8px 18px 8px 8px;
+  color: var(--paper);
+  text-align: left;
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    border-color 250ms var(--ease),
+    box-shadow 250ms var(--ease);
+}
+.duels__cert:hover,
+.duels__cert:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 24px -8px color-mix(in srgb, var(--gold) 70%, transparent);
+}
+.duels__cert-thumb {
+  width: 96px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 3px solid var(--paper);
+  border-bottom-width: 8px;
+  box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.9);
+  transform: rotate(-3deg);
+  transition: transform 300ms var(--ease);
+}
+.duels__cert:hover .duels__cert-thumb {
+  transform: rotate(0deg) scale(1.04);
+}
+.duels__cert-text {
+  display: grid;
+  gap: 2px;
+}
+.duels__cert-label {
+  font-size: calc(var(--step--1) * 0.7);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.duels__cert-title {
+  font-family: var(--font-rules);
+  font-size: var(--step-0);
+}
+
+/* ───────── Certificate viewer (native modal dialog) ───────── */
+.duels__viewer {
+  width: min(1100px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  color: var(--paper);
+  background: var(--ink-2);
+  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
+  border-radius: 6px;
+  box-shadow:
+    0 40px 100px -20px rgba(0, 0, 0, 0.95),
+    0 0 60px -20px color-mix(in srgb, var(--blood) 70%, transparent);
+}
+.duels__viewer::backdrop {
+  background: rgba(3, 3, 3, 0.82);
+  backdrop-filter: blur(3px);
+}
+.duels__viewer[open] {
+  animation: duels-viewer-in 320ms var(--ease) both;
+}
+@keyframes duels-viewer-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+.duels__viewer-inner {
+  display: grid;
+  gap: 16px;
+  padding: clamp(16px, 2.4vw, 26px);
+}
+.duels__viewer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.duels__viewer-kicker {
+  font-size: calc(var(--step--1) * 0.72);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.duels__viewer-title {
+  margin-top: 0.3rem;
+  font-size: var(--step-2);
+  line-height: 1.05;
+}
+.duels__viewer-close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  color: var(--paper-dim);
+  font-size: 1.5rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.duels__viewer-close:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+}
+.duels__viewer-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+}
+.duels__viewer-pdf {
+  justify-self: start;
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duels__viewer[open] {
+    animation: none;
+  }
+}

@@ -346,9 +346,32 @@ export type Contest = {
   fieldPlus?: boolean
   /** Public final standings page, if there is one. */
   standings?: string
+  /** Extra result details, shown under the placing (e.g. points, challenges solved). */
+  details?: string[]
+  /** When the contest ran, if more precise than the year. */
+  when?: string
+  /** Certificate: web image (webp + jpg fallback) and the original PDF, all in /public. */
+  certificate?: { webp: string; jpg: string; pdf: string; alt: string }
 }
 
 export const contests: Contest[] = [
+  {
+    kind: 'ctf',
+    year: 2025,
+    when: 'December 17–18, 2025',
+    name: 'NahamCon CTF 2025',
+    organizer: 'NahamCon',
+    team: 'Restless_goblins',
+    rank: 74,
+    field: 859,
+    details: ['1,326 points', '8 of 25 challenges solved', '1,684 players in total'],
+    certificate: {
+      webp: 'media/nahamcon-2025-certificate.webp',
+      jpg: 'media/nahamcon-2025-certificate.jpg',
+      pdf: 'media/nahamcon-2025-certificate.pdf',
+      alt: 'NahamCon CTF 2025 certificate of completion for team Restless_goblins: 1326 points, 74th of 859 teams, 8 of 25 challenges solved',
+    },
+  },
   { kind: 'ctf', year: 2025, name: 'AL KHWARIZMI CTF', organizer: 'Bangladesh Islami Chhatrashibir Science', team: 'DU_Restless_goblins', rank: 6, field: 650, fieldPlus: true },
   { kind: 'cp', year: 2025, name: 'Battle of Brains 2025', organizer: 'University of Dhaka', rank: 10, field: 105, standings: 'https://toph.co/c/battle-brains-2025/standings' },
   { kind: 'cp', year: 2024, name: 'Battle of Brains 2024', organizer: 'University of Dhaka', rank: 14, field: 68, standings: 'https://toph.co/c/battle-brains-2024/standings' },

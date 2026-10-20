@@ -82,6 +82,7 @@ const JUDGE_ALIASES: Record<string, string[]> = {
 // Only the distinctive names: generic words ("ctf", "brains") are left to the
 // contest intent, which lists every contest.
 const CONTEST_ALIASES: [string, string[]][] = [
+  ['NahamCon CTF 2025', ['nahamcon', 'naham con', 'nahamsec']],
   ['AL KHWARIZMI CTF', ['khwarizmi', 'al khwarizmi', 'alkhwarizmi']],
   ['Battle of Brains 2025', ['battle of brains 2025', 'bob 2025', 'bob25']],
   ['Battle of Brains 2024', ['battle of brains 2024', 'bob 2024', 'bob24']],
@@ -128,7 +129,9 @@ function contestReply(cName: string): Reply {
       `**${c.name}** (${c.year}), organized by ${c.organizer}: ` +
       `${c.kind === 'ctf' ? `a team CTF, as **${c.team}**` : 'a solo programming contest'}. ` +
       `Result: **${ordinal(c.rank)} place** among ${field}.` +
-      (c.standings ? `\n\n[See the standings](${c.standings})` : ''),
+      (c.details ? `\n\n${c.details.map((d) => `- ${d}`).join('\n')}` : '') +
+      (c.standings ? `\n\n[See the standings](${c.standings})` : '') +
+      (c.certificate ? `\n\nA certificate of completion is shown in the Contests section.` : ''),
     section: 'duels',
     suggest: ['All contests?', `How many problems has ${name} solved?`],
   }
@@ -252,7 +255,12 @@ const R = {
     suggest: ['Tell me about CatVision', 'Tell me about Cognify'],
   }),
   security: (): Reply => ({
-    text: `Cybersecurity is one of ${name}'s interests, shown in team CTFs:\n\n- **AL KHWARIZMI CTF 2025**: 6th of 650+ teams (DU_Restless_goblins)\n- **DU CTF 2023**: 10th of 100+ teams (DU_CTF_NOOBS)`,
+    text:
+      `Cybersecurity is one of ${name}'s interests, shown in team CTFs:\n\n` +
+      contests
+        .filter((c) => c.kind === 'ctf')
+        .map((c) => `- **${c.name}**: ${ordinal(c.rank)} of ${c.field}${c.fieldPlus ? '+' : ''} teams (${c.team})`)
+        .join('\n'),
     section: 'duels',
     suggest: ['All contests?'],
   }),

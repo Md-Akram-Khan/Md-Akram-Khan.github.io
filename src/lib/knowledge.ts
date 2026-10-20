@@ -65,7 +65,9 @@ export function buildKnowledge(): string {
     const field = `${c.field}${c.fieldPlus ? '+' : ''} ${c.kind === 'ctf' ? 'teams' : 'participants'}`
     line(
       `- ${c.year} ${c.name} (${c.kind === 'ctf' ? 'CTF, team' : 'programming contest, solo'}), organized by ${c.organizer}` +
-        `${c.team ? `, team "${c.team}"` : ''}: ${ordinal(c.rank)} place among ${field}${c.standings ? ` — standings ${c.standings}` : ''}`,
+        `${c.team ? `, team "${c.team}"` : ''}${c.when ? `, ${c.when}` : ''}: ${ordinal(c.rank)} place among ${field}` +
+        `${c.details ? ` (${c.details.join(', ')})` : ''}${c.standings ? ` — standings ${c.standings}` : ''}` +
+        `${c.certificate ? ` — certificate of completion: ${SITE}${c.certificate.pdf}` : ''}`,
     )
   }
 
