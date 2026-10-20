@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import { profile } from '../data/portfolio'
 import { scrollToSection } from '../lib/scroll'
-import { REPO_URL, useStars } from '../lib/stars'
+import { REPO_URL, markStarClicked, useStars } from '../lib/stars'
 import { StarIcon } from './StarPrompt'
 import './StarPrompt.css'
 import './Footer.css'
@@ -52,7 +52,7 @@ export default function Footer() {
         </p>
         <p className="footer__built">Built with too many apples and Shinigami.</p>
 
-        <a className="star-btn footer__star" href={REPO_URL} target="_blank" rel="noopener noreferrer">
+        <a className="star-btn footer__star" href={REPO_URL} target="_blank" rel="noopener noreferrer" onClick={markStarClicked}>
           <StarIcon />
           <span>Liked the note? Star it on GitHub</span>
           {stars !== null && (

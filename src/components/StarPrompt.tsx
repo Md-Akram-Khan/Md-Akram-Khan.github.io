@@ -4,7 +4,7 @@
 // requires the visitor's own login, so no site can star on their behalf).
 // Dismissed or used once, it stays away on that browser.
 import { useEffect, useRef, useState } from 'react'
-import { REPO_URL, useStars } from '../lib/stars'
+import { REPO_URL, markStarClicked, useStars } from '../lib/stars'
 import './StarPrompt.css'
 
 const SEEN = 'dn-star-prompt'
@@ -52,6 +52,10 @@ export default function StarPrompt() {
     remember()
     setGone(true)
   }
+  const starred = () => {
+    markStarClicked()
+    dismiss()
+  }
 
   if (gone || !show) return null
 
@@ -66,7 +70,7 @@ export default function StarPrompt() {
         Did the note leave a mark?
       </h2>
       <p className="star-prompt__text">If you liked this portfolio, leave a star on GitHub. It takes one click and means a lot.</p>
-      <a className="star-prompt__btn" href={REPO_URL} target="_blank" rel="noopener noreferrer" onClick={dismiss}>
+      <a className="star-prompt__btn" href={REPO_URL} target="_blank" rel="noopener noreferrer" onClick={starred}>
         <StarIcon />
         <span>Star on GitHub</span>
         {stars !== null && (
