@@ -1,0 +1,367 @@
+/* ───────── "Ask the Note": floating launcher + chat panel (bottom right) ───────── */
+
+.assistant {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: var(--z-nav);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+.assistant > * {
+  pointer-events: auto;
+}
+
+/* ── Launcher ── */
+.assistant__launcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 20px 0 16px;
+  border: 1px solid color-mix(in srgb, var(--blood) 70%, transparent);
+  border-radius: 999px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--blood-deep) 80%, transparent), transparent 60%),
+    var(--panel);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--paper);
+  cursor: pointer;
+  box-shadow:
+    0 12px 32px -10px rgba(0, 0, 0, 0.9),
+    0 0 24px -8px color-mix(in srgb, var(--blood-bright) 60%, transparent);
+  transition:
+    border-color 250ms ease,
+    box-shadow 250ms ease,
+    transform 250ms var(--ease);
+}
+.assistant__launcher:hover {
+  border-color: var(--blood-bright);
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 32px -10px rgba(0, 0, 0, 0.9),
+    0 0 30px -4px color-mix(in srgb, var(--blood-bright) 70%, transparent);
+}
+.assistant__icon {
+  width: 24px;
+  height: auto;
+  color: var(--blood-bright);
+  filter: drop-shadow(0 0 6px var(--blood-bright));
+}
+.assistant__launcher .assistant__icon {
+  animation: assistant-blink 6s ease-in-out infinite;
+}
+@keyframes assistant-blink {
+  0%,
+  46%,
+  52%,
+  100% {
+    transform: scaleY(1);
+  }
+  49% {
+    transform: scaleY(0.1);
+  }
+}
+.assistant__launcher-label {
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Panel ── */
+.assistant__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(400px, calc(100vw - 32px));
+  height: min(600px, calc(100dvh - 120px));
+  border: 1px solid color-mix(in srgb, var(--blood) 45%, transparent);
+  border-radius: 6px;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 50% at 100% 0%, color-mix(in srgb, var(--blood-deep) 40%, transparent), transparent 70%),
+    repeating-linear-gradient(180deg, transparent 0 33px, color-mix(in srgb, var(--paper) 3.5%, transparent) 33px 34px),
+    linear-gradient(170deg, var(--ink-3), var(--ink) 75%);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.95),
+    0 0 50px -18px color-mix(in srgb, var(--blood) 70%, transparent);
+  animation: assistant-in 380ms var(--ease) both;
+}
+@keyframes assistant-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+.assistant__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 14px 12px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
+}
+.assistant__eye {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid var(--panel-border);
+  border-radius: 50%;
+  box-shadow: inset 0 0 14px color-mix(in srgb, var(--blood) 30%, transparent);
+}
+.assistant__eye .assistant__icon {
+  width: 20px;
+}
+.assistant__meta {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.assistant__kicker {
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blood-text);
+}
+.assistant__title {
+  font-size: 1.55rem;
+  line-height: 1.1;
+  color: var(--paper);
+}
+.assistant__close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--paper-dim);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.assistant__close:hover {
+  color: var(--paper);
+  border-color: var(--blood);
+}
+
+/* ── Conversation ── */
+.assistant__log {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+}
+.assistant__msg {
+  display: flex;
+}
+.assistant__msg--user {
+  justify-content: flex-end;
+}
+.assistant__bubble {
+  max-width: 88%;
+  padding: 10px 13px;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.assistant__msg--assistant .assistant__bubble {
+  color: var(--paper);
+  background: color-mix(in srgb, var(--ink) 75%, transparent);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--blood);
+}
+.assistant__msg--user .assistant__bubble {
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--blood-deep) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blood) 55%, transparent);
+}
+.assistant__bubble p + p,
+.assistant__bubble p + ul,
+.assistant__bubble ul + p {
+  margin-top: 0.55em;
+}
+.assistant__bubble ul {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 0.2em;
+}
+.assistant__bubble ul + ul {
+  margin-top: 0.55em;
+}
+.assistant__bubble li::marker {
+  color: var(--blood-text);
+}
+.assistant__bubble strong {
+  font-weight: 600;
+  color: var(--paper);
+}
+.assistant__bubble a {
+  color: var(--blood-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--blood) 55%, transparent);
+}
+.assistant__bubble a:hover {
+  color: var(--blood-bright);
+}
+.assistant__jump {
+  display: inline-block;
+  margin-top: 0.7em;
+  padding: 0.35em 0.75em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.assistant__jump:hover {
+  color: var(--paper);
+  border-color: var(--gold);
+}
+
+.assistant__typing {
+  display: inline-flex;
+  gap: 5px;
+  padding: 14px 16px;
+}
+.assistant__typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blood-bright);
+  animation: assistant-dot 1s ease-in-out infinite;
+}
+.assistant__typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.assistant__typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes assistant-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* ── Suggested questions ── */
+.assistant__chips {
+  display: flex;
+  gap: 8px;
+  padding: 6px 14px 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.assistant__chip {
+  flex: none;
+  padding: 0.4em 0.85em;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--paper-dim);
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--blood) 40%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+.assistant__chip:hover {
+  color: var(--paper);
+  border-color: var(--blood-bright);
+}
+
+/* ── Input ── */
+.assistant__form {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+}
+.assistant__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  color: var(--paper);
+  background: color-mix(in srgb, var(--ink) 80%, transparent);
+  border: 1px solid var(--line);
+  border-bottom: 1px solid color-mix(in srgb, var(--blood) 60%, transparent);
+  border-radius: 3px;
+}
+.assistant__input::placeholder {
+  color: var(--ash);
+}
+.assistant__input:focus {
+  outline: none;
+  border-color: var(--blood-bright);
+}
+.assistant__send {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  flex: none;
+  color: var(--paper);
+  background: var(--blood);
+  border: 1px solid var(--blood-bright);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.assistant__send:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.assistant__note {
+  padding: 0 14px 10px;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+
+@media (max-width: 760px) {
+  .assistant__launcher {
+    height: 46px;
+    padding: 0 16px 0 14px;
+  }
+  .assistant__panel {
+    height: min(620px, calc(100dvh - 96px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant__launcher .assistant__icon,
+  .assistant__typing span {
+    animation: none;
+  }
+  .assistant__panel {
+    animation: none;
+  }
+}

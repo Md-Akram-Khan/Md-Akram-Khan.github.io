@@ -25,6 +25,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # URL of the Ask the Note AI Worker (repo variable); empty = built-in answers only
+          VITE_CHAT_ENDPOINT: ${{ vars.VITE_CHAT_ENDPOINT }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

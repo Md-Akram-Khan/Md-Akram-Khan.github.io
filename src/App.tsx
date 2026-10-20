@@ -6,6 +6,7 @@ import Intro from './components/Intro'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
+import Assistant from './components/Assistant'
 import SceneFallback from './three/SceneFallback'
 import Hero from './sections/Hero'
 import Rules from './sections/Rules'
@@ -103,6 +104,7 @@ export default function App() {
       </main>
       <Footer />
       <MusicPlayer />
+      <Assistant />
       <div className="grain" aria-hidden="true" />
     </>
   )
